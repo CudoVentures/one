@@ -19,7 +19,7 @@ define(function(require) {
   // Clone the local config object in a private var
   var _config = $.extend(true, {}, config);
 
-  var inmutableTabs = ['official-support-tab', 'support-tab']
+  var inmutableTabs = []//'official-support-tab', 'support-tab']
 
   function enabledTabs () {
     return _config["view"]["enabled_tabs"].concat(inmutableTabs)

@@ -143,8 +143,8 @@ require.config({
         "tabs/vnets-topology-tab",
         "tabs/secgroups-tab",
         "tabs/settings-tab",
-        "tabs/support-tab",
-        "tabs/official-support-tab",
+        // "tabs/support-tab",
+        // "tabs/official-support-tab",
         "tabs/vmgroup-tab",
         "addons/start",
         "addons/end"

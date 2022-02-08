@@ -65,64 +65,64 @@
     margin-left: 0;
   }
 
-  #li_support-tab {
-    margin-top: 1rem;
-    a {
-      border: 1px solid #dfdfdf;
-      padding: 1rem;
-      background: $bg-li-support-tab;
-      cursor: default;
+  // #li_support-tab {
+  //   margin-top: 1rem;
+  //   a {
+  //     border: 1px solid #dfdfdf;
+  //     padding: 1rem;
+  //     background: $bg-li-support-tab;
+  //     cursor: default;
 
-      .support_connect {
-        .officialy_support{
-          padding: 0px;
-          color: $dark-primary;
-        }
-        span {
-          display: block;
-          color: $dark-gray;
-          padding: 0.5rem 0 0 0;
-        }
-        .button {
-          margin-top: 1rem;
-        }
-      }
+  //     .support_connect {
+  //       .officialy_support{
+  //         padding: 0px;
+  //         color: $dark-primary;
+  //       }
+  //       span {
+  //         display: block;
+  //         color: $dark-gray;
+  //         padding: 0.5rem 0 0 0;
+  //       }
+  //       .button {
+  //         margin-top: 1rem;
+  //       }
+  //     }
 
-      .support_not_connected {
-        text-align: center;
+  //     .support_not_connected {
+  //       text-align: center;
 
-        button.alert {
-          margin: 0.5rem auto;
-        }
-      }
+  //       button.alert {
+  //         margin: 0.5rem auto;
+  //       }
+  //     }
 
-      .support_info {
-        .support_open,
-        .support_pending,
-        .support_open_value,
-        .support_pending_value {
-          display: block;
-          color: $dark-gray;
-          padding: 0.5rem 0 0 0;
-        }
-        .table{
-          display: table;
-          width: 100%;
-          *{
-            display: table-cell !important;
-          }
-        }
-        .officialy_support{
-          padding: 0px;
-          color: #4DBBD3;
-        }
+  //     .support_info {
+  //       .support_open,
+  //       .support_pending,
+  //       .support_open_value,
+  //       .support_pending_value {
+  //         display: block;
+  //         color: $dark-gray;
+  //         padding: 0.5rem 0 0 0;
+  //       }
+  //       .table{
+  //         display: table;
+  //         width: 100%;
+  //         *{
+  //           display: table-cell !important;
+  //         }
+  //       }
+  //       .officialy_support{
+  //         padding: 0px;
+  //         color: #4DBBD3;
+  //       }
 
-        .button {
-          margin-top: 1rem;
-        }
-      }
-    }
-  }
+  //       .button {
+  //         margin-top: 1rem;
+  //       }
+  //     }
+  //   }
+  // }
 }
 
 #menu-wrapper {
