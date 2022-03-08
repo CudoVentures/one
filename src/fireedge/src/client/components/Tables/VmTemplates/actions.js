@@ -17,7 +17,6 @@
 import { useMemo } from 'react'
 import { useHistory } from 'react-router-dom'
 import {
-  RefreshDouble,
   AddSquare,
   Import,
   Trash,
@@ -27,8 +26,13 @@ import {
   Cart,
 } from 'iconoir-react'
 
-import { useAuth } from 'client/features/Auth'
-import { useVmTemplateApi } from 'client/features/One'
+import { useViews } from 'client/features/Auth'
+import {
+  useLockTemplateMutation,
+  useUnlockTemplateMutation,
+  useCloneTemplateMutation,
+  useRemoveTemplateMutation,
+} from 'client/features/OneApi/vmTemplate'
 import { Tr, Translate } from 'client/components/HOC'
 
 import { CloneForm } from 'client/components/Forms/VmTemplate'
@@ -62,23 +66,17 @@ MessageToConfirmAction.displayName = 'MessageToConfirmAction'
 
 const Actions = () => {
   const history = useHistory()
-  const { view, getResourceView } = useAuth()
-  const { getVmTemplate, getVmTemplates, lock, unlock, clone, remove } =
-    useVmTemplateApi()
+  const { view, getResourceView } = useViews()
+  const [lock] = useLockTemplateMutation()
+  const [unlock] = useUnlockTemplateMutation()
+  const [clone] = useCloneTemplateMutation()
+  const [remove] = useRemoveTemplateMutation()
 
   const vmTemplateActions = useMemo(
     () =>
       createActions({
-        filters: getResourceView('VM-TEMPLATE')?.actions,
+        filters: getResourceView(RESOURCE_NAMES.VM_TEMPLATE)?.actions,
         actions: [
-          {
-            accessor: VM_TEMPLATE_ACTIONS.REFRESH,
-            tooltip: T.Refresh,
-            icon: RefreshDouble,
-            action: async () => {
-              await getVmTemplates()
-            },
-          },
           {
             accessor: VM_TEMPLATE_ACTIONS.CREATE_DIALOG,
             tooltip: T.Create,
@@ -169,26 +167,18 @@ const Actions = () => {
                   return CloneForm(stepProps, initialValues)
                 },
                 onSubmit: async (formData, rows) => {
-                  try {
-                    const { prefix } = formData
+                  const { prefix, ...restOfData } = formData
 
-                    const vmTemplates = rows?.map?.(
-                      ({ original: { ID, NAME } = {} }) => {
-                        // overwrite all names with prefix+NAME
-                        const formatData = prefix
-                          ? { name: `${prefix} ${NAME}` }
-                          : {}
+                  const vmTemplates = rows?.map?.(
+                    ({ original: { ID, NAME } = {} }) => {
+                      // overwrite all names with prefix+NAME
+                      const name = prefix ? `${prefix} ${NAME}` : NAME
 
-                        return { id: ID, data: { ...formData, ...formatData } }
-                      }
-                    )
+                      return { id: ID, ...restOfData, name }
+                    }
+                  )
 
-                    await Promise.all(
-                      vmTemplates.map(({ id, data }) => clone(id, data))
-                    )
-                  } finally {
-                    await getVmTemplates()
-                  }
+                  await Promise.all(vmTemplates.map(clone))
                 },
               },
             ],
@@ -245,8 +235,7 @@ const Actions = () => {
                 },
                 onSubmit: async (_, rows) => {
                   const ids = rows?.map?.(({ original }) => original?.ID)
-                  await Promise.all(ids.map((id) => lock(id)))
-                  await Promise.all(ids.map((id) => getVmTemplate(id)))
+                  await Promise.all(ids.map((id) => lock({ id })))
                 },
               },
               {
@@ -260,7 +249,6 @@ const Actions = () => {
                 onSubmit: async (_, rows) => {
                   const ids = rows?.map?.(({ original }) => original?.ID)
                   await Promise.all(ids.map((id) => unlock(id)))
-                  await Promise.all(ids.map((id) => getVmTemplate(id)))
                 },
               },
             ],
@@ -280,8 +268,7 @@ const Actions = () => {
                 },
                 onSubmit: async (_, rows) => {
                   const ids = rows?.map?.(({ original }) => original?.ID)
-                  await Promise.all(ids.map((id) => remove(id)))
-                  await getVmTemplates()
+                  await Promise.all(ids.map((id) => remove({ id })))
                 },
               },
             ],
@@ -294,7 +281,7 @@ const Actions = () => {
   const marketplaceAppActions = useMemo(
     () =>
       createActions({
-        filters: getResourceView('MARKETPLACE-APP')?.actions,
+        filters: getResourceView(RESOURCE_NAMES.APP)?.actions,
         actions: [
           {
             accessor: MARKETPLACE_APP_ACTIONS.CREATE_DIALOG,

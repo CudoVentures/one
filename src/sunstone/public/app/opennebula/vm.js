@@ -403,19 +403,12 @@ define(function(require) {
     "VROUTER_IP6_ULA",
   ];
 
-  var EXTERNAL_NETWORK_ATTRIBUTES = [
-    "GUEST_IP",
-    "GUEST_IP_ADDRESSES",
-    "AWS_IP_ADDRESS",
+  var EXTERNAL_NETWORK_ATTRS = EXTERNAL_IP_ATTRS.concat([
     "AWS_DNS_NAME",
-    "AWS_PUBLIC_IP_ADDRESS",
     "AWS_PUBLIC_DNS_NAME",
-    "AWS_PRIVATE_IP_ADDRESS",
     "AWS_PRIVATE_DNS_NAME",
-    "AWS_SECURITY_GROUPS",
-    "AZ_IPADDRESS",
-    "SL_PRIMARYIPADDRESS"
-  ];
+    "AWS_SECURITY_GROUPS"
+  ]);
 
   var MIGRATE_ACTION_STR = [
     "none",                // NONE_ACTION            = 0
@@ -838,6 +831,14 @@ define(function(require) {
     "sched_action_delete" : function(params) {
       var action_obj = { "sched_id" : params.data.extra_param };
       OpenNebulaAction.simple_action(params, RESOURCE, "sched_action_delete", action_obj);
+    },
+    "attachsg" : function(params) {
+      var action_obj = params.data.extra_param;
+      OpenNebulaAction.simple_action(params, RESOURCE, "sg_attach", action_obj);
+    },
+    "detachsg" : function(params) {
+      var action_obj = params.data.extra_param;
+      OpenNebulaAction.simple_action(params, RESOURCE, "sg_detach", action_obj);
     }
   };
 
@@ -952,27 +953,20 @@ define(function(require) {
   }
 
   function retrieveExternalIPs(element) {
-    var monitoring = element.MONITORING;
-    var ips = {};
-    var externalIP;
-
-    $.each(EXTERNAL_IP_ATTRS, function(index, IPAttr) {
-      externalIP = monitoring[IPAttr];
-      if (externalIP) {
-        ips[IPAttr] = externalIP;
-      }
-    });
-
-    return ips;
+    return retrieveExternalAttr(element, EXTERNAL_IP_ATTRS);
   }
 
   function retrieveExternalNetworkAttrs(element) {
+    return retrieveExternalAttr(element, EXTERNAL_NETWORK_ATTRS);
+  }
+
+  function retrieveExternalAttr(element, attr_array) {
     var ips = {};
     var externalAttr;
-
     var monitoring = element.MONITORING;
+
     if (monitoring) {
-      $.each(EXTERNAL_NETWORK_ATTRIBUTES, function(index, attr) {
+      $.each(attr_array, function(_, attr) {
         externalAttr = monitoring[attr];
         if (externalAttr) {
           ips[attr] = externalAttr;
@@ -1040,8 +1034,9 @@ define(function(require) {
 
     var nics = getNICs(element);
     var nicsFromMonitoring = getNicsFromMonitoring(element);
+    var nicExternal = retrieveExternalIPs(element);
 
-    nics = nics.concat(nicsFromMonitoring);
+    nics = nics.concat(nicsFromMonitoring, nicExternal);
 
     // infoextended: alias will be group by nic
     if (Config.isExtendedVmInfo || options.forceGroup) {
@@ -1260,6 +1255,11 @@ define(function(require) {
       String(element.USER_TEMPLATE.HYPERVISOR).toLowerCase() === "vcenter");
   }
 
+  function isKVMVM(element = {}){
+    return Boolean(element.USER_TEMPLATE &&
+      String(element.USER_TEMPLATE.HYPERVISOR).toLowerCase() === "kvm");
+  }
+
   function isVMRCSupported(element = {}) {
     var actionEnabled = Config.isTabActionEnabled("vms-tab", "VM.startvmrc");
     var vmrcSupported = graphicSupported(element, "vnc");
@@ -1279,8 +1279,9 @@ define(function(require) {
     var actionEnabled = Config.isTabActionEnabled("vms-tab", "VM.save_virt_viewer");
     var vncSupported = graphicSupported(element, "vnc");
     var spiceSupported = graphicSupported(element, "spice");
+    var isKVM = isKVMVM(element);
 
-    return (actionEnabled && history && (vncSupported || spiceSupported))
+    return (actionEnabled && history && (vncSupported || spiceSupported) && isKVM)
       ? {
         hostname: history.HOSTNAME,
         type: element.TEMPLATE.GRAPHICS.TYPE.toLowerCase(),

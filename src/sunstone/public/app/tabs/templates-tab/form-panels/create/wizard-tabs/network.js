@@ -37,6 +37,7 @@ define(function(require) {
     CONSTANTS
    */
 
+  var SCHED_TAB_ID = require('./scheduling/wizardTabId');
   var WIZARD_TAB_ID = require('./network/wizardTabId');
   var LINKS_CONTAINER_ID = 'template_create_network_tabs';
   var CONTENTS_CONTAINER_ID = 'template_create_network_tabs_content';
@@ -196,9 +197,7 @@ define(function(require) {
     }
 
     $.each(nics, function(nicId, nicJSON) {
-      if (nicId > 0) {
-        that.addNicTab(context);
-      }
+      nicId > 0 && that.addNicTab(context);
 
       var nicTab = that.nicTabObjects[that.numberOfNics];
       var nicContext = $('#' + nicTab.nicTabId, context);
@@ -279,7 +278,8 @@ define(function(require) {
 
     $("a", a).trigger("click");
 
-    nicTab.setup(content);
+    nicTab.setup(content, $("div[id^='" + SCHED_TAB_ID + "']").data());
+
     content.attr("nicId", that.numberOfNics);
 
     that.renameTabLinks(context);

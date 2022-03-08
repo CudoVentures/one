@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and       *
  * limitations under the License.                                            *
  * ------------------------------------------------------------------------- */
-const { combineReducers } = require('redux')
+const { combineReducers } = require('@reduxjs/toolkit')
 const Auth = require('client/features/Auth/slice')
 const General = require('client/features/General/slice')
-const One = require('client/features/One/slice')
+const { authApi } = require('client/features/AuthApi')
+const { oneApi } = require('client/features/OneApi')
 
 const rootReducer = combineReducers({
   general: General.reducer,
   auth: Auth.reducer,
-  one: One.reducer,
+  [authApi.reducerPath]: authApi.reducer,
+  [oneApi.reducerPath]: oneApi.reducer,
 })
 
 module.exports = rootReducer

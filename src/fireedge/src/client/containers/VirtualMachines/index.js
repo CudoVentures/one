@@ -33,7 +33,6 @@ function VirtualMachines() {
         <VmsTable
           onSelectedRowsChange={onSelectedRowsChange}
           globalActions={actions}
-          rootProps={{ 'data-cy': 'vms' }}
         />
 
         {selectedRows?.length > 0 && (

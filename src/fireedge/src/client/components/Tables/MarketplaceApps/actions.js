@@ -16,18 +16,20 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { useMemo } from 'react'
 import { useHistory } from 'react-router-dom'
-import { RefreshDouble, AddSquare, CloudDownload } from 'iconoir-react'
+import { AddSquare, CloudDownload, DownloadCircledOutline } from 'iconoir-react'
 
-import { useAuth } from 'client/features/Auth'
+import { useViews } from 'client/features/Auth'
 import { useGeneralApi } from 'client/features/General'
-import { useMarketplaceAppApi } from 'client/features/One'
 import { Translate } from 'client/components/HOC'
+import {
+  useExportAppMutation,
+  useDownloadAppMutation,
+} from 'client/features/OneApi/marketplaceApp'
 
 import { ExportForm } from 'client/components/Forms/MarketplaceApp'
-
 import { createActions } from 'client/components/Tables/Enhanced/Utils'
 import { PATH } from 'client/apps/sunstone/routesOne'
-import { T, MARKETPLACE_APP_ACTIONS } from 'client/constants'
+import { T, RESOURCE_NAMES, MARKETPLACE_APP_ACTIONS } from 'client/constants'
 
 const MessageToConfirmAction = (rows) => {
   const names = rows?.map?.(({ original }) => original?.NAME)
@@ -49,23 +51,16 @@ MessageToConfirmAction.displayName = 'MessageToConfirmAction'
 
 const Actions = () => {
   const history = useHistory()
-  const { view, getResourceView } = useAuth()
+  const { view, getResourceView } = useViews()
   const { enqueueSuccess } = useGeneralApi()
-  const { getMarketplaceApps, exportApp } = useMarketplaceAppApi()
+  const [exportApp] = useExportAppMutation()
+  const [downloadApp] = useDownloadAppMutation()
 
   const marketplaceAppActions = useMemo(
     () =>
       createActions({
-        filters: getResourceView('MARKETPLACE-APP')?.actions,
+        filters: getResourceView(RESOURCE_NAMES.APP)?.actions,
         actions: [
-          {
-            accessor: MARKETPLACE_APP_ACTIONS.REFRESH,
-            tooltip: T.Refresh,
-            icon: RefreshDouble,
-            action: async () => {
-              await getMarketplaceApps()
-            },
-          },
           {
             accessor: MARKETPLACE_APP_ACTIONS.CREATE_DIALOG,
             tooltip: T.CreateMarketApp,
@@ -88,12 +83,24 @@ const Actions = () => {
                   return ExportForm(app, app)
                 },
                 onSubmit: async (formData, rows) => {
-                  const appId = rows?.[0]?.original?.ID
-                  const response = await exportApp(appId, formData)
-                  enqueueSuccess(response)
+                  const id = rows?.[0]?.original?.ID
+                  const res = await exportApp({ id, ...formData }).unwrap()
+                  enqueueSuccess(res)
                 },
               },
             ],
+          },
+          {
+            accessor: MARKETPLACE_APP_ACTIONS.DOWNLOAD,
+            tooltip: T.DownloadApp,
+            selected: { min: 1 },
+            icon: DownloadCircledOutline,
+            action: async (apps) => {
+              const urls = await Promise.all(
+                apps.map(({ id }) => downloadApp(id).unwrap())
+              )
+              urls.forEach((url) => window.open(url, '_blank'))
+            },
           },
         ],
       }),

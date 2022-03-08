@@ -37,6 +37,8 @@ else
     SUNSTONE_LOCATION ||= ONE_LOCATION + '/lib/sunstone'
 end
 
+VMS_LOCATION = VAR_LOCATION + "/vms"
+
 SUNSTONE_AUTH             = VAR_LOCATION + '/.one/sunstone_auth'
 SUNSTONE_LOG              = LOG_LOCATION + '/sunstone.log'
 CONFIGURATION_FILE        = ETC_LOCATION + '/sunstone-server.conf'
@@ -107,7 +109,8 @@ ONED_CONF_OPTS = {
         'MARKET_MAD_CONF',
         'VM_MAD',
         'IM_MAD',
-        'AUTH_MAD'
+        'AUTH_MAD',
+        'LOG'
     ],
     # Generate an array if there is only 1 element
     'ARRAY_KEYS' => [
@@ -211,7 +214,8 @@ end
 
 case $conf[:sessions]
 when 'memory', nil
-    use Rack::Session::Pool, :key => 'sunstone'
+    use Rack::Session::Pool, :key => 'sunstone',
+                            :expire_after => $conf['session_expire_time']
 when 'memcache'
     memcache_server=$conf[:memcache_host]+':'<<
         $conf[:memcache_port].to_s
@@ -231,7 +235,7 @@ when 'memcache-dalli'
     use Rack::Session::Dalli,
       :memcache_server => memcache_server,
       :namespace => $conf[:memcache_namespace],
-      :cache => Dalli::Client.new
+      :cache => Dalli::Client.new(memcache_server, {:namespace => $conf[:memcache_namespace]})
 else
     STDERR.puts "Wrong value for :sessions in configuration file"
     exit(-1)

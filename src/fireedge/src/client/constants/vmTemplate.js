@@ -14,9 +14,29 @@
  * limitations under the License.                                            *
  * ------------------------------------------------------------------------- */
 import * as ACTIONS from 'client/constants/actions'
+// eslint-disable-next-line no-unused-vars
+import { Permissions, LockInfo } from 'client/constants/common'
+
+/**
+ * @typedef {object} VmTemplate
+ * @property {string|number} ID - Id
+ * @property {string} NAME - Name
+ * @property {string|number} UID - User id
+ * @property {string|number} GID - Group id
+ * @property {string} UNAME - User name
+ * @property {string} GNAME - Group name
+ * @property {Permissions} PERMISSIONS - Permissions
+ * @property {LockInfo} [LOCK] - Lock information
+ * @property {string|number} REGTIME - Registration time
+ * @property {object} TEMPLATE - Template information
+ * @property {string} [TEMPLATE.CONTEXT] - Context
+ * @property {string} [TEMPLATE.VCENTER_CCR_REF] - vCenter information
+ * @property {string} [TEMPLATE.VCENTER_INSTANCE_ID] - vCenter information
+ * @property {string} [TEMPLATE.VCENTER_TEMPLATE_REF] - vCenter information
+ */
 
 export const VM_TEMPLATE_ACTIONS = {
-  REFRESH: 'refresh',
+  REFRESH: ACTIONS.REFRESH,
   CREATE_DIALOG: 'create_dialog',
   IMPORT_DIALOG: 'import_dialog',
   UPDATE_DIALOG: 'update_dialog',

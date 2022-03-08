@@ -24,14 +24,14 @@ networks:
     provision:
       count: "${input.number_public_ips}"
     ar:
-      - provison_id: "${provision_id}"
+      - provision_id: "${provision_id}"
         size: '1'
         ipam_mad: 'aws'
 
 vntemplates:
   - name: "${provision}-private"
     vn_mad: 'vxlan'
-    phydev: 'eth0'
+    phydev: "${input.private_phydev}"
     automatic_vlan_id: 'yes'
     netrole: 'private'
     vxlan_mode: 'evpn'

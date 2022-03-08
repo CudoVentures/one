@@ -168,7 +168,9 @@ define(function(require) {
     "updateFn": _updateFn,
     "list": _list,
     "clearLabelsFilter": _clearLabelsFilter,
-    "getLabelsFilter": _getLabelsFilter
+    "getLabelsFilter": _getLabelsFilter,
+    "deselectHiddenResources": _deselectHiddenResources,
+    "getColumnDataInSelectedRows": _getColumnDataInSelectedRows,
   };
 
   return TabDatatable;
@@ -1251,5 +1253,46 @@ define(function(require) {
 
   function _getLabelsFilter() {
     return LabelsUtils.getLabelsFilter(this.dataTable);
+  }
+
+  function _deselectHiddenResources() {
+    var id_index = this.selectOptions.id_index
+    var currentSelect = this.retrieveResourceTableSelect()
+    var ensuredCurrentSelected = Array.isArray(currentSelect) ? currentSelect : [currentSelect]
+    ensuredCurrentSelected = ensuredCurrentSelected.filter(function(row) { return Boolean(row) })
+
+    var ids = this.dataTable.fnGetData()
+      .filter(function(res) { return ensuredCurrentSelected.includes(res[id_index]) })
+      .map(function(res) { return res[id_index] })
+
+    var deselectIds = ensuredCurrentSelected.filter(function(rowId) {
+      return !ids.includes(rowId)
+    })
+
+    if (!!deselectIds.length) {
+      Notifier.notifyMessage("Deselect " + this.resource + ": " + deselectIds.join(','));
+    }
+
+    this.selectResourceTableSelect({ ids });
+
+    return ids
+  }
+
+  /**
+   * Returns the selected data from a column by index.
+   * 
+   * @param {number} columnIndex - Column index
+   * @returns {any[]} List of column data
+   */
+  function _getColumnDataInSelectedRows(columnIndex) {
+    var selectedRowIds = this.retrieveResourceTableSelect();
+    var allRows = this.dataTable.fnGetData();
+    var id_index = this.selectOptions.id_index;
+
+    var columnData = !Array.isArray(allRows) ? [] : allRows
+      .filter(function(row) { return selectedRowIds.includes(row[id_index]) })
+      .map(function(row) { return row[(columnIndex || id_index)] });
+
+    return columnData;
   }
 });

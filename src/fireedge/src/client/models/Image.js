@@ -18,13 +18,14 @@ import {
   DISK_TYPES,
   IMAGE_STATES,
   StateInfo,
+  Image,
 } from 'client/constants'
+import { prettyBytes } from 'client/utils'
 
 /**
  * Returns the image type.
  *
- * @param {object} image - Image
- * @param {number|string} image.TYPE - Type numeric code
+ * @param {Image} image - Image
  * @returns {IMAGE_TYPES} - Image type
  */
 export const getType = ({ TYPE } = {}) =>
@@ -33,8 +34,7 @@ export const getType = ({ TYPE } = {}) =>
 /**
  * Returns the image state.
  *
- * @param {object} image - Image
- * @param {number|string} image.STATE - State code
+ * @param {Image} image - Image
  * @returns {StateInfo} - Image state information
  */
 export const getState = ({ STATE } = {}) => IMAGE_STATES[+STATE]
@@ -42,9 +42,21 @@ export const getState = ({ STATE } = {}) => IMAGE_STATES[+STATE]
 /**
  * Returns the disk type.
  *
- * @param {object} image - Image
- * @param {number|string} image.DISK_TYPE - Disk type numeric code
+ * @param {Image} image - Image
  * @returns {DISK_TYPES} - Disk type
  */
 export const getDiskType = ({ DISK_TYPE } = {}) =>
   isNaN(+DISK_TYPE) ? DISK_TYPE : DISK_TYPES[+DISK_TYPE]
+
+/**
+ * Returns the disk name.
+ *
+ * @param {Image} image - Image
+ * @returns {string} - Disk name
+ */
+export const getDiskName = ({ IMAGE, SIZE, TYPE, FORMAT } = {}) => {
+  const size = +SIZE ? prettyBytes(+SIZE, 'MB') : '-'
+  const type = String(TYPE).toLowerCase()
+
+  return IMAGE ?? { fs: `${FORMAT} - ${size}`, swap: size }[type]
+}

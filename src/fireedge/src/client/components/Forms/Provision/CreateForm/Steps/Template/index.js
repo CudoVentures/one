@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and       *
  * limitations under the License.                                            *
  * ------------------------------------------------------------------------- */
-import { useState, useEffect, useMemo } from 'react'
+import { memo, useState, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import {
   Divider,
@@ -23,11 +23,14 @@ import {
   FormControl,
 } from '@mui/material'
 import { NavArrowRight } from 'iconoir-react'
-import Marked from 'marked'
+import { marked } from 'marked'
 
 import { useListForm } from 'client/hooks'
-import { useAuth } from 'client/features/Auth'
-import { useProvider, useProvisionTemplate } from 'client/features/One'
+import {
+  useGetProvidersQuery,
+  useGetProviderConfigQuery,
+} from 'client/features/OneApi/provider'
+import { useGetProvisionTemplatesQuery } from 'client/features/OneApi/provision'
 import { ListCards } from 'client/components/List'
 import { ProvisionTemplateCard } from 'client/components/Cards'
 import { Step, sanitize } from 'client/utils'
@@ -45,33 +48,39 @@ export const STEP_ID = 'template'
 // Markdown Description
 // ----------------------------------------------------------
 
-const renderer = new Marked.Renderer()
+marked.use({
+  renderer: {
+    link(href, title, text) {
+      return `
+        <a class='description__link'
+          target='_blank' rel='nofollow' title='${title ?? ''}' href='${href}'>
+          ${text}
+        </a>
+      `
+    },
+  },
+})
 
-renderer.link = (href, title, text) => `
-  <a class='description__link'
-    target='_blank' rel='nofollow' title='${title ?? ''}' href='${href}'>
-    ${text}
-  </a>
-`
+const Description = memo(
+  ({ description = '' }) => {
+    const html = marked.parse(sanitize`${description}`)
 
-const Description = ({ description = '' }) => {
-  const html = Marked(sanitize`${description}`, { renderer })
+    return <div dangerouslySetInnerHTML={{ __html: html }} />
+  },
+  (prev, next) => prev.description === next.description
+)
 
-  return <div dangerouslySetInnerHTML={{ __html: html }} />
-}
-
-Description.propTypes = {
-  description: PropTypes.string,
-}
+Description.displayName = 'ProviderTypeDescription'
+Description.propTypes = { description: PropTypes.string }
 
 // ----------------------------------------------------------
 // Step content : Select Provision Template
 // ----------------------------------------------------------
 
 const Content = ({ data, setFormData }) => {
-  const providers = useProvider()
-  const provisionTemplates = useProvisionTemplate()
-  const { providerConfig } = useAuth()
+  const { data: provisionTemplates } = useGetProvisionTemplatesQuery()
+  const { data: providers } = useGetProvidersQuery()
+  const { data: providerConfig } = useGetProviderConfigQuery()
   const templateSelected = data?.[0]
 
   const provisionTypes = useMemo(
@@ -171,7 +180,7 @@ const Content = ({ data, setFormData }) => {
             inputProps={{ 'data-cy': 'select-provision-type' }}
             labelId="select-provision-type-label"
             native
-            style={{ marginTop: '1em', minWidth: '8em' }}
+            sx={{ marginTop: '1em', minWidth: '8em' }}
             onChange={handleChangeProvision}
             value={provisionSelected}
             variant="outlined"
@@ -192,7 +201,7 @@ const Content = ({ data, setFormData }) => {
             inputProps={{ 'data-cy': 'select-provider-type' }}
             labelId="select-provider-type-label"
             native
-            style={{ marginTop: '1em', minWidth: '8em' }}
+            sx={{ marginTop: '1em', minWidth: '8em' }}
             onChange={handleChangeProvider}
             value={providerSelected}
             variant="outlined"
@@ -215,7 +224,7 @@ const Content = ({ data, setFormData }) => {
         [providerDescription]
       )}
 
-      <Divider style={{ margin: '1rem 0' }} />
+      <Divider sx={{ margin: '1rem 0' }} />
 
       {/* -- LIST -- */}
       <ListCards

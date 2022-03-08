@@ -14,13 +14,60 @@
  * limitations under the License.                                            *
  * ------------------------------------------------------------------------- */
 
-const { setApiRoutes } = require('server/utils/server')
-const { routes: vcenterRoutes } = require('./vcenter')
-const { VCENTER } = require('./string-routes')
+const { Actions, Commands } = require('server/routes/api/vcenter/routes')
+const {
+  importVobject,
+  list,
+  listAll,
+  cleartags,
+  importHost,
+} = require('server/routes/api/vcenter/functions')
+const { resources } = require('server/routes/api/vcenter/command-flags')
 
-const functionRoutes = {
-  private: setApiRoutes(vcenterRoutes, VCENTER),
-  public: [],
-}
+const { TEMPLATES, DATASTORES, NETWORKS, IMAGES } = resources
 
-module.exports = functionRoutes
+const {
+  VCENTER_CLEAR_TAGS,
+  VCENTER_IMPORT_HOSTS,
+  VCENTER_IMPORT_DATASTORES,
+  VCENTER_IMPORT_TEMPLATES,
+  VCENTER_IMPORT_NETWORKS,
+  VCENTER_IMPORT_IMAGES,
+  VCENTER_LIST_ALL,
+  VCENTER_LIST,
+} = Actions
+
+module.exports = [
+  {
+    ...Commands[VCENTER_CLEAR_TAGS],
+    action: cleartags,
+  },
+  {
+    ...Commands[VCENTER_IMPORT_HOSTS],
+    action: importHost,
+  },
+  {
+    ...Commands[VCENTER_IMPORT_DATASTORES],
+    action: (...args) => importVobject(...args, DATASTORES),
+  },
+  {
+    ...Commands[VCENTER_IMPORT_NETWORKS],
+    action: (...args) => importVobject(...args, NETWORKS),
+  },
+  {
+    ...Commands[VCENTER_IMPORT_IMAGES],
+    action: (...args) => importVobject(...args, IMAGES),
+  },
+  {
+    ...Commands[VCENTER_IMPORT_TEMPLATES],
+    action: (...args) => importVobject(...args, TEMPLATES),
+  },
+  {
+    ...Commands[VCENTER_LIST_ALL],
+    action: listAll,
+  },
+  {
+    ...Commands[VCENTER_LIST],
+    action: list,
+  },
+]

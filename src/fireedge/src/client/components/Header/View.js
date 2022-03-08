@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and       *
  * limitations under the License.                                            *
  * ------------------------------------------------------------------------- */
-import { useMemo, memo, JSXElementConstructor } from 'react'
+import { useMemo, memo, ReactElement } from 'react'
 import PropTypes from 'prop-types'
 
 import { Button } from '@mui/material'
@@ -22,7 +22,7 @@ import {
   VerifiedBadge as SelectIcon,
 } from 'iconoir-react'
 
-import { useAuth, useAuthApi } from 'client/features/Auth'
+import { useAuthApi, useViews } from 'client/features/Auth'
 import Search from 'client/components/Search'
 import HeaderPopover from 'client/components/Header/Popover'
 import { Translate } from 'client/components/HOC'
@@ -31,7 +31,7 @@ import { T } from 'client/constants'
 const ButtonView = memo(
   ({ view, handleClick }) => {
     const { changeView } = useAuthApi()
-    const { view: currentView } = useAuth()
+    const { view: currentView } = useViews()
     const isCurrentView = currentView === view
 
     return (
@@ -70,10 +70,10 @@ ButtonView.displayName = 'ButtonView'
  *
  * These views are defined in yaml config.
  *
- * @returns {JSXElementConstructor} Returns interface views list
+ * @returns {ReactElement} Returns interface views list
  */
 const View = () => {
-  const { view: currentView, views = {} } = useAuth()
+  const { view: currentView, views = {} } = useViews()
   const viewNames = useMemo(() => Object.keys(views), [currentView])
 
   return (

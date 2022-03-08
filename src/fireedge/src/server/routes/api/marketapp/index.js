@@ -14,13 +14,36 @@
  * limitations under the License.                                            *
  * ------------------------------------------------------------------------- */
 
-const { setApiRoutes } = require('server/utils/server')
-const { routes: marketappRoutes } = require('./marketapp')
-const { MARKETAPP } = require('./string-routes')
+const { Actions, Commands } = require('server/routes/api/marketapp/routes')
+const {
+  exportApp,
+  downloadApp,
+  importMarket,
+  getDockerTags,
+} = require('server/routes/api/marketapp/functions')
 
-const functionRoutes = {
-  private: setApiRoutes(marketappRoutes, MARKETAPP),
-  public: [],
-}
+const {
+  MARKETAPP_EXPORT,
+  MARKETAPP_DOWNLOAD,
+  MARKETAPP_VMIMPORT,
+  MARKETAPP_DOCKERTAGS,
+} = Actions
 
-module.exports = functionRoutes
+module.exports = [
+  {
+    ...Commands[MARKETAPP_EXPORT],
+    action: exportApp,
+  },
+  {
+    ...Commands[MARKETAPP_DOWNLOAD],
+    action: downloadApp,
+  },
+  {
+    ...Commands[MARKETAPP_VMIMPORT],
+    action: importMarket,
+  },
+  {
+    ...Commands[MARKETAPP_DOCKERTAGS],
+    action: getDockerTags,
+  },
+]

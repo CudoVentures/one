@@ -16,9 +16,11 @@
 import PropTypes from 'prop-types'
 import { useFormContext } from 'react-hook-form'
 
-import { useSystem } from 'client/features/One'
+import { useGetOneConfigQuery } from 'client/features/OneApi/system'
+import { useGetMarketplacesQuery } from 'client/features/OneApi/marketplace'
 import { MarketplacesTable } from 'client/components/Tables'
 import { SCHEMA } from 'client/components/Forms/MarketplaceApp/CreateForm/Steps/MarketplacesTable/schema'
+import { onedConfIncludesAction } from 'client/models/Marketplace'
 import { Step } from 'client/utils'
 import { T } from 'client/constants'
 
@@ -27,7 +29,7 @@ export const STEP_ID = 'marketplace'
 const Content = ({ data }) => {
   const { NAME } = data?.[0] ?? {}
   const { setValue } = useFormContext()
-  const { config: oneConfig } = useSystem()
+  const { data: oneConfig = {} } = useGetOneConfigQuery()
 
   const handleSelectedRows = (rows) => {
     const { original = {} } = rows?.[0] ?? {}
@@ -41,14 +43,15 @@ const Content = ({ data }) => {
       onlyGlobalSearch
       onlyGlobalSelectedRows
       getRowId={(market) => String(market.NAME)}
-      filter={(market) =>
-        oneConfig?.FEDERATION?.ZONE_ID === market.ZONE_ID &&
-        oneConfig?.MARKET_MAD_CONF?.some(
-          (marketMad) =>
-            marketMad?.APP_ACTIONS?.includes('create') &&
-            `${marketMad?.NAME}`.toUpperCase() ===
-              `${market?.MARKET_MAD}`.toUpperCase()
-        )
+      useQuery={() =>
+        useGetMarketplacesQuery(undefined, {
+          selectFromResult: ({ data: result = [], ...restOfQuery }) => ({
+            data: result?.filter((market) =>
+              onedConfIncludesAction(market, oneConfig, 'create')
+            ),
+            ...restOfQuery,
+          }),
+        })
       }
       initialState={{ selectedRowIds: { [NAME]: true } }}
       onSelectedRowsChange={handleSelectedRows}

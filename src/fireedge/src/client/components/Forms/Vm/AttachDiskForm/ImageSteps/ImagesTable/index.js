@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and       *
  * limitations under the License.                                            *
  * ------------------------------------------------------------------------- */
-/* eslint-disable jsdoc/require-jsdoc */
 import PropTypes from 'prop-types'
 
 import { useListForm } from 'client/hooks'
 import { ImagesTable } from 'client/components/Tables'
 import { SCHEMA } from 'client/components/Forms/Vm/AttachDiskForm/ImageSteps/ImagesTable/schema'
+import { Step } from 'client/utils'
 import { T } from 'client/constants'
 
 export const STEP_ID = 'image'
@@ -44,11 +44,15 @@ const Content = ({ data, setFormData }) => {
       onlyGlobalSelectedRows
       initialState={{ selectedRowIds: { [ID]: true } }}
       onSelectedRowsChange={handleSelectedRows}
-      searchProps={{ 'data-cy': 'search-images' }}
     />
   )
 }
 
+/**
+ * Renders datatable to select an image form pool.
+ *
+ * @returns {Step} Image step
+ */
 const ImageStep = () => ({
   id: STEP_ID,
   label: T.Image,

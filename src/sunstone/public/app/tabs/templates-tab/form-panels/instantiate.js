@@ -190,15 +190,18 @@ define(function(require) {
     });
   }
 
-  function diffValues(finder, inElement){
+  function diffValues(newValues, oldValues){
     var diff = [];
-    if(finder && inElement){
-      var Template = Array.isArray(inElement)? inElement: [inElement];
-      var Finder = Array.isArray(finder)? finder: [finder];
-      var x = Template.map(function(internalTemplate){return JSON.stringify(internalTemplate);});
-      Finder.forEach(function(fnd) {
-        if($.inArray(JSON.stringify(fnd),x) === -1){
-          diff.push(fnd);
+    if(oldValues && newValues){
+      oldValues = Array.isArray(oldValues)? oldValues: [oldValues];
+      newValues = Array.isArray(newValues)? newValues: [newValues];
+      var oldValuesString = oldValues.map(function(internalValue){
+        return JSON.stringify(internalValue);
+      });
+
+      newValues.forEach(function (newValue){
+        if($.inArray(JSON.stringify(newValue),oldValuesString) === -1){
+          diff.push(newValue);
         }
       });
     }
@@ -502,27 +505,58 @@ define(function(require) {
           $(".provision_uid_selector" + template_json.VMTEMPLATE.ID, context).data("usersTable", that.usersTable);
           $(".provision_gid_selector" + template_json.VMTEMPLATE.ID, context).data("groupTable", that.groupTable);
 
-          var selectOptions = {
-            "selectOptions": {
-              "select_callback": function(aData, options) {
+
+          that.hostsTable.initialize({
+            selectOptions: {
+              select_callback: function(aData, options) {                
+                that.datastoresTable.updateFn();
+                that.datastoresTable.deselectHiddenResources();
+
                 var hostTable = $(".provision_host_selector" + template_json.VMTEMPLATE.ID, context).data("hostsTable");
                 var dsTable = $(".provision_ds_selector" + template_json.VMTEMPLATE.ID, context).data("dsTable");
                 generateRequirements(hostTable, dsTable, context, template_json.VMTEMPLATE.ID);
               },
-              "unselect_callback": function(aData, options) {
+              unselect_callback: function(aData, options) {
+                that.datastoresTable.updateFn();
+
                 var hostTable = $(".provision_host_selector" + template_json.VMTEMPLATE.ID, context).data("hostsTable");
                 var dsTable = $(".provision_ds_selector" + template_json.VMTEMPLATE.ID, context).data("dsTable");
                 generateRequirements(hostTable, dsTable, context, template_json.VMTEMPLATE.ID);
                }
             }
-          };
-          that.hostsTable.initialize(selectOptions);
-          that.hostsTable.refreshResourceTableSelect();
-          that.datastoresTable.initialize(selectOptions);
-          that.datastoresTable.filter("system", 10);
-          that.datastoresTable.refreshResourceTableSelect();
+          });
+          that.datastoresTable.initialize({
+            selectOptions: {
+              filter_fn: function(ds) {
+                if (!that.hostsTable.dataTable) return true;
 
-          //select_options
+                var clusters = ds.CLUSTERS.ID;
+                var ensuredClusters = Array.isArray(clusters) ? clusters : [clusters];
+                var hostClusterIndex = that.hostsTable.columnsIndex.CLUSTER
+                var hostClustersIds = that.hostsTable.getColumnDataInSelectedRows(hostClusterIndex)
+
+                return hostClustersIds.length === 0 ||
+                  hostClustersIds.some(function(id) {
+                    return ensuredClusters.includes(id)
+                  })
+              },
+              select_callback: function(aData, options) {
+                var hostTable = $(".provision_host_selector" + template_json.VMTEMPLATE.ID, context).data("hostsTable");
+                var dsTable = $(".provision_ds_selector" + template_json.VMTEMPLATE.ID, context).data("dsTable");
+                generateRequirements(hostTable, dsTable, context, template_json.VMTEMPLATE.ID);
+              },
+              unselect_callback: function(aData, options) {
+                var hostTable = $(".provision_host_selector" + template_json.VMTEMPLATE.ID, context).data("hostsTable");
+                var dsTable = $(".provision_ds_selector" + template_json.VMTEMPLATE.ID, context).data("dsTable");
+                generateRequirements(hostTable, dsTable, context, template_json.VMTEMPLATE.ID);
+               }
+            }
+          });
+          that.datastoresTable.filter("system", 10);
+          that.hostsTable.refreshResourceTableSelect();
+          that.datastoresTable.refreshResourceTableSelect();
+          
+
           that.usersTable.initialize();
           that.usersTable.refreshResourceTableSelect();
           that.groupTable.initialize();
@@ -590,7 +624,8 @@ define(function(require) {
             { "forceIPv4": true,
               "securityGroups": Config.isFeatureEnabled("secgroups"),
               "name": " ",
-              "fieldset": false
+              "fieldset": false,
+              "hostsTable": that.hostsTable
             });
 
           VMGroupSection.insert(template_json,

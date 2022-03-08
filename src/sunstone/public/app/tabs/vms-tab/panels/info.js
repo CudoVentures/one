@@ -71,6 +71,7 @@ define(function(require) {
    */
 
   function _html() {
+    var that = this;
     var renameTrHTML = RenameTr.html(TAB_ID, RESOURCE, this.element.NAME);
     var permissionsTableHTML = PermissionsTable.html(TAB_ID, RESOURCE, this.element);
     var prettyStartTime = Humanize.prettyTime(this.element.STIME);
@@ -124,7 +125,22 @@ define(function(require) {
               error_msg: this.element.USER_TEMPLATE.ERROR,
               error_title: Locale.tr("Driver Error"),
               canDismiss: true,
-              dismisId: "close_vm_async_error"
+              dismissId: "close_vm_async_error",
+              size: 12
+            }
+          );
+    }
+
+    if (this.element &&
+        this.element.USER_TEMPLATE &&
+        this.element.USER_TEMPLATE.SCHED_MESSAGE){
+          errorMessageHTML += TemplateInfoError(
+            {
+              error_msg: this.element.USER_TEMPLATE.SCHED_MESSAGE,
+              error_title: Locale.tr("Scheduler Error"),
+              canDismiss: true,
+              dismissId: "close_vm_scheduler_async_error",
+              size: 12
             }
           );
     }
@@ -142,11 +158,14 @@ define(function(require) {
                 error_msg: lastErrorAndId.error,
                 error_title: Locale.tr("Scheduled Action Error") + " (ID: #" + lastErrorAndId.id + ")",
                 canDismiss: false,
-                dismisId: ""
+                dismissId: "",
+                size: 12
               }
             );
           }
     }
+
+    that.errorMessageHTML = errorMessageHTML;
 
     return TemplateInfo({
       "element": this.element,
@@ -165,8 +184,7 @@ define(function(require) {
       "templateTableVcenterHTML": templateTableVcenterHTML,
       "templateTableHTML": templateTableHTML,
       "monitoringTableContentHTML": monitoringTableContentHTML,
-      "vrouterHTML": vrouterHTML,
-      "errorMessageHTML": errorMessageHTML
+      "vrouterHTML": vrouterHTML
     });
   }
 
@@ -219,10 +237,22 @@ define(function(require) {
       Sunstone.runAction(RESOURCE + ".update_template", resourceId, template_str);
     });
 
+    context.off("click", "#close_vm_scheduler_async_error");
+    context.on("click", "#close_vm_scheduler_async_error", function() {
+      var resourceId = that.element.ID;
+      var templateJSON = $.extend({}, that.element.USER_TEMPLATE);
+      delete templateJSON.SCHED_MESSAGE;
+      template_str = TemplateUtils.templateToString(templateJSON);
+
+      Sunstone.runAction(RESOURCE + ".update_template", resourceId, template_str);
+    });
+
     if (OpenNebula.VM.isvCenterVM(this.element)) {
       $("button[href=\"VM.upload_marketplace_dialog\"]").attr("disabled","disabled");
     } else {
       $("button[href=\"VM.upload_marketplace_dialog\"]").removeAttr("disabled");
     }
+
+    $("#vms-tab-panelsErrors", context).html(that.errorMessageHTML);
   }
 });

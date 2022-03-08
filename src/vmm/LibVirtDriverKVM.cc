@@ -602,6 +602,8 @@ int LibVirtDriver::deployment_description_kvm(
     string vm_slot   = "";
     string vm_func   = "";
 
+    string uuid = "";
+
     bool pae                = false;
     bool acpi               = false;
     bool apic               = false;
@@ -716,24 +718,21 @@ int LibVirtDriver::deployment_description_kvm(
     // Memory must be expressed in Kb
     if (vm->get_template_attribute("MEMORY",memory))
     {
-        file << "\t<memory>" << memory * 1024 << "</memory>" << endl;
+        bool has_memory_max = vm->get_template_attribute("MEMORY_MAX", memory_max);
+        has_memory_max = has_memory_max && memory < memory_max;
+
+        if (!has_memory_max)
+        {
+            memory_max = memory;
+        }
+
+        file << "\t<memory>" << memory_max * 1024 << "</memory>" << endl;
+        file << "\t<currentMemory>" << memory * 1024 << "</currentMemory>" << endl;
     }
     else
     {
         vm->log("VMM", Log::ERROR, "No MEMORY defined and no default provided.");
         return -1;
-    }
-
-    bool has_memory_max = vm->get_template_attribute("MEMORY_MAX", memory_max);
-    has_memory_max = has_memory_max && memory < memory_max;
-
-    if (!topology && has_memory_max)
-    {
-        int slots = 0;
-        get_attribute(vm, host, cluster, "MEMORY_SLOTS", slots);
-
-        file << "\t<maxMemory slots='" << slots
-             << "'>" << memory_max * 1024 << "</maxMemory>" << endl;
     }
 
     // ------------------------------------------------------------------------
@@ -796,7 +795,7 @@ int LibVirtDriver::deployment_description_kvm(
 
     bool boot_secure = false;
     string firmware;
- 
+
     get_attribute(vm, nullptr, nullptr, "OS", "FIRMWARE", firmware);
 
     bool is_uefi = !firmware.empty() && !one_util::icasecmp(firmware, "BIOS");
@@ -849,7 +848,7 @@ int LibVirtDriver::deployment_description_kvm(
         cpu_mode = "custom";
     }
 
-    if ( !cpu_model.empty() || topology != 0 || has_memory_max )
+    if ( !cpu_model.empty() || topology != 0 )
     {
         file << "\t<cpu";
 
@@ -866,19 +865,6 @@ int LibVirtDriver::deployment_description_kvm(
         else
         {
             file << ">\n";
-        }
-
-        if (nodes.empty() && has_memory_max)
-        {
-            int cpus = to_i(vcpu) - 1;
-            if (cpus < 0)
-            {
-                cpus = 0;
-            }
-
-            file << "\t\t<numa>\n\t\t\t<cell id='0' cpus='0-" << cpus
-                << "' memory=" << one_util::escape_xml_attr(memory * 1024)
-                << " unit='KiB'/>\n\t\t</numa>" << endl;
         }
 
         vtopol(file, topology, nodes, numa_tune, mbacking);
@@ -1788,6 +1774,8 @@ int LibVirtDriver::deployment_description_kvm(
         vm_slot    = pci[i]->vector_value("VM_SLOT");
         vm_func    = pci[i]->vector_value("VM_FUNCTION");
 
+        uuid = pci[i]->vector_value("UUID");
+
         if ( domain.empty() || bus.empty() || slot.empty() || func.empty() )
         {
             vm->log("VMM", Log::WARNING,
@@ -1796,26 +1784,38 @@ int LibVirtDriver::deployment_description_kvm(
             continue;
         }
 
-        file << "\t\t<hostdev mode='subsystem' type='pci' managed='yes'>\n";
-
-        file << "\t\t\t<source>\n";
-        file << "\t\t\t\t<address "
-                 << " domain="   << one_util::escape_xml_attr("0x" + domain)
-                 << " bus="      << one_util::escape_xml_attr("0x" + bus)
-                 << " slot="     << one_util::escape_xml_attr("0x" + slot)
-                 << " function=" << one_util::escape_xml_attr("0x" + func)
-             << "/>\n";
-        file << "\t\t\t</source>\n";
-
-        if ( !vm_domain.empty() && !vm_bus.empty() && !vm_slot.empty() &&
-                !vm_func.empty() )
+        if ( !uuid.empty() )
         {
-            file << "\t\t\t\t<address type='pci'"
-                     << " domain="   << one_util::escape_xml_attr(vm_domain)
-                     << " bus="      << one_util::escape_xml_attr(vm_bus)
-                     << " slot="     << one_util::escape_xml_attr(vm_slot)
-                     << " function=" << one_util::escape_xml_attr(vm_func)
-                 << "/>\n";
+            file << "\t\t<hostdev mode='subsystem' type='mdev' model='vfio-pci'>\n";
+            file << "\t\t\t<source>\n";
+            file << "\t\t\t\t<address "
+                    << " uuid="   << one_util::escape_xml_attr(uuid)
+                << "/>\n";
+            file << "\t\t\t</source>\n";
+        }
+        else
+        {
+            file << "\t\t<hostdev mode='subsystem' type='pci' managed='yes'>\n";
+
+            file << "\t\t\t<source>\n";
+            file << "\t\t\t\t<address "
+                    << " domain="   << one_util::escape_xml_attr("0x" + domain)
+                    << " bus="      << one_util::escape_xml_attr("0x" + bus)
+                    << " slot="     << one_util::escape_xml_attr("0x" + slot)
+                    << " function=" << one_util::escape_xml_attr("0x" + func)
+                << "/>\n";
+            file << "\t\t\t</source>\n";
+
+            if ( !vm_domain.empty() && !vm_bus.empty() && !vm_slot.empty() &&
+                    !vm_func.empty() )
+            {
+                file << "\t\t\t\t<address type='pci'"
+                        << " domain="   << one_util::escape_xml_attr(vm_domain)
+                        << " bus="      << one_util::escape_xml_attr(vm_bus)
+                        << " slot="     << one_util::escape_xml_attr(vm_slot)
+                        << " function=" << one_util::escape_xml_attr(vm_func)
+                    << "/>\n";
+            }
         }
 
         file << "\t\t</hostdev>" << endl;

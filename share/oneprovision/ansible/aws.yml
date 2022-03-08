@@ -1,10 +1,4 @@
 ---
-
-- hosts: all
-  gather_facts: false
-  roles:
-    - python
-
 - hosts: nodes
   roles:
     - ddc
@@ -22,6 +16,6 @@
         - { protocol: 'udp', port: 8472 }
     - update-replica
     - role: frr
-      frr_iface: 'eth0'
+      frr_iface: '{{ oneprovision_private_phydev }}'
       # Use /16 for the internal management network address
       frr_prefix_length: 16

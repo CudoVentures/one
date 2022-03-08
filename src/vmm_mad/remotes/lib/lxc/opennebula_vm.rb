@@ -45,7 +45,13 @@ class LXCConfiguration < Hash
         },
         :datastore_location => '/var/lib/one/datastores',
         :default_lxc_config => '/usr/share/lxc/config/common.conf',
-        :bindfs_mountopts   => 'suid' # bindfs -o opt1,opt2
+        :mountopts => {
+            :bindfs => 'suid',
+            :disk   => 'rbind,create=dir,optional',
+            :dev_xfs => 'nouuid',
+            :rootfs => '',
+            :mountpoint => 'media/one-disk.$id'
+        }
     }
 
     # Configuration attributes that are not customizable
@@ -127,7 +133,7 @@ class LXCVM < OpenNebulaVM
         # User mapping
         # rubocop:disable Layout/LineLength
 
-        if @xml['/VM/USER_TEMPLATE/LXC_UNPRIVILEGED'].casecmp('NO').zero?
+        if privileged?
             @lxcrc[:id_map] = 0
 
             lxc['lxc.include'] << "#{@lxcrc[:profiles_location]}/profile_privileged"
@@ -158,19 +164,26 @@ class LXCVM < OpenNebulaVM
             next if xml['TYPE'].downcase == 'swap'
 
             if xml['DISK_ID'] == @rootfs_id
-                adisks << Disk.new_root(xml, @sysds_path, @vm_id)
+                adisks << Disk.new_root(xml, @sysds_path, @vm_id,
+                                        @lxcrc[:mountopts])
             else
-                adisks << Disk.new_disk(xml, @sysds_path, @vm_id)
+                adisks << Disk.new_disk(xml, @sysds_path, @vm_id,
+                                        @lxcrc[:mountopts])
             end
         end
 
         context_xml = @xml.element('//TEMPLATE/CONTEXT')
 
         if context_xml
-            adisks << Disk.new_context(context_xml, @sysds_path, @vm_id)
+            adisks << Disk.new_context(context_xml, @sysds_path, @vm_id,
+                                       @lxcrc[:mountopts])
         end
 
         adisks
+    end
+
+    def privileged?
+        @xml['/VM/USER_TEMPLATE/LXC_UNPRIVILEGED'].casecmp('NO').zero?
     end
 
     private
@@ -256,18 +269,20 @@ class Disk
 
     attr_accessor :id, :vm_id, :sysds_path
 
+    DISK_TYPE = [:context, :rootfs, :entry]
+
     class << self
 
-        def new_context(xml, sysds_path, vm_id)
-            Disk.new(xml, sysds_path, vm_id, false, true)
+        def new_context(xml, sysds_path, vm_id, mountopts)
+            Disk.new(xml, sysds_path, vm_id, mountopts, :context)
         end
 
-        def new_root(xml, sysds_path, vm_id)
-            Disk.new(xml, sysds_path, vm_id, true, false)
+        def new_root(xml, sysds_path, vm_id, mountopts)
+            Disk.new(xml, sysds_path, vm_id, mountopts, :rootfs)
         end
 
-        def new_disk(xml, sysds_path, vm_id)
-            Disk.new(xml, sysds_path, vm_id, false, false)
+        def new_disk(xml, sysds_path, vm_id, mountopts)
+            Disk.new(xml, sysds_path, vm_id, mountopts, :entry)
         end
 
     end
@@ -306,18 +321,38 @@ class Disk
 
     # Generate disk into LXC config format
     def to_lxc
-        return { 'lxc.rootfs.path' => @bindpoint } if @is_rootfs
+        case @kind
+        when :context
+            { 'lxc.mount.entry' =>
+                "#{@bindpoint} context none ro,rbind,create=dir,optional 0 0" }
 
-        if @is_context
-            path = 'context'
-            opts = 'none rbind,ro,create=dir,optional 0 0'
+        when :rootfs
+            ropt = []
+
+            ropt << 'ro' if @read_only
+            ropt << @lxcrc_mopts[:rootfs]
+
+            root = { 'lxc.rootfs.path' => @bindpoint }
+            root['lxc.rootfs.options'] = opt_sanitize(ropt) unless ropt.empty?
+
+            root
+
+        when :entry
+            opts = []
+
+            opts << 'ro' if @read_only
+            opts << @lxcrc_mopts[:disk]
+
+            path  = @xml['TARGET']
+
+            point = @lxcrc_mopts[:mountpoint].sub('$id', @id.to_s)
+            point = path[1..-1] unless path.empty? || path[0] != '/'
+
+            { 'lxc.mount.entry' =>
+                "#{@bindpoint} #{point} none #{opt_sanitize(opts)} 0 0" }
         else
-            # TODO: Adjustable guest mountpoint
-            path = "media/one-disk.#{@id}"
-            opts = 'none rbind,create=dir,optional 0 0'
+            raise 'invalid disk type'
         end
-
-        { 'lxc.mount.entry' => "#{@bindpoint} #{path} #{opts}" }
     end
 
     def swap?
@@ -335,15 +370,17 @@ class Disk
 
     private
 
-    def initialize(xml, sysds_path, vm_id, is_rootfs, is_context)
+    def initialize(xml, sysds_path, vm_id, lxcrc_mopts, kind)
         @xml   = xml
         @vm_id = vm_id
         @id    = @xml['DISK_ID'].to_i
 
-        @sysds_path = sysds_path
+        @kind = kind
 
-        @is_rootfs  = is_rootfs
-        @is_context = is_context
+        @sysds_path  = sysds_path
+        @lxcrc_mopts = lxcrc_mopts
+
+        @read_only = true if @xml['READONLY'].casecmp('yes').zero?
 
         # rubocop:disable all
         @mapper = if @xml['FORMAT'].downcase == 'qcow2'
@@ -362,6 +399,14 @@ class Disk
 
         @mountpoint = "#{datastore}/#{@vm_id}/mapper/disk.#{@id}"
         @bindpoint = "#{LXCVM::CONTAINER_FS_PATH}/#{@vm_id}/disk.#{@id}"
+    end
+
+    # Returns a , separated list of options. Removes empty or nil elements
+    def opt_sanitize(opts)
+        return unless opts.class == Array
+
+        opts.delete_if {|o| o.nil? || o.empty? }
+        opts.join(',')
     end
 
     # Returns the associated linux device for the mountpoint

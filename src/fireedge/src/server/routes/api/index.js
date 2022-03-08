@@ -14,26 +14,106 @@
  * limitations under the License.                                            *
  * ------------------------------------------------------------------------- */
 
+const multer = require('multer')
 const { messageTerminal } = require('server/utils/general')
-const { getRouteForOpennebulaCommand } = require('server/utils/opennebula')
+const { getRequestParameters, getRequestFiles } = require('server/utils/server')
 const {
-  defaultFilesRoutes,
   defaultConfigErrorMessage,
+  defaultTmpPath,
 } = require('server/utils/constants/defaults')
+const { writeInLogger } = require('server/utils/logger')
 
-const filesDataPrivate = []
-const filesDataPublic = []
+const upload = multer({ dest: defaultTmpPath })
 
-defaultFilesRoutes.forEach((file) => {
+const routes = [
+  '2fa',
+  'auth',
+  'files',
+  'marketapp',
+  'oneflow',
+  'vcenter',
+  'vm',
+  'zendesk',
+  'oneprovision',
+  'sunstone',
+  'system',
+]
+
+const serverRoutes = []
+
+/**
+ * Parse files for actions.
+ *
+ * @param {Array} files - files
+ * @returns {Array} files
+ */
+const parseFiles = (files = []) => {
+  let rtn
+  if (files && Array.isArray(files)) {
+    rtn = {}
+    files.forEach((file) => {
+      if (file.fieldname) {
+        rtn[file.fieldname]
+          ? rtn[file.fieldname].push(file)
+          : (rtn[file.fieldname] = [file])
+      }
+    })
+  }
+
+  return rtn
+}
+
+routes.forEach((file) => {
   try {
     // eslint-disable-next-line global-require
     const fileInfo = require(`./${file}`)
 
-    if (fileInfo.private && fileInfo.private.length) {
-      filesDataPrivate.push(...fileInfo.private)
-    }
-    if (fileInfo.public && fileInfo.public.length) {
-      filesDataPublic.push(...fileInfo.public)
+    if (fileInfo && Array.isArray(fileInfo) && fileInfo.length) {
+      serverRoutes.push(
+        ...fileInfo.map((route) => {
+          const { action, params } = route
+          if (action) {
+            route.action = (req, res, next, oneConnection, oneUser) => {
+              const { serverDataSource } = req
+              const uploadFiles = getRequestFiles(params)
+              if (!(uploadFiles && uploadFiles.length)) {
+                return action(
+                  res,
+                  next,
+                  getRequestParameters(params, serverDataSource),
+                  oneUser,
+                  oneConnection
+                )
+              }
+
+              /** Request with files */
+              const files = upload.array(uploadFiles)
+              files(req, res, (err) => {
+                if (err) {
+                  const errorData = (err && err.message) || ''
+                  writeInLogger(errorData)
+                  messageTerminal({
+                    color: 'red',
+                    message: 'Error: %s',
+                    error: errorData,
+                  })
+                }
+                serverDataSource.files = parseFiles(req && req.files)
+
+                return action(
+                  res,
+                  next,
+                  getRequestParameters(params, serverDataSource),
+                  oneUser,
+                  oneConnection
+                )
+              })
+            }
+          }
+
+          return route
+        })
+      )
     }
   } catch (error) {
     if (error instanceof Error && error.code === 'MODULE_NOT_FOUND') {
@@ -44,10 +124,4 @@ defaultFilesRoutes.forEach((file) => {
   }
 })
 
-const opennebulaActions = getRouteForOpennebulaCommand()
-const routes = {
-  private: [...opennebulaActions, ...filesDataPrivate],
-  public: [...filesDataPublic],
-}
-
-module.exports = routes
+module.exports = serverRoutes

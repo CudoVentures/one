@@ -14,13 +14,14 @@
  * limitations under the License.                                            *
  * ------------------------------------------------------------------------- */
 
-const { setApiRoutes } = require('server/utils/server')
-const { routes: authRoutes } = require('./auth')
-const { AUTH } = require('./string-routes')
+const { Actions, Commands } = require('server/routes/api/auth/routes')
+const { auth } = require('server/routes/api/auth/functions')
 
-const functionRoutes = {
-  private: [],
-  public: setApiRoutes(authRoutes, AUTH),
-}
+const { AUTHENTICATION } = Actions
 
-module.exports = functionRoutes
+module.exports = [
+  {
+    ...Commands[AUTHENTICATION],
+    action: auth,
+  },
+]

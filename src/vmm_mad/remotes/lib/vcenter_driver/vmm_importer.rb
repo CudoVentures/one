@@ -46,7 +46,8 @@ module VCenterDriver
             vm_ref     = selected['DEPLOY_ID'] || selected[:wild]['DEPLOY_ID']
             vm         = selected[:one_item]   || build
             template   = selected[:template]   || import_tmplt
-            host_id    = selected[:host]       || @list.keys[0]
+            template = "DEPLOY_ID = #{vm_ref}\n" + template
+            host_id    = selected[:host] || @list.keys[0]
 
             vc_uuid    = @vi_client.vim.serviceContent.about.instanceUuid
             vc_name    = @vi_client.vim.host

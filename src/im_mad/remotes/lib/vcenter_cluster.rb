@@ -201,6 +201,8 @@ class Cluster
 
     # Retrieve all known VM states from vCenter
     def vcenter_vms_state
+        vc_uuid = @vic.vim.serviceContent.about.instanceUuid
+
         view = @vic.vim
                    .serviceContent
                    .viewManager
@@ -244,7 +246,7 @@ class Cluster
         result.each do |r|
             next unless r.obj.is_a?(RbVmomi::VIM::VirtualMachine)
 
-            vms_hash[r.obj._ref] = r.to_hash
+            vms_hash[r.obj._ref + '_' + vc_uuid] = r.to_hash
         end
 
         view.DestroyView
@@ -257,7 +259,13 @@ class Cluster
         vms = {}
         vms_hash.each do |vm_ref, info|
             one_id = -1
-            ids    = vmpool.retrieve_xmlelements("/VM_POOL/VM[DEPLOY_ID = '#{vm_ref}']")
+
+            # Add OR to retrieve VMs that are using old deploy ID
+            ids    = vmpool.retrieve_xmlelements(
+                "/VM_POOL/VM[(DEPLOY_ID = '#{vm_ref}')" \
+                ' or ' \
+                "(DEPLOY_ID = '#{vm_ref.split('_')[0]}')]"
+            )
 
             ids.select do |vm|
                 hid = vm['HISTORY_RECORDS/HISTORY/HID']

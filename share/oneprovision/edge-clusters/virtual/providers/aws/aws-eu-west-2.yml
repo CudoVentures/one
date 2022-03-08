@@ -11,10 +11,12 @@ connection:
 inputs:
    - name: 'aws_ami_image'
      type: 'list'
+     default: 'ami-0015a39e4b7c0966f'
      options:
-       - 'ami-08095fbc7037048f3'
+       - 'ami-0015a39e4b7c0966f'
    - name: 'aws_instance_type'
      type: 'list'
+     default: 't2.micro'
      options:
        - 't2.micro'
        - 't2.small'

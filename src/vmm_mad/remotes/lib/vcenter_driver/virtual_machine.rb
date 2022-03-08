@@ -103,6 +103,7 @@ end
 
         def initialize(vi_client, ref, one_id)
             if ref
+                ref = VCenterDriver::VIHelper.get_deploy_id(ref)
                 @item = RbVmomi::VIM::VirtualMachine.new(vi_client.vim, ref)
                 check_item(@item, RbVmomi::VIM::VirtualMachine)
             end
@@ -1713,8 +1714,13 @@ end
         def sync(deploy = {})
             extraconfig   = []
             device_change = []
+            sync_opt = nil
 
-            disks = sync_disks(:all, false)
+            # Disk are only synced with :all option when VM is first created
+            # NOTE: Detach actions are implemented through TM (not sync)
+            sync_opt = :all if deploy[:new] == true
+
+            disks = sync_disks(sync_opt, false)
             resize_unmanaged_disks
 
             if deploy[:boot] && !deploy[:boot].empty?
@@ -2306,6 +2312,7 @@ end
             detach_disk_array = []
             extra_config      = []
             keys = disk_keys.invert
+
             ipool = VCenterDriver::VIHelper.one_pool(OpenNebula::ImagePool)
             disks_each(:detached?) do |d|
                 key = d.key.to_s
@@ -2381,8 +2388,7 @@ end
         # @param option  [symbol]  if :all is provided the
         # method will try to sync
         # all the disks (detached and not existing ones)
-        # otherwishe it will only sync
-        # the disks that are not existing
+        # otherwise it will only sync the disks that are not existing
         #
         # @param execute [boolean] indicates if the reconfigure operation
         # is going to
@@ -2432,8 +2438,8 @@ end
             # https://github.com/OpenNebula/one/issues/5409
             if snapshots? || one_snapshots?
                 error_msg =  'Existing sytem snapshots, cannot change disks. '
-                error_msg << 'Please remove all snapshots and try again.'
-                raise error_message
+                error_msg << 'Please remove all snapshots and try again'
+                raise error_msg
             end
 
             spec_hash     = {}
@@ -2619,7 +2625,7 @@ end
 
             if snapshots? || one_snapshots?
                 error_message =  'Existing sytem snapshots, cannot change disks'
-                error_message << '. Please remove all snapshots and try again.'
+                error_message << '. Please remove all snapshots and try again'
                 raise error_message
             end
 
@@ -3430,6 +3436,7 @@ end
                 config[:esx_migration_list] = 'Selected_by_DRS'
             end
 
+            vc_vm.reference_all_disks
             vc_vm.migrate(config)
 
             vm.replace({ 'VCENTER_CCR_REF' => ccr_ref })

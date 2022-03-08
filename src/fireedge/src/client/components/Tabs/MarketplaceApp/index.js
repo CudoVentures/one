@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and       *
  * limitations under the License.                                            *
  * ------------------------------------------------------------------------- */
-/* eslint-disable jsdoc/require-jsdoc */
-import { memo, useEffect, useState } from 'react'
+import { memo, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { LinearProgress } from '@mui/material'
 
-import { useFetch } from 'client/hooks'
-import { useAuth } from 'client/features/Auth'
-import { useMarketplaceAppApi } from 'client/features/One'
+import { useViews } from 'client/features/Auth'
+import { useGetMarketplaceAppQuery } from 'client/features/OneApi/marketplaceApp'
+import { getAvailableInfoTabs } from 'client/models/Helper'
+import { RESOURCE_NAMES } from 'client/constants'
 
 import Tabs from 'client/components/Tabs'
-import { camelCase } from 'client/utils'
-
-import TabProvider from 'client/components/Tabs/TabProvider'
 import Info from 'client/components/Tabs/MarketplaceApp/Info'
 import Template from 'client/components/Tabs/MarketplaceApp/Template'
 
@@ -36,54 +33,24 @@ const getTabComponent = (tabName) =>
   }[tabName])
 
 const MarketplaceAppTabs = memo(({ id }) => {
-  const { getMarketplaceApp } = useMarketplaceAppApi()
-  const { data, fetchRequest, loading, error } = useFetch(getMarketplaceApp)
+  const { view, getResourceView } = useViews()
+  const { isLoading } = useGetMarketplaceAppQuery(id)
 
-  const handleRefetch = () => fetchRequest(id, { reload: true })
+  const tabsAvailable = useMemo(() => {
+    const resource = RESOURCE_NAMES.APP
+    const infoTabs = getResourceView(resource)?.['info-tabs'] ?? {}
 
-  const [tabsAvailable, setTabs] = useState(() => [])
-  const { view, getResourceView } = useAuth()
-
-  useEffect(() => {
-    fetchRequest(id)
-  }, [id])
-
-  useEffect(() => {
-    const infoTabs = getResourceView('MARKETPLACE-APP')?.['info-tabs'] ?? {}
-
-    setTabs(() =>
-      Object.entries(infoTabs)
-        ?.filter(([_, { enabled } = {}]) => !!enabled)
-        ?.map(([tabName, tabProps]) => {
-          const camelName = camelCase(tabName)
-          const TabContent = getTabComponent(camelName)
-
-          return (
-            TabContent && {
-              name: camelName,
-              renderContent: (props) => TabContent({ ...props, tabProps }),
-            }
-          )
-        })
-        ?.filter(Boolean)
-    )
+    return getAvailableInfoTabs(infoTabs, getTabComponent, id)
   }, [view])
 
-  if ((!data && !error) || loading) {
-    return <LinearProgress color="secondary" style={{ width: '100%' }} />
-  }
-
-  return (
-    <TabProvider initialState={{ data, handleRefetch }}>
-      <Tabs tabs={tabsAvailable} />
-    </TabProvider>
+  return isLoading ? (
+    <LinearProgress color="secondary" sx={{ width: '100%' }} />
+  ) : (
+    <Tabs tabs={tabsAvailable ?? []} />
   )
 })
 
-MarketplaceAppTabs.propTypes = {
-  id: PropTypes.string.isRequired,
-}
-
+MarketplaceAppTabs.propTypes = { id: PropTypes.string.isRequired }
 MarketplaceAppTabs.displayName = 'MarketplaceAppTabs'
 
 export default MarketplaceAppTabs
