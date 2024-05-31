@@ -61,27 +61,25 @@ func NewFlowConfig(user, password, endpoint string) HTTPAuth {
 			oneAuthPath = os.Getenv("HOME") + "/.one/one_auth"
 		}
 
-		file, err := os.Open(oneAuthPath)
-		if err != nil {
-			log.Fatalln(err)
+		file, _ := os.Open(oneAuthPath)
+		if file != nil {
+			defer file.Close()
+
+			scanner := bufio.NewScanner(file)
+
+			scanner.Scan()
+			if scanner.Err() != nil {
+				log.Fatalln(scanner.Err())
+			}
+
+			parts := strings.Split(scanner.Text(), ":")
+			if len(parts) != 2 {
+				log.Fatalln("unable to parse credentials")
+			}
+
+			conf.user = parts[0]
+			conf.pass = parts[1]
 		}
-		defer file.Close()
-
-		scanner := bufio.NewScanner(file)
-
-		scanner.Scan()
-		if scanner.Err() != nil {
-			log.Fatalln(scanner.Err())
-		}
-
-		parts := strings.Split(scanner.Text(), ":")
-		if len(parts) != 2 {
-			log.Fatalln("unable to parse credentials")
-		}
-
-		conf.user = parts[0]
-		conf.pass = parts[1]
-
 	} else {
 		conf.user = user
 		conf.pass = password
