@@ -66,20 +66,19 @@ func NewConfig(user, password, endpoint string) OneConfig {
 			oneAuthPath = os.Getenv("HOME") + "/.one/one_auth"
 		}
 
-		file, err := os.Open(oneAuthPath)
-		if err != nil {
-			log.Fatalln(err)
+		file, _ := os.Open(oneAuthPath)
+		if file != nil {
+			defer file.Close()
+
+			scanner := bufio.NewScanner(file)
+
+			scanner.Scan()
+			if scanner.Err() != nil {
+				log.Fatalln(scanner.Err())
+			}
+
+			conf.Token = scanner.Text()
 		}
-		defer file.Close()
-
-		scanner := bufio.NewScanner(file)
-
-		scanner.Scan()
-		if scanner.Err() != nil {
-			log.Fatalln(scanner.Err())
-		}
-
-		conf.Token = scanner.Text()
 	} else {
 		conf.Token = user + ":" + password
 	}
