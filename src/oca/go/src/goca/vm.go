@@ -436,16 +436,23 @@ func (vc *VMController) UpdateContext(ctx context.Context, tpl string, uType par
 	return err
 }
 
-// UpdateConf updates (appends) a set of supported configuration attributes in
+// UpdateConf updates a set of supported configuration attributes in
 // the VM template
-func (vc *VMController) UpdateConf(tpl string) error {
-	return vc.UpdateConfContext(context.Background(), tpl)
+//   - tpl: The new vm contents. Syntax can be the usual attribute=value or XML.
+//   - uType: Update type: Replace: Replace the whole template.
+//     Merge: Merge new template with the existing one.
+func (vc *VMController) UpdateConf(tpl string, uType parameters.UpdateType) error {
+	return vc.UpdateConfContext(context.Background(), tpl, uType)
 }
 
-// UpdateConf updates (appends) a set of supported configuration attributes in
+// UpdateConf updates a set of supported configuration attributes in
 // the VM template
-func (vc *VMController) UpdateConfContext(ctx context.Context, tpl string) error {
-	_, err := vc.c.Client.CallContext(ctx, "one.vm.updateconf", vc.ID, tpl)
+//   - ctx: context for cancelation
+//   - tpl: The new vm contents. Syntax can be the usual attribute=value or XML.
+//   - uType: Update type: Replace: Replace the whole template.
+//     Merge: Merge new template with the existing one.
+func (vc *VMController) UpdateConfContext(ctx context.Context, tpl string, uType parameters.UpdateType) error {
+	_, err := vc.c.Client.CallContext(ctx, "one.vm.updateconf", vc.ID, tpl, uType)
 	return err
 }
 
