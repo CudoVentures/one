@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -19,7 +19,9 @@ import { Typography, Paper } from '@mui/material'
 
 import { rowStyles } from 'client/components/Tables/styles'
 import * as Helper from 'client/models/Helper'
-import { Snapshot } from 'client/constants'
+import { Snapshot, T } from 'client/constants'
+
+import { Tr } from 'client/components/HOC'
 
 const SnapshotCard = memo(
   ({ snapshot, actions = [], extraActionProps = {} }) => {
@@ -29,7 +31,7 @@ const SnapshotCard = memo(
     const { SNAPSHOT_ID, NAME, TIME } = snapshot
 
     const time = Helper.timeFromMilliseconds(+TIME)
-    const timeAgo = `created ${time.toRelative()}`
+    const timeAgo = `${Tr(T.Created)} ${time.toRelative()}`
 
     return (
       <Paper

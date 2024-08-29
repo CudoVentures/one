@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -29,13 +29,14 @@ export const NETWORK_TYPES = {
 const NETWORK_TYPE = {
   name: 'type',
   label: 'Type',
-  type: INPUT_TYPES.SELECT,
+  type: INPUT_TYPES.AUTOCOMPLETE,
+  optionsOnly: true,
   values: arrayToOptions(Object.values(NETWORK_TYPES), { addEmpty: false }),
   validation: string()
     .trim()
     .oneOf([...Object.keys(NETWORK_TYPES), ...Object.values(NETWORK_TYPES)])
     .default(() => Object.values(NETWORK_TYPES)[0]),
-  grid: { sm: 1.5, md: 1.5 },
+  grid: { md: 2 },
 }
 
 // Network Name Field
@@ -44,7 +45,7 @@ const NAME = {
   label: 'Name',
   type: INPUT_TYPES.TEXT,
   validation: string().trim().required(),
-  grid: { sm: 2.5, md: 2.5 },
+  grid: { md: 2.5 },
 }
 
 // Network Description Field
@@ -56,14 +57,15 @@ const DESCRIPTION = {
     .trim()
     .notRequired()
     .default(() => undefined),
-  grid: { sm: 2.5, md: 2.5 },
+  grid: { md: 2.5 },
 }
 
 // Network Selection Field (for 'reserve' or 'existing')
 const NETWORK_SELECTION = {
   name: 'network',
   label: 'Network',
-  type: INPUT_TYPES.SELECT,
+  type: INPUT_TYPES.AUTOCOMPLETE,
+  optionsOnly: true,
   values: () => {
     const { data: vnets = [] } = useGetVNetworksQuery()
     const networks = vnets
@@ -91,7 +93,7 @@ const NETEXTRA = {
     then: string().strip(),
     otherwise: string().notRequired(),
   }),
-  grid: { sm: 2.5, md: 2.5 },
+  grid: { md: 2.5 },
 }
 
 // List of Network Input Fields

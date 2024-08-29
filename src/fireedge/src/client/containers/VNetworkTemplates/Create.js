@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -31,6 +31,7 @@ import {
 import { CreateForm } from 'client/components/Forms/VNTemplate'
 
 import { useSystemData } from 'client/features/Auth'
+import { T } from 'client/constants'
 
 const _ = require('lodash')
 
@@ -57,10 +58,10 @@ const CreateVirtualNetworkTemplate = () => {
     try {
       if (!vnetId) {
         const newVnetId = await allocate({ template: xml }).unwrap()
-        enqueueSuccess(`Virtual Network Template created - #${newVnetId}`)
+        enqueueSuccess(T.SuccessVNetTemplateCreated, newVnetId)
       } else {
         await update({ id: vnetId, template: xml }).unwrap()
-        enqueueSuccess(`Virtual Network Template updated - #${vnetId} ${NAME}`)
+        enqueueSuccess(T.SuccessVNetTemplateUpdated, [vnetId, NAME])
       }
 
       history.push(PATH.NETWORK.VN_TEMPLATES.LIST)

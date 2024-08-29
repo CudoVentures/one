@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -144,7 +144,7 @@ void VirtualRouterInstantiate::request_execute(
         tmp_name = one_util::gsub(name, "%i", oss.str());
 
         ErrorCode ec = tmpl_instantiate.request_execute(tmpl_id, tmp_name,
-                true, str_uattrs, extra_attrs.get(), vid, att);
+                                                        true, str_uattrs, extra_attrs.get(), vid, att);
 
         if (ec != SUCCESS)
         {

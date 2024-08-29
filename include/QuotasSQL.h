@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -71,11 +71,11 @@ protected:
               const char * net_xpath,
               const char * img_xpath,
               const char * vm_xpath):
-                Quotas(ds_xpath, net_xpath, img_xpath, vm_xpath, false),
-                ObjectSQL(),
-                oid(-1){};
+        Quotas(ds_xpath, net_xpath, img_xpath, vm_xpath, false),
+        ObjectSQL(),
+        oid(-1) {};
 
-    virtual ~QuotasSQL(){};
+    virtual ~QuotasSQL() {};
 
     virtual const char * table() const = 0;
 
@@ -153,12 +153,12 @@ class GroupQuotas : public QuotasSQL
 {
 public:
     GroupQuotas():QuotasSQL(
-            "/QUOTAS/DATASTORE_QUOTA",
-            "/QUOTAS/NETWORK_QUOTA",
-            "/QUOTAS/IMAGE_QUOTA",
-            "/QUOTAS/VM_QUOTA"){};
+                "/QUOTAS/DATASTORE_QUOTA",
+                "/QUOTAS/NETWORK_QUOTA",
+                "/QUOTAS/IMAGE_QUOTA",
+                "/QUOTAS/VM_QUOTA") {};
 
-    virtual ~GroupQuotas(){};
+    virtual ~GroupQuotas() {};
 
     /**
      *  Bootstraps the database table for group quotas
@@ -201,10 +201,10 @@ class UserQuotas : public QuotasSQL
 {
 public:
     UserQuotas():QuotasSQL(
-            "/QUOTAS/DATASTORE_QUOTA",
-            "/QUOTAS/NETWORK_QUOTA",
-            "/QUOTAS/IMAGE_QUOTA",
-            "/QUOTAS/VM_QUOTA"){};
+                "/QUOTAS/DATASTORE_QUOTA",
+                "/QUOTAS/NETWORK_QUOTA",
+                "/QUOTAS/IMAGE_QUOTA",
+                "/QUOTAS/VM_QUOTA") {};
 
     /**
      *  Bootstraps the database table for user quotas

@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -20,7 +20,7 @@ import { string } from 'yup'
 /** @type {Field} Name field */
 const NAME = {
   name: 'NAME',
-  label: T['marketplace.form.create.general.name'],
+  label: T.Name,
   type: INPUT_TYPES.TEXT,
   validation: string()
     .trim()
@@ -32,7 +32,7 @@ const NAME = {
 /** @type {Field} Name field */
 const DESCRIPTION = {
   name: 'DESCRIPTION',
-  label: T['marketplace.form.create.general.description'],
+  label: T.Description,
   type: INPUT_TYPES.TEXT,
   validation: string()
     .trim()
@@ -45,9 +45,10 @@ const DESCRIPTION = {
 const TYPE = {
   name: 'MARKET_MAD',
   label: T['marketplace.form.create.general.type'],
-  type: INPUT_TYPES.SELECT,
+  type: INPUT_TYPES.AUTOCOMPLETE,
+  optionsOnly: true,
   values: arrayToOptions(Object.keys(MARKET_TYPES), {
-    addEmpty: true,
+    addEmpty: false,
     getText: (key) => T[MARKET_TYPES[key].text],
     getValue: (key) => MARKET_TYPES[key].value,
   }),

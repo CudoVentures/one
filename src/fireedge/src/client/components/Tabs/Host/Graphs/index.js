@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -20,6 +20,7 @@ import { ReactElement } from 'react'
 import { Chartist } from 'client/components/Charts'
 import { T } from 'client/constants'
 import { useGetHostMonitoringQuery } from 'client/features/OneApi/host'
+import { Tr } from 'client/components/HOC'
 
 /**
  * Renders the host Graph tab.
@@ -50,20 +51,20 @@ const HostGraphTab = ({ id }) => {
           y={['FREE_CPU', 'USED_CPU']}
           x="TIMESTAMP"
           enableLegend={true}
-          legendNames={[T.FreeCPU, T.UsedCPU]}
+          legendNames={[Tr(T.FreeCPU), Tr(T.UsedCPU)]}
           lineColors={['#039be5', '#757575']}
         />
       </Grid>
       <Grid item xs={12} sm={12}>
         <Chartist
-          name={T.Memory}
+          name={Tr(T.Memory)}
           filter={['FREE_MEMORY', 'USED_MEMORY']}
           data={cpuMemoryData}
           y={['FREE_MEMORY', 'USED_MEMORY']}
           x="TIMESTAMP"
           enableLegend={true}
           lineColors={['#039be5', '#757575']}
-          legendNames={[T.FreeMemory, T.UsedMemory]}
+          legendNames={[Tr(T.FreeMemory), Tr(T.UsedMemory)]}
           interpolationY={(value) => prettyBytes(value)}
         />
       </Grid>

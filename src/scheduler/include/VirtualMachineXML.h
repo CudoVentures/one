@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -59,7 +59,7 @@ public:
      */
     void sort_match_networks()
     {
-       match_networks.sort_resources();
+        match_networks.sort_resources();
     }
 
     /**
@@ -238,7 +238,7 @@ public:
     /**
      *  @return storage usage for the VM
      */
-    const std::map<int,long long>& get_storage_usage() const
+    const std::map<int, long long>& get_storage_usage() const
     {
         return ds_usage;
     }
@@ -511,7 +511,7 @@ protected:
     float       cpu;
     long long   system_ds_usage;
 
-    std::map<int,long long> ds_usage;
+    std::map<int, long long> ds_usage;
 
     std::string rank;
     std::string requirements;

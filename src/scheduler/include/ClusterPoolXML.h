@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project Leads (OpenNebula.org)             */
+/* Copyright 2002-2024, OpenNebula Project Leads (OpenNebula.org)             */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -26,9 +26,9 @@ class ClusterPoolXML : public PoolXML
 {
 public:
 
-    ClusterPoolXML(Client* client):PoolXML(client){};
+    ClusterPoolXML(Client* client):PoolXML(client) {};
 
-    ~ClusterPoolXML(){};
+    ~ClusterPoolXML() {};
 
     /**
      *  Gets an object from the pool

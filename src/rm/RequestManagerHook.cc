@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -23,7 +23,7 @@
 /* -------------------------------------------------------------------------- */
 
 void HookRetry::request_execute(xmlrpc_c::paramList const& _paramList,
-                         RequestAttributes& att)
+                                RequestAttributes& att)
 {
     int    hk_id     = xmlrpc_c::value_int(_paramList.getInt(1));
     int    hk_exe_id = xmlrpc_c::value_int(_paramList.getInt(2));

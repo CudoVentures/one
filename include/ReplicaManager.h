@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -66,7 +66,7 @@ public:
     void add_replica_thread(int follower_id);
 
 protected:
-    ReplicaManager(){};
+    ReplicaManager() {};
 
     virtual ~ReplicaManager()
     {
@@ -96,9 +96,9 @@ private:
 class RaftReplicaManager : public ReplicaManager
 {
 public:
-    RaftReplicaManager():ReplicaManager(){};
+    RaftReplicaManager():ReplicaManager() {};
 
-    virtual ~RaftReplicaManager(){};
+    virtual ~RaftReplicaManager() {};
 
 private:
     ReplicaThread * thread_factory(int follower_id) override;
@@ -107,9 +107,9 @@ private:
 class HeartBeatManager : public ReplicaManager
 {
 public:
-    HeartBeatManager():ReplicaManager(){};
+    HeartBeatManager():ReplicaManager() {};
 
-    virtual ~HeartBeatManager(){};
+    virtual ~HeartBeatManager() {};
 
 private:
     ReplicaThread * thread_factory(int follower_id) override;

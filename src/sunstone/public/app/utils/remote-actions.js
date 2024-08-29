@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -314,6 +314,8 @@ define(function(require) {
       paramInfo
     ]).filter(Boolean);
 
+    var params_query = params.length? "?" + params.join("&") : ""
+
     var endpoint = new URL(window.location.href);
     var websocketProtocol = options.protocol === "https:" ? "wss:" : "ws:";
 
@@ -328,7 +330,7 @@ define(function(require) {
     else 
       websocket += endpoint.host;
 
-    websocket += options.extra_path + "?" + params.join("&");
+    websocket += options.extra_path + params_query;
 
     var encoded_socket = btoa(websocket);
 

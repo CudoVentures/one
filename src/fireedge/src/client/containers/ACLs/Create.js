@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -34,6 +34,8 @@ import { useGetClustersQuery } from 'client/features/OneApi/cluster'
 import { useGetZonesQuery } from 'client/features/OneApi/zone'
 
 import { useSystemData } from 'client/features/Auth'
+
+import { T } from 'client/constants'
 
 const _ = require('lodash')
 
@@ -80,13 +82,13 @@ function CreateACLs() {
 
       if (idAcl) {
         // Success message
-        enqueueSuccess(`ACL rule created - #${idAcl}`)
+        enqueueSuccess(T.SuccessACLCreated, idAcl)
 
         // Go to ACL list
         history.push(PATH.SYSTEM.ACLS.LIST)
       }
     } catch (error) {
-      enqueueError('Error creating ACL rule')
+      enqueueError(T.ErrorACLCreated)
     }
   }
 

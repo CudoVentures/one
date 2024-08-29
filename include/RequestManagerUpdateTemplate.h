@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -53,7 +53,7 @@ protected:
         auth_op = AuthRequest::MANAGE;
     };
 
-    ~RequestManagerUpdateTemplate(){};
+    ~RequestManagerUpdateTemplate() {};
 
     /* -------------------------------------------------------------------- */
 
@@ -102,7 +102,7 @@ public:
         auth_object = PoolObjectSQL::TEMPLATE;
     };
 
-    ~TemplateUpdateTemplate(){};
+    ~TemplateUpdateTemplate() {};
 };
 
 /* ------------------------------------------------------------------------- */
@@ -120,7 +120,7 @@ public:
         auth_object = PoolObjectSQL::VNTEMPLATE;
     };
 
-    ~VirtualNetworkTemplateUpdateTemplate(){};
+    ~VirtualNetworkTemplateUpdateTemplate() {};
 };
 
 /* ------------------------------------------------------------------------- */
@@ -142,22 +142,6 @@ public:
     ~VirtualMachineUpdateTemplate() = default;
 
 protected:
-    int extra_updates(PoolObjectSQL * obj) override
-    {
-        VirtualMachine * vm;
-
-        VirtualMachinePool * vmpool = static_cast<VirtualMachinePool *>(pool);
-
-        if (obj == 0)
-        {
-            return -1;
-        }
-
-        vm = static_cast<VirtualMachine *>(obj);
-
-        return vmpool->update_search(vm);
-    }
-
     void request_execute(int oid,
                          const std::string& templ,
                          int update_type,
@@ -179,7 +163,7 @@ public:
         auth_object = PoolObjectSQL::IMAGE;
     };
 
-    ~ImageUpdateTemplate(){};
+    ~ImageUpdateTemplate() {};
 };
 
 /* ------------------------------------------------------------------------- */
@@ -198,7 +182,7 @@ public:
         auth_op     = AuthRequest::ADMIN;
     };
 
-    ~HostUpdateTemplate(){};
+    ~HostUpdateTemplate() {};
 };
 
 /* ------------------------------------------------------------------------- */
@@ -217,7 +201,7 @@ public:
         auth_op     = AuthRequest::MANAGE;
     };
 
-    ~VirtualNetworkUpdateTemplate(){};
+    ~VirtualNetworkUpdateTemplate() {};
 };
 
 /* ------------------------------------------------------------------------- */
@@ -235,7 +219,7 @@ public:
         auth_object = PoolObjectSQL::USER;
     };
 
-    ~UserUpdateTemplate(){};
+    ~UserUpdateTemplate() {};
 };
 
 /* ------------------------------------------------------------------------- */
@@ -253,7 +237,7 @@ public:
         auth_object = PoolObjectSQL::DATASTORE;
     };
 
-    ~DatastoreUpdateTemplate(){};
+    ~DatastoreUpdateTemplate() {};
 };
 
 /* ------------------------------------------------------------------------- */
@@ -271,7 +255,7 @@ public:
         auth_object = PoolObjectSQL::DOCUMENT;
     };
 
-    ~DocumentUpdateTemplate(){};
+    ~DocumentUpdateTemplate() {};
 };
 
 /* ------------------------------------------------------------------------- */
@@ -289,7 +273,7 @@ public:
         auth_object = PoolObjectSQL::CLUSTER;
     };
 
-    ~ClusterUpdateTemplate(){};
+    ~ClusterUpdateTemplate() {};
 
 protected:
     int extra_updates(PoolObjectSQL * obj) override;
@@ -310,7 +294,7 @@ public:
         auth_object = PoolObjectSQL::ZONE;
     };
 
-    ~ZoneUpdateTemplate(){};
+    ~ZoneUpdateTemplate() {};
 };
 
 /* ------------------------------------------------------------------------- */
@@ -328,7 +312,7 @@ public:
         auth_object = PoolObjectSQL::GROUP;
     };
 
-    ~GroupUpdateTemplate(){};
+    ~GroupUpdateTemplate() {};
 };
 
 /* ------------------------------------------------------------------------- */
@@ -346,7 +330,7 @@ public:
         auth_object = PoolObjectSQL::SECGROUP;
     };
 
-    ~SecurityGroupUpdateTemplate(){};
+    ~SecurityGroupUpdateTemplate() {};
 };
 
 /* ------------------------------------------------------------------------- */
@@ -364,7 +348,7 @@ public:
         auth_object = PoolObjectSQL::VDC;
     };
 
-    ~VdcUpdateTemplate(){};
+    ~VdcUpdateTemplate() {};
 };
 
 /* ------------------------------------------------------------------------- */
@@ -382,7 +366,7 @@ public:
         auth_object = PoolObjectSQL::VROUTER;
     };
 
-    ~VirtualRouterUpdateTemplate(){};
+    ~VirtualRouterUpdateTemplate() {};
 };
 
 /* ------------------------------------------------------------------------- */
@@ -400,7 +384,7 @@ public:
         auth_object = PoolObjectSQL::MARKETPLACE;
     };
 
-    ~MarketPlaceUpdateTemplate(){};
+    ~MarketPlaceUpdateTemplate() {};
 };
 
 /* ------------------------------------------------------------------------- */
@@ -418,7 +402,7 @@ public:
         auth_object = PoolObjectSQL::MARKETPLACEAPP;
     };
 
-    ~MarketPlaceAppUpdateTemplate(){};
+    ~MarketPlaceAppUpdateTemplate() {};
 };
 
 /* -------------------------------------------------------------------------- */
@@ -436,7 +420,7 @@ public:
         auth_object = PoolObjectSQL::VMGROUP;
     };
 
-    ~VMGroupUpdateTemplate(){};
+    ~VMGroupUpdateTemplate() {};
 };
 
 /* -------------------------------------------------------------------------- */
@@ -454,7 +438,7 @@ public:
         auth_object = PoolObjectSQL::HOOK;
     };
 
-    ~HookUpdateTemplate(){};
+    ~HookUpdateTemplate() {};
 };
 
 /* -------------------------------------------------------------------------- */

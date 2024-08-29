@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------ */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems              */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems              */
 /*                                                                          */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may  */
 /* not use this file except in compliance with the License. You may obtain  */
@@ -122,7 +122,7 @@ private:
         unsigned int base_port = vnc_bitmap.get_start_bit();
         unsigned int hint_port = base_port + (vmid % (65535 - base_port));
 
-        return vnc_bitmap.get(hint_port,port);
+        return vnc_bitmap.get(hint_port, port);
     }
 
     void release_vnc_port(int port)
@@ -233,17 +233,17 @@ private:
      *    @param db pointer to the db
      *    @return 0 on success
      */
-     int select(SqlDB *db, const std::string& _name, int _uid) override
-     {
-         int rc = PoolObjectSQL::select(db, _name, _uid);
+    int select(SqlDB *db, const std::string& _name, int _uid) override
+    {
+        int rc = PoolObjectSQL::select(db, _name, _uid);
 
-         if ( rc != 0 )
-         {
-             return rc;
-         }
+        if ( rc != 0 )
+        {
+            return rc;
+        }
 
-         return vnc_bitmap.select(oid, db);
-     }
+        return vnc_bitmap.select(oid, db);
+    }
 
     /**
      * Checks if all the collections are empty, and therefore this cluster

@@ -1,5 +1,5 @@
 # -------------------------------------------------------------------------- #
-# Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                #
+# Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                #
 #                                                                            #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may    #
 # not use this file except in compliance with the License. You may obtain    #
@@ -160,7 +160,8 @@ class OneVMHelper < OpenNebulaHelper::OneHelper
     SEARCH = {
         :name => 'search',
         :large => '--search search',
-        :description => 'query in KEY=VALUE format',
+        :description => 'Query in PATH=VALUE format. For example: ' \
+        'onevm list --search "VM.NAME=abc&VM.TEMPLATE.DISK[*].IMAGE=db1"',
         :format => String
     }
 

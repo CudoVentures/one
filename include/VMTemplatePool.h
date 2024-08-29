@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -28,9 +28,9 @@ class VMTemplatePool : public PoolSQL
 {
 public:
 
-    VMTemplatePool(SqlDB * db) : PoolSQL(db, one_db::vm_template_table){};
+    VMTemplatePool(SqlDB * db) : PoolSQL(db, one_db::vm_template_table) {};
 
-    ~VMTemplatePool(){};
+    ~VMTemplatePool() {};
 
     /**
      *  Allocates a new object, writting it in the pool database. No memory is
@@ -90,10 +90,10 @@ public:
      *  @return 0 on success
      */
     int dump(std::string& oss, const std::string& where, int sid, int eid,
-        bool desc) override
+             bool desc) override
     {
         return PoolSQL::dump(oss, "VMTEMPLATE_POOL", "body",
-            one_db::vm_template_table, where, sid, eid, desc);
+                             one_db::vm_template_table, where, sid, eid, desc);
     };
 
     /**
@@ -112,7 +112,7 @@ private:
      */
     PoolObjectSQL * create() override
     {
-        return new VMTemplate(-1,-1,-1,"","",0,0);
+        return new VMTemplate(-1, -1, -1, "", "", 0, 0);
     };
 };
 

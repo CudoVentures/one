@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -78,7 +78,7 @@ public:
     int from_xml(const std::string& xml_string);
 
     /**
-     *  The contents of the provided template are merged with any previous 
+     *  The contents of the provided template are merged with any previous
      *  exisiting data, preserving it.
      *    @param tmpl with monitoring attributes
      *    @return 0 on succes, -1 otherwise

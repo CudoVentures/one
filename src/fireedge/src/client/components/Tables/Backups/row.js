@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -15,6 +15,7 @@
  * ------------------------------------------------------------------------- */
 /* eslint-disable jsdoc/require-jsdoc */
 import PropTypes from 'prop-types'
+import { useAuth } from 'client/features/Auth'
 import { useMemo, useCallback } from 'react'
 import imageApi, { useUpdateImageMutation } from 'client/features/OneApi/image'
 
@@ -39,12 +40,14 @@ import Timer from 'client/components/Timer'
 import { StatusCircle, StatusChip } from 'client/components/Status'
 import { rowStyles } from 'client/components/Tables/styles'
 import { T } from 'client/constants'
+import { Tr } from 'client/components/HOC'
 
 import * as ImageModel from 'client/models/Image'
 import * as Helper from 'client/models/Helper'
 
 const Row = ({ original, value, onClickLabel, ...props }) => {
   const [update] = useUpdateImageMutation()
+  const { labels: userLabels } = useAuth()
 
   const state = imageApi.endpoints.getImages.useQueryState(undefined, {
     selectFromResult: ({ data = [] }) =>
@@ -94,12 +97,19 @@ const Row = ({ original, value, onClickLabel, ...props }) => {
 
   const multiTagLabels = useMemo(
     () =>
-      getUniqueLabels(LABELS).map((label) => ({
-        text: label,
-        stateColor: getColorFromString(label),
-        onClick: onClickLabel,
-        onDelete: handleDeleteLabel,
-      })),
+      getUniqueLabels(LABELS).reduce((acc, label) => {
+        if (userLabels?.includes(label)) {
+          acc.push({
+            text: label,
+            dataCy: `label-${label}`,
+            stateColor: getColorFromString(label),
+            onClick: onClickLabel,
+            onDelete: handleDeleteLabel,
+          })
+        }
+
+        return acc
+      }, []),
     [LABELS, handleDeleteLabel, onClickLabel]
   )
 
@@ -126,38 +136,40 @@ const Row = ({ original, value, onClickLabel, ...props }) => {
           <span title={time.toFormat('ff')}>
             <Timer translateWord={T.RegisteredAt} initial={time} />
           </span>
-          <span title={`${T.Owner}: ${UNAME}`}>
+          <span title={`${Tr(T.Owner)}: ${UNAME}`}>
             <User />
             <span>{` ${UNAME}`}</span>
           </span>
-          <span title={`${T.Group}: ${GNAME}`}>
+          <span title={`${Tr(T.Group)}: ${GNAME}`}>
             <Group />
             <span>{` ${GNAME}`}</span>
           </span>
-          <span title={`${T.Datastore}: ${DATASTORE}`}>
+          <span title={`${Tr(T.Datastore)}: ${DATASTORE}`}>
             <DatastoreIcon />
             <span>{` ${DATASTORE}`}</span>
           </span>
           <span
             title={
               PERSISTENT
-                ? T.Persistent.toLowerCase()
-                : T.NonPersistent.toLowerCase()
+                ? Tr(T.Persistent).toLowerCase()
+                : Tr(T.NonPersistent).toLowerCase()
             }
           >
             <PersistentIcon />
             <span>
               {PERSISTENT
-                ? T.Persistent.toLowerCase()
-                : T.NonPersistent.toLowerCase()}
+                ? Tr(T.Persistent).toLowerCase()
+                : Tr(T.NonPersistent).toLowerCase()}
             </span>
           </span>
-          <span title={`${T.DiskType}: ${DISK_TYPE.toLowerCase()}`}>
+          <span title={`${Tr(T.DiskType)}: ${DISK_TYPE.toLowerCase()}`}>
             <DiskTypeIcon />
             <span>{` ${DISK_TYPE.toLowerCase()}`}</span>
           </span>
           <span
-            title={`${T.Running} / ${T.Used} ${T.VMs}: ${RUNNING_VMS} / ${TOTAL_VMS}`}
+            title={`${Tr(T.Running)} / ${Tr(T.Used)} ${Tr(
+              T.VMs
+            )}: ${RUNNING_VMS} / ${TOTAL_VMS}`}
           >
             <ModernTv />
             <span>{` ${RUNNING_VMS} / ${TOTAL_VMS}`}</span>

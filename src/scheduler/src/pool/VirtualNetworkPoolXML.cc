@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -51,7 +51,7 @@ int VirtualNetworkPoolXML::set_up()
             oss << "Discovered " << objects.size() << " vnets.";
         }
 
-        NebulaLog::log("VNET",Log::DEBUG,oss);
+        NebulaLog::log("VNET", Log::DEBUG, oss);
     }
 
     return rc;
@@ -65,14 +65,14 @@ void VirtualNetworkPoolXML::add_object(xmlNodePtr node)
 {
     if ( node == 0 || node->children == 0 )
     {
-        NebulaLog::log("VNET",Log::ERROR,
+        NebulaLog::log("VNET", Log::ERROR,
                        "XML Node does not represent a valid VNET");
         return;
     }
 
     VirtualNetworkXML* vnet = new VirtualNetworkXML(node);
 
-    objects.insert(pair<int,ObjectXML*>(vnet->get_oid(), vnet));
+    objects.insert(pair<int, ObjectXML*>(vnet->get_oid(), vnet));
 }
 
 /* -------------------------------------------------------------------------- */

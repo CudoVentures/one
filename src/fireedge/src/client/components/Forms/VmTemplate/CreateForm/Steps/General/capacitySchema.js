@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -37,7 +37,7 @@ const commonValidation = number()
   .positive()
   .default(() => undefined)
 
-const { vcenter, lxc, firecracker } = HYPERVISORS
+const { lxc } = HYPERVISORS
 
 // --------------------------------------------------------
 // MEMORY fields
@@ -48,12 +48,7 @@ export const MEMORY = generateCapacityInput({
   name: 'MEMORY',
   label: T.Memory,
   tooltip: T.MemoryConcept,
-  validation: commonValidation
-    .integer()
-    .required()
-    .when('HYPERVISOR', (hypervisor, schema) =>
-      hypervisor === vcenter ? schema.isDivisibleBy(4) : schema
-    ),
+  validation: commonValidation.integer().required(),
 })
 
 /**
@@ -64,8 +59,9 @@ export const MEMORYUNIT = () => ({
   name: 'MEMORYUNIT',
   label: T.MemoryUnit,
   tooltip: T.MemoryConceptUnit,
-  type: INPUT_TYPES.SELECT,
-  grid: { md: 3 },
+  type: INPUT_TYPES.AUTOCOMPLETE,
+  optionsOnly: true,
+  grid: { sm: 12, md: 12 },
   values: arrayToOptions([UNITS.MB, UNITS.GB, UNITS.TB], {
     addEmpty: false,
     getText: (type) => type,
@@ -232,8 +228,9 @@ export const SHOWBACK_FIELDS = (features) =>
 export const MEMORY_RESIZE_MODE_FIELD = {
   name: 'MEMORY_RESIZE_MODE',
   label: T.MemoryResizeMode,
-  type: INPUT_TYPES.SELECT,
-  notOnHypervisors: [lxc, firecracker, vcenter],
+  type: INPUT_TYPES.AUTOCOMPLETE,
+  optionsOnly: true,
+  notOnHypervisors: [lxc],
   dependOf: ['HYPERVISOR', '$general.HYPERVISOR'],
   values: arrayToOptions(Object.keys(MEMORY_RESIZE_OPTIONS), {
     addEmpty: true,
@@ -241,7 +238,7 @@ export const MEMORY_RESIZE_MODE_FIELD = {
     getValue: (option) => MEMORY_RESIZE_OPTIONS[option],
   }),
   validation: string().default(() => undefined),
-  grid: { md: 6 },
+  grid: { sm: 12, md: 12 },
 }
 
 /** @type {Field} Memory slots field */
@@ -249,14 +246,14 @@ export const MEMORY_SLOTS_FIELD = {
   name: 'MEMORY_SLOTS',
   label: T.MemorySlots,
   type: INPUT_TYPES.TEXT,
-  notOnHypervisors: [lxc, firecracker, vcenter],
+  notOnHypervisors: [lxc],
   dependOf: MEMORY_RESIZE_MODE_FIELD.name,
   htmlType: (resizeMode) =>
     resizeMode === MEMORY_RESIZE_OPTIONS[T.Hotplug]
       ? 'number'
       : INPUT_TYPES.HIDDEN,
   validation: number().default(() => undefined),
-  grid: { md: 6 },
+  grid: { sm: 12, md: 12 },
 }
 
 /**

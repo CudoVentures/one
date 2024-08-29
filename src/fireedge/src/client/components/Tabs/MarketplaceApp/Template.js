@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -35,11 +35,14 @@ const AppTemplateTab = ({ id }) => {
   const { APPTEMPLATE64, VMTEMPLATE64 } = marketplaceApp?.TEMPLATE
 
   const appTemplate = useMemo(
-    () => decodeBase64(APPTEMPLATE64),
+    () => (APPTEMPLATE64 ? decodeBase64(APPTEMPLATE64) : T.Empty),
     [APPTEMPLATE64]
   )
 
-  const vmTemplate = useMemo(() => decodeBase64(VMTEMPLATE64), [VMTEMPLATE64])
+  const vmTemplate = useMemo(
+    () => (VMTEMPLATE64 ? decodeBase64(VMTEMPLATE64) : T.Empty),
+    [VMTEMPLATE64]
+  )
 
   return (
     <>

@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -24,11 +24,11 @@
 
 namespace ssl_util
 {
-   /**
-    *  Base 64 decoding
-    *    @param in the string to decode
-    *    @param out the decoded string
-    */
+    /**
+     *  Base 64 decoding
+     *    @param in the string to decode
+     *    @param out the decoded string
+     */
     void base64_decode(const std::string& in, std::string& out);
 
     /**
@@ -107,7 +107,7 @@ namespace ssl_util
 
     private:
         friend void sslmutex_lock_callback(int mode, int type, char *file,
-            int line);
+                                           int line);
 
         SSLMutex();
 

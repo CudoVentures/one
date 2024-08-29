@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------ */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems              */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems              */
 /*                                                                          */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may  */
 /* not use this file except in compliance with the License. You may obtain  */
@@ -117,8 +117,8 @@ int Zone::insert_replace(SqlDB *db, bool replace, string& error_str)
     char * sql_xml;
 
     // Set oneadmin as the owner and group it belongs to
-    set_user(0,"");
-    set_group(0,"");
+    set_user(0, "");
+    set_group(0, "");
 
     // Update the zone
 
@@ -215,13 +215,13 @@ string& Zone::to_xml(string& xml) const
     string server_xml;
 
     oss <<
-    "<ZONE>"    <<
+        "<ZONE>"    <<
         "<ID>"   << oid  << "</ID>"   <<
         "<NAME>" << name << "</NAME>" <<
         "<STATE>" << state << "</STATE>" <<
         obj_template->to_xml(template_xml) <<
         servers_template.to_xml(server_xml) <<
-    "</ZONE>";
+        "</ZONE>";
 
     xml = oss.str();
 
@@ -243,7 +243,7 @@ int Zone::from_xml(const string& xml)
 
     // Get class base attributes
     rc += xpath(oid, "/ZONE/ID",   -1);
-    rc += xpath(name,"/ZONE/NAME", "not_found");
+    rc += xpath(name, "/ZONE/NAME", "not_found");
     rc += xpath(int_state, "/ZONE/STATE", 0);
 
     state = static_cast<ZoneState>( int_state );
@@ -282,8 +282,8 @@ int Zone::from_xml(const string& xml)
     }
 
     // Set oneadmin as the owner and group it belongs to
-    set_user(0,"");
-    set_group(0,"");
+    set_user(0, "");
+    set_group(0, "");
 
     servers = new ZoneServers(&servers_template);
 

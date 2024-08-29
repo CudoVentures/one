@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -181,7 +181,7 @@ int HookStateVM::post_update_template(Template * tmpl, std::string& error)
     VirtualMachine::LcmState new_lcm;
 
     if ( tmpl->get("STATE", new_state_str) &&
-            VirtualMachine::vm_state_from_str(new_state_str, new_state) == 0)
+         VirtualMachine::vm_state_from_str(new_state_str, new_state) == 0)
     {
         state = new_state;
         tmpl->replace("STATE", new_state_str);
@@ -193,7 +193,7 @@ int HookStateVM::post_update_template(Template * tmpl, std::string& error)
     }
 
     if ( tmpl->get("LCM_STATE", new_lcm_str) &&
-            VirtualMachine::lcm_state_from_str(new_lcm_str, new_lcm) == 0)
+         VirtualMachine::lcm_state_from_str(new_lcm_str, new_lcm) == 0)
     {
         lcm_state = new_lcm;
         tmpl->replace("LCM_STATE", new_lcm_str);

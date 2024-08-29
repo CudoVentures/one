@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -26,9 +26,9 @@ class ZoneServer : public ExtendedAttribute
 {
 public:
 
-    ZoneServer(VectorAttribute *va, int id):ExtendedAttribute(va, id){};
+    ZoneServer(VectorAttribute *va, int id):ExtendedAttribute(va, id) {};
 
-    virtual ~ZoneServer(){};
+    virtual ~ZoneServer() {};
 
     /**
      *  Initialized server metadata:
@@ -124,9 +124,9 @@ public:
     class ZoneIterator : public AttributeIterator
     {
     public:
-        ZoneIterator():AttributeIterator(){};
-        ZoneIterator(const AttributeIterator& dit):AttributeIterator(dit){};
-        virtual ~ZoneIterator(){};
+        ZoneIterator():AttributeIterator() {};
+        ZoneIterator(const AttributeIterator& dit):AttributeIterator(dit) {};
+        virtual ~ZoneIterator() {};
 
         ZoneServer * operator*() const
         {

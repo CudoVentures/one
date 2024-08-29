@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -26,9 +26,9 @@ class DatastorePoolXML : public PoolXML
 {
 public:
 
-    DatastorePoolXML(Client* client):PoolXML(client){};
+    DatastorePoolXML(Client* client):PoolXML(client) {};
 
-    ~DatastorePoolXML(){};
+    ~DatastorePoolXML() {};
 
     /**
      *  Gets an object from the pool
@@ -54,7 +54,7 @@ protected:
 class SystemDatastorePoolXML : public DatastorePoolXML
 {
 public:
-    SystemDatastorePoolXML(Client* client):DatastorePoolXML(client){};
+    SystemDatastorePoolXML(Client* client):DatastorePoolXML(client) {};
 
 protected:
     int get_suitable_nodes(std::vector<xmlNodePtr>& content) const override
@@ -69,7 +69,7 @@ protected:
 class ImageDatastorePoolXML : public DatastorePoolXML
 {
 public:
-    ImageDatastorePoolXML(Client* client):DatastorePoolXML(client){};
+    ImageDatastorePoolXML(Client* client):DatastorePoolXML(client) {};
 
 protected:
     int get_suitable_nodes(std::vector<xmlNodePtr>& content) const override

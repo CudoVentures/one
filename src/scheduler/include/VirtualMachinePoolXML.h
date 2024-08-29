@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -35,7 +35,7 @@ public:
         , cold_migrate_mode(_cold_migrate_mode)
     {}
 
-    virtual ~VirtualMachinePoolXML(){};
+    virtual ~VirtualMachinePoolXML() {};
 
     /**
      * Retrieves the pending and rescheduling VMs
@@ -120,7 +120,7 @@ protected:
     {
         // Pending or ((running or unknown) and resched))
         return get_nodes("/VM_POOL/VM[STATE=1 or ((STATE=8 or "
-                "(LCM_STATE=3 or LCM_STATE=16)) and RESCHED=1)]", content);
+                         "(LCM_STATE=3 or LCM_STATE=16)) and RESCHED=1)]", content);
     }
 
     void add_object(xmlNodePtr node) override;
@@ -149,9 +149,9 @@ class VirtualMachineRolePoolXML : public VirtualMachinePoolXML
 public:
 
     VirtualMachineRolePoolXML(Client * client, unsigned int machines_limit):
-        VirtualMachinePoolXML(client, machines_limit, false, 0){};
+        VirtualMachinePoolXML(client, machines_limit, false, 0) {};
 
-    virtual ~VirtualMachineRolePoolXML(){};
+    virtual ~VirtualMachineRolePoolXML() {};
 
     /**
      * Retrieves the VMs part of a role

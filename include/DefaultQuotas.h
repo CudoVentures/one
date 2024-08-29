@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -28,11 +28,11 @@ public:
             const char * _net_xpath,
             const char * _img_xpath,
             const char * _vm_xpath):
-               Quotas(_ds_xpath, _net_xpath, _img_xpath, _vm_xpath, true),
-               root_elem(_root_elem)
+        Quotas(_ds_xpath, _net_xpath, _img_xpath, _vm_xpath, true),
+        root_elem(_root_elem)
     {};
 
-    ~DefaultQuotas(){};
+    ~DefaultQuotas() {};
 
     /**
      *  Generates a string representation of the quotas in XML format

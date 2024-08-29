@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -16,6 +16,7 @@
 import { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Box, Checkbox, FormControlLabel, FormGroup } from '@mui/material'
+import { Tr } from 'client/components/HOC'
 
 /**
  * Sub-component used to select different metrics.
@@ -41,7 +42,7 @@ export const MetricSelector = ({ selectedItems, onChange, items }) => (
               color="primary"
             />
           }
-          label={item.label}
+          label={Tr(item.label)}
         />
       ))}
     </FormGroup>

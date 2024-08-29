@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -36,7 +36,7 @@ using namespace std;
 /* -------------------------------------------------------------------------- */
 
 HostPool::HostPool(SqlDB * db, const vector<const SingleAttribute *>& ea) :
-            PoolSQL(db, one_db::host_table)
+    PoolSQL(db, one_db::host_table)
 {
     HostTemplate::parse_encrypted(ea);
 }
@@ -45,13 +45,13 @@ HostPool::HostPool(SqlDB * db, const vector<const SingleAttribute *>& ea) :
 /* -------------------------------------------------------------------------- */
 
 int HostPool::allocate (
-    int * oid,
-    const string& hostname,
-    const string& im_mad_name,
-    const string& vmm_mad_name,
-    int           cluster_id,
-    const string& cluster_name,
-    string& error_str)
+        int * oid,
+        const string& hostname,
+        const string& im_mad_name,
+        const string& vmm_mad_name,
+        int           cluster_id,
+        const string& cluster_name,
+        string& error_str)
 {
     Host *        host_ptr;
     ostringstream oss;

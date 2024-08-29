@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -13,10 +13,17 @@
  * See the License for the specific language governing permissions and       *
  * limitations under the License.                                            *
  * ------------------------------------------------------------------------- */
-import { Component } from 'react'
+import Component from 'react'
+import {
+  Box,
+  TextField,
+  Typography,
+  Checkbox,
+  Autocomplete,
+} from '@mui/material'
 import PropTypes from 'prop-types'
-import { Box, TextField, Typography } from '@mui/material'
 import { T } from 'client/constants'
+import { Tr } from 'client/components/HOC'
 
 /**
  * Role Panel component for managing roles.
@@ -28,31 +35,39 @@ import { T } from 'client/constants'
  * @returns {Component} The rendered component.
  */
 const RoleVmVmPanel = ({ roles, onChange, selectedRoleIndex }) => {
-  const handleInputChange = (event, passedName = '') => {
-    let value
-    let name = passedName
-    if (typeof event === 'object' && event?.target) {
-      const { name: eventName = '', value: eventValue = '' } =
-        event.target || {}
-      value = eventValue
-      name = passedName || eventName
-    } else {
-      value = event
-    }
-    onChange({ ...roles[selectedRoleIndex], [name]: value }) // updated role
+  const handleInputChange = (name, value) => {
+    const updatedRole = { ...roles[selectedRoleIndex], [name]: value }
+    onChange(updatedRole)
   }
+
+  const handleTextFieldChange = (event, number = false) => {
+    const { name, value } = event.target
+    handleInputChange(name, number ? parseInt(value, 10) : value)
+  }
+
+  const handleAutocompleteChange = (event, value) => {
+    const parentNames = value.map((option) => option.NAME)
+    handleInputChange('PARENTS', parentNames)
+  }
+
+  const isDisabled = !roles?.[selectedRoleIndex] || roles?.length <= 0
+  const selectedRole = roles?.[selectedRoleIndex] || {}
+
+  const selectedParentRoles = roles?.filter((role) =>
+    selectedRole?.PARENTS?.includes(role?.NAME)
+  )
 
   return (
     <Box p={2}>
       <Box sx={{ flex: 1 }}>
-        <Typography variant="h6">Role Details</Typography>
+        <Typography variant="h6">{Tr(T.RoleDetails)}</Typography>
         <Box sx={{ mb: 2 }}>
           <TextField
-            label="Role Name"
+            label={Tr(T.RoleName)}
             name="NAME"
-            value={roles?.[selectedRoleIndex]?.NAME ?? ''}
-            onChange={handleInputChange}
-            disabled={!roles?.[selectedRoleIndex]}
+            value={selectedRole?.NAME || ''}
+            onChange={handleTextFieldChange}
+            disabled={isDisabled}
             inputProps={{ 'data-cy': `role-name-${selectedRoleIndex}` }}
             fullWidth
           />
@@ -61,10 +76,11 @@ const RoleVmVmPanel = ({ roles, onChange, selectedRoleIndex }) => {
         <Box sx={{ mb: 2 }}>
           <TextField
             type="number"
-            label={T.NumberOfVms}
-            value={roles?.[selectedRoleIndex]?.CARDINALITY ?? 1}
-            onChange={handleInputChange}
+            label={Tr(T.NumberOfVms)}
             name="CARDINALITY"
+            value={selectedRole?.CARDINALITY || 0}
+            onChange={(event) => handleTextFieldChange(event, true)}
+            disabled={isDisabled}
             InputProps={{
               inputProps: {
                 min: 0,
@@ -74,6 +90,32 @@ const RoleVmVmPanel = ({ roles, onChange, selectedRoleIndex }) => {
             fullWidth
           />
         </Box>
+
+        {roles?.length >= 2 && (
+          <Box sx={{ mb: 2 }}>
+            <Autocomplete
+              multiple
+              options={roles?.filter((_, idx) => idx !== selectedRoleIndex)}
+              disableCloseOnSelect
+              getOptionLabel={(option) => option?.NAME}
+              value={selectedParentRoles}
+              onChange={handleAutocompleteChange}
+              renderOption={(props, option, { selected }) => (
+                <li {...props}>
+                  <Checkbox style={{ marginRight: 8 }} checked={selected} />
+                  {option?.NAME}
+                </li>
+              )}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  name="PARENTS"
+                  placeholder={Tr(T.ParentRoles)}
+                />
+              )}
+            />
+          </Box>
+        )}
       </Box>
     </Box>
   )

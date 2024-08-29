@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -35,7 +35,7 @@ extern "C" int sqlite_callback (
         return -1;
     }
 
-    return obj->do_callback(num,values,names);
+    return obj->do_callback(num, values, names);
 };
 
 /* -------------------------------------------------------------------------- */
@@ -53,18 +53,19 @@ SqliteDB::SqliteDB(const string& db_name, int timeout)
 
     if (enable_limit == 1)
     {
-        NebulaLog::log("ONE",Log::INFO ,
-                "sqlite has enabled: SQLITE_ENABLE_UPDATE_DELETE_LIMIT");
+        NebulaLog::log("ONE", Log::INFO,
+                       "sqlite has enabled: SQLITE_ENABLE_UPDATE_DELETE_LIMIT");
     }
 
     sqlite3_extended_result_codes(db, 1);
 
     sqlite3_busy_timeout(db, timeout);
 
-    features = {
+    features =
+    {
         {SqlFeature::MULTIPLE_VALUE, false},
         {SqlFeature::LIMIT, enable_limit == 1},
-        {SqlFeature::FTS, false},
+        {SqlFeature::JSON_QUERY, false},
         {SqlFeature::COMPARE_BINARY, false}
     };
 }
@@ -88,7 +89,7 @@ int SqliteDB::exec_ext(std::ostringstream& cmd, Callbackable *obj, bool quiet)
 
     char * err_msg = 0;
 
-    int   (*callback)(void*,int,char**,char**);
+    int   (*callback)(void*, int, char**, char**);
     void * arg;
 
     Log::MessageType error_level;
@@ -148,7 +149,7 @@ int SqliteDB::exec_ext(std::ostringstream& cmd, Callbackable *obj, bool quiet)
         error_level = quiet ? Log::DDEBUG : Log::ERROR;
 
         oss << "SQL command was: " << c_str << ", error: " << err_msg;
-        NebulaLog::log("ONE",error_level,oss);
+        NebulaLog::log("ONE", error_level, oss);
 
         sqlite3_free(err_msg);
     }
@@ -160,7 +161,7 @@ int SqliteDB::exec_ext(std::ostringstream& cmd, Callbackable *obj, bool quiet)
 
 char * SqliteDB::escape_str(const string& str) const
 {
-    return sqlite3_mprintf("%q",str.c_str());
+    return sqlite3_mprintf("%q", str.c_str());
 }
 
 /* -------------------------------------------------------------------------- */

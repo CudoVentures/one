@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -27,16 +27,46 @@ const {
   ovswitch_vxlan: openVSwitchVXLAN,
 } = VN_DRIVERS
 
+/** @type {Field} Bridge switch linux field */
+const BRIDGE_SWITCH = {
+  name: 'bridgeSwitch',
+  label: T.BridgeSwitch,
+  tooltip: T.BridgeSwitchConcept,
+  type: INPUT_TYPES.SWITCH,
+  validation: boolean().default(() => false),
+  grid: { md: 12 },
+}
+
 /** @type {Field} Bridge linux field */
 const BRIDGE_FIELD = {
   name: 'BRIDGE',
   label: T.Bridge,
   tooltip: T.BridgeConcept,
+  dependOf: BRIDGE_SWITCH.name,
+  htmlType: (bridgeSwitch) => !bridgeSwitch && INPUT_TYPES.HIDDEN,
   type: INPUT_TYPES.TEXT,
   validation: string()
     .trim()
     .notRequired()
-    .default(() => undefined),
+    .default(() => undefined)
+    .when(BRIDGE_SWITCH.name, {
+      is: (bridgeSwitch) => bridgeSwitch,
+      then: (schema) => schema.required(),
+    }),
+  grid: { md: 6 },
+}
+
+/** @type {Field} Bridge switch linux field */
+const PHYDEV_SWITCH = {
+  name: 'phyDevSwitch',
+  label: T.PhysicalDeviceSwitch,
+  tooltip: T.PhysicalDeviceSwitchConcept,
+  dependOf: DRIVER_FIELD.name,
+  htmlType: (driver) =>
+    [dot1Q, vxlan, openVSwitchVXLAN].includes(driver) && INPUT_TYPES.HIDDEN,
+  type: INPUT_TYPES.SWITCH,
+  validation: boolean().default(() => false),
+  grid: { md: 12 },
 }
 
 /** @type {Field} Physical device field */
@@ -44,14 +74,22 @@ const PHYDEV_FIELD = {
   name: 'PHYDEV',
   label: T.PhysicalDevice,
   tooltip: T.PhysicalDeviceConcept,
+  dependOf: [PHYDEV_SWITCH.name, DRIVER_FIELD.name],
+  htmlType: ([phyDevSwitch, driver] = []) =>
+    phyDevSwitch &&
+    ![dot1Q, vxlan, openVSwitchVXLAN].includes(driver) &&
+    INPUT_TYPES.HIDDEN,
   type: INPUT_TYPES.TEXT,
   validation: string()
     .trim()
     .default(() => undefined)
-    .when(DRIVER_FIELD.name, {
-      is: (driver) => [dot1Q, vxlan, openVSwitchVXLAN].includes(driver),
+    .when([DRIVER_FIELD.name, PHYDEV_SWITCH.name], {
+      is: (driver, phyDevSwitch) =>
+        [dot1Q, vxlan, openVSwitchVXLAN].includes(driver) || !phyDevSwitch,
       then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
     }),
+  grid: { md: 6 },
 }
 
 /** @type {Field} Filter MAC spoofing field */
@@ -98,7 +136,7 @@ const AUTOMATIC_VLAN_FIELD = {
       .yesOrNo()
       .default(() => context?.AUTOMATIC_VLAN_ID === '1')
   ),
-  grid: (self) => (self ? { md: 12 } : { sm: 6 }),
+  grid: { md: 12 },
 }
 
 /** @type {Field} VLAN ID field */
@@ -157,7 +195,8 @@ const VXLAN_MODE_FIELD = {
   name: 'VXLAN_MODE',
   label: T.VxlanMode,
   tooltip: T.VxlanModeConcept,
-  type: INPUT_TYPES.SELECT,
+  type: INPUT_TYPES.AUTOCOMPLETE,
+  optionsOnly: true,
   onlyOnHypervisors: [vxlan],
   values: arrayToOptions(['evpn', 'multicast']),
   validation: string()
@@ -170,7 +209,8 @@ const VXLAN_TEP_FIELD = {
   name: 'VXLAN_TEP',
   label: T.VxlanTunnelEndpoint,
   tooltip: T.VxlanTunnelEndpointConcept,
-  type: INPUT_TYPES.SELECT,
+  type: INPUT_TYPES.AUTOCOMPLETE,
+  optionsOnly: true,
   onlyOnHypervisors: [vxlan],
   dependOf: VXLAN_MODE_FIELD.name,
   htmlType: (mode) => mode !== 'evpn' && INPUT_TYPES.HIDDEN,
@@ -204,8 +244,10 @@ const VXLAN_MC_FIELD = {
 
 /** @type {Field[]} List of common fields */
 export const FIELDS = [
-  BRIDGE_FIELD,
+  PHYDEV_SWITCH,
   PHYDEV_FIELD,
+  BRIDGE_SWITCH,
+  BRIDGE_FIELD,
 
   FILTER_MAC_SPOOFING_FIELD,
   FILTER_IP_SPOOFING_FIELD,

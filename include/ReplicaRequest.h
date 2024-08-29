@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -27,9 +27,9 @@
 class ReplicaRequest : public SyncRequest
 {
 public:
-    ReplicaRequest(uint64_t i):_index(i), _to_commit(-1), _replicas(1){};
+    ReplicaRequest(uint64_t i):_index(i), _to_commit(-1), _replicas(1) {};
 
-    ~ReplicaRequest(){};
+    ~ReplicaRequest() {};
 
     /**
      *  This function updates the number of replicas of the record and decrement

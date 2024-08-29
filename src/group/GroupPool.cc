@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -41,7 +41,7 @@ const int    GroupPool::USERS_ID      = 1;
 /* -------------------------------------------------------------------------- */
 
 GroupPool::GroupPool(SqlDB * db, bool is_slave,
-        const vector<const SingleAttribute *>& restricted_attrs)
+                     const vector<const SingleAttribute *>& restricted_attrs)
     : PoolSQL(db, one_db::group_table)
 {
     ostringstream oss;
@@ -71,7 +71,7 @@ GroupPool::GroupPool(SqlDB * db, bool is_slave,
 
         group = new Group(USERS_ID, USERS_NAME);
 
-        group->sunstone_views("cloud","cloud","groupadmin","groupadmin,cloud");
+        group->sunstone_views("cloud", "cloud", "groupadmin", "groupadmin,cloud");
 
         rc = PoolSQL::allocate(group, error_str);
 
@@ -90,7 +90,7 @@ GroupPool::GroupPool(SqlDB * db, bool is_slave,
 
 error_groups:
     oss << "Error trying to create default group: " << error_str;
-    NebulaLog::log("GROUP",Log::ERROR,oss);
+    NebulaLog::log("GROUP", Log::ERROR, oss);
 
     throw runtime_error(oss.str());
 }
@@ -108,9 +108,9 @@ int GroupPool::allocate(string name, int * oid, string& error_str)
 
     if (Nebula::instance().is_federation_slave())
     {
-        NebulaLog::log("ONE",Log::ERROR,
-                "GroupPool::allocate called, but this "
-                "OpenNebula is a federation slave");
+        NebulaLog::log("ONE", Log::ERROR,
+                       "GroupPool::allocate called, but this "
+                       "OpenNebula is a federation slave");
 
         return -1;
     }
@@ -154,9 +154,9 @@ int GroupPool::update(PoolObjectSQL * objsql)
 {
     if (Nebula::instance().is_federation_slave())
     {
-        NebulaLog::log("ONE",Log::ERROR,
-                "GroupPool::update called, but this "
-                "OpenNebula is a federation slave");
+        NebulaLog::log("ONE", Log::ERROR,
+                       "GroupPool::update called, but this "
+                       "OpenNebula is a federation slave");
 
         return -1;
     }
@@ -183,9 +183,9 @@ int GroupPool::drop(PoolObjectSQL * objsql, string& error_msg)
 
     if (Nebula::instance().is_federation_slave())
     {
-        NebulaLog::log("ONE",Log::ERROR,
-                "GroupPool::drop called, but this "
-                "OpenNebula is a federation slave");
+        NebulaLog::log("ONE", Log::ERROR,
+                       "GroupPool::drop called, but this "
+                       "OpenNebula is a federation slave");
 
         return -1;
     }

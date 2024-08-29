@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -32,13 +32,12 @@ class ObjectCollection
 public:
 
     ObjectCollection(const std::string& _collection_name)
-        :collection_name(_collection_name){};
+        :collection_name(_collection_name) {};
 
     ObjectCollection(const std::string& cname, const std::set<int>& cset)
-        :collection_name(cname), collection_set(cset){};
+        :collection_name(cname), collection_set(cset) {};
 
-    template <typename T>
-    ObjectCollection(const std::string& cname, const std::vector<T>& cvector)
+    template <typename T> ObjectCollection(const std::string& cname, const std::vector<T>& cvector)
         :collection_name(cname)
     {
         for (const auto& i: cvector)
@@ -48,7 +47,7 @@ public:
 
     }
 
-    ~ObjectCollection(){};
+    ~ObjectCollection() {};
 
     /**
      *  Adds an ID to the set.

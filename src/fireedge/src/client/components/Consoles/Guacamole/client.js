@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -24,7 +24,7 @@ import {
   GuacamoleSession, // eslint-disable-line no-unused-vars
   SOCKETS,
   GUACAMOLE_STATES_STR,
-  // THUMBNAIL_UPDATE_FREQUENCY,
+  T,
 } from 'client/constants'
 
 const {
@@ -172,8 +172,8 @@ const GuacamoleClient = ({ id, display }) => {
       const isDisconnected = DISCONNECTED === stateString
       const isConnected = CONNECTED === stateString
 
-      isConnected && enqueueSuccess('Connection established')
-      isDisconnected && enqueueInfo('Disconnected')
+      isConnected && enqueueSuccess(T.SuccessConnectionEstablished)
+      isDisconnected && enqueueInfo(T.InfoDisconnected)
 
       !isDisconnect && setConnectionState({ state: stateString })
     }

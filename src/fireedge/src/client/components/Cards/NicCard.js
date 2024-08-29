@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -104,12 +104,12 @@ const NicCard = memo(
           {
             text: stringToBoolean(RDP) && 'RDP',
             dataCy: `${dataCy}-rdp`,
-            helpText: 'Remote Desktop Protocol',
+            helpText: Tr(T['nic.card.rdp']),
           },
           {
             text: stringToBoolean(SSH) && 'SSH',
             dataCy: `${dataCy}-ssh`,
-            helpText: 'Secure Shell Protocol',
+            helpText: Tr(T['nic.card.ssh']),
           },
           hasAlias && {
             text: `ALIAS: ${aliasLength}`,

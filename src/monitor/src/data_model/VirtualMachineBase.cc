@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -77,7 +77,7 @@ int VirtualMachineBase::init_attributes()
 
     xpath(action, "/VM/HISTORY_RECORDS/HISTORY/ACTION", -1);
     resume = (action == VMActions::STOP_ACTION || action == VMActions::UNDEPLOY_ACTION
-            || action == VMActions::UNDEPLOY_HARD_ACTION );
+              || action == VMActions::UNDEPLOY_HARD_ACTION );
 
     xpath(hid, "/VM/HISTORY_RECORDS/HISTORY/HID", -1);
     xpath(dsid, "/VM/HISTORY_RECORDS/HISTORY/DS_ID", -1);

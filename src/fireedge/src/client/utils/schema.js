@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -339,7 +339,8 @@ export const schemaUserInput = ({
 
       return {
         values,
-        type: INPUT_TYPES.SELECT,
+        type: INPUT_TYPES.AUTOCOMPLETE,
+        optionsOnly: true,
         validation: string()
           .trim()
           .concat(requiredSchema(mandatory, string()))
@@ -367,7 +368,8 @@ export const schemaUserInput = ({
 
       return {
         values,
-        type: INPUT_TYPES.SELECT,
+        type: INPUT_TYPES.AUTOCOMPLETE,
+        optionsOnly: true,
         multiple: true,
         validation: array(string().trim())
           .concat(requiredSchema(mandatory, array()))

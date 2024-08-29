@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -27,7 +27,8 @@ import { boolean, string } from 'yup'
 const SCHEME_FIELD = {
   name: 'SCHEME',
   label: T.Schema,
-  type: INPUT_TYPES.SELECT,
+  type: INPUT_TYPES.AUTOCOMPLETE,
+  optionsOnly: true,
   values: [
     { text: T.System, value: SCHEMES.SYSTEM },
     { text: T.Dark, value: SCHEMES.DARK },
@@ -43,7 +44,8 @@ const SCHEME_FIELD = {
 const LANG_FIELD = {
   name: 'LANG',
   label: T.Language,
-  type: INPUT_TYPES.SELECT,
+  type: INPUT_TYPES.AUTOCOMPLETE,
+  optionsOnly: true,
   values: () =>
     arrayToOptions(Object.entries(LANGUAGES), {
       addEmpty: false,
@@ -68,7 +70,8 @@ const DISABLE_ANIMATIONS_FIELD = {
 const VIEW_FIELD = ({ views }) => ({
   name: 'DEFAULT_VIEW',
   label: T.View,
-  type: INPUT_TYPES.SELECT,
+  type: INPUT_TYPES.AUTOCOMPLETE,
+  optionsOnly: true,
   values: () =>
     arrayToOptions(Object.entries(views), {
       addEmpty: true,
@@ -85,7 +88,8 @@ const VIEW_FIELD = ({ views }) => ({
 const ZONE_ENDPOINT_FIELD = ({ zones = [] }) => ({
   name: 'DEFAULT_ZONE_ENDPOINT',
   label: T.DefaultZoneEndpoint,
-  type: INPUT_TYPES.SELECT,
+  type: INPUT_TYPES.AUTOCOMPLETE,
+  optionsOnly: true,
   values: () =>
     arrayToOptions(
       zones
@@ -107,6 +111,14 @@ const ZONE_ENDPOINT_FIELD = ({ zones = [] }) => ({
   grid: { md: 12 },
 })
 
+const FULL_SCREEN_INFO_FIELD = {
+  name: 'FULL_SCREEN_INFO',
+  label: T.FullScreenInfo,
+  type: INPUT_TYPES.CHECKBOX,
+  validation: boolean().yesOrNo(),
+  grid: { md: 12 },
+}
+
 /**
  * @param {object} props - Props
  * @param {object} props.views - views.
@@ -120,6 +132,7 @@ export const FIELDS = (props) => [
   VIEW_FIELD(props),
   ZONE_ENDPOINT_FIELD(props),
   DISABLE_ANIMATIONS_FIELD,
+  FULL_SCREEN_INFO_FIELD,
 ]
 
 /**

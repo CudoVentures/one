@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project Leads (OpenNebula.org)             */
+/* Copyright 2002-2024, OpenNebula Project Leads (OpenNebula.org)             */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -24,13 +24,13 @@ void VMGroupPoolXML::add_object(xmlNodePtr node)
     if ( node == 0 || node->children == 0 )
     {
         NebulaLog::log("VM_GROUP", Log::ERROR, "XML Node does not represent a "
-                "valid user");
+                       "valid user");
         return;
     }
 
     VMGroupXML * vmg = new VMGroupXML(node);
 
-    objects.insert( pair<int,ObjectXML*>(vmg->get_oid(), vmg) );
+    objects.insert( pair<int, ObjectXML*>(vmg->get_oid(), vmg) );
 }
 
 int VMGroupPoolXML::load_info(xmlrpc_c::value &result)

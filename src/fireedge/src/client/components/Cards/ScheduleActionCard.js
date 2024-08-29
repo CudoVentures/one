@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -31,6 +31,7 @@ import {
   isRelative,
 } from 'client/models/Scheduler'
 import { sentenceCase } from 'client/utils'
+import { Tr } from 'client/components/HOC'
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
   marginLeft: `${theme.spacing(1)} !important`,
@@ -47,10 +48,11 @@ const ScheduleActionCard = memo(({ schedule, actions }) => {
   const { ID, ACTION, TIME, MESSAGE, DONE, WARNING, NAME } = schedule
 
   const typeScheduleText =
-    `${TEMPLATE_SCHEDULE_TYPE_STRING?.[getTypeScheduleAction(schedule)]}:` || ''
+    Tr(TEMPLATE_SCHEDULE_TYPE_STRING?.[getTypeScheduleAction(schedule)]) +
+      ':' || ''
 
   const titleName = NAME ? `(${NAME})` : ''
-  const titleAction = `#${ID} ${sentenceCase(ACTION)} ${titleName}`
+  const titleAction = `#${ID} ${Tr(sentenceCase(ACTION))} ${titleName}`
   const timeIsRelative = isRelative(TIME)
 
   const time = timeIsRelative ? getPeriodicityByTimeInSeconds(TIME) : TIME
@@ -102,7 +104,9 @@ const ScheduleActionCard = memo(({ schedule, actions }) => {
             <>
               <StyledTypography variant="caption">
                 {timeIsRelative ? (
-                  <span>{Object.values(time).join(' ')}</span>
+                  <span>
+                    {time?.time} {Tr(time?.period)}
+                  </span>
                 ) : (
                   <span title={formatTime}>
                     <Timer initial={TIME} />

@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -25,6 +25,7 @@ import { DateTime } from 'luxon'
 
 import { Tr } from 'client/components/HOC'
 import { T } from 'client/constants'
+import { mapValues } from 'lodash'
 
 const keyMap = {
   VMID: 'OID',
@@ -68,7 +69,6 @@ const topMetricNames = {
 }
 
 const commonStyles = {
-  minHeight: '250px',
   width: '100%',
   position: 'relative',
   marginTop: 2,
@@ -195,8 +195,23 @@ const generateShowbackInfoTab = ({ groups }) => {
       )
     }
 
+    const topMetricNamesTranslated = mapValues(topMetricNames, (value, key) =>
+      Tr(value)
+    )
+    const metricNamesTranslated = mapValues(metricNames, (value, key) =>
+      Tr(value)
+    )
+
     return (
-      <Box padding={2} display="flex" flexDirection="column" height="100%">
+      <Box
+        padding={2}
+        display="flex"
+        flexDirection="column"
+        sx={{
+          height: '100vh',
+          minHeight: '1000px',
+        }}
+      >
         <Box
           display="flex"
           justifyContent="space-between"
@@ -223,30 +238,31 @@ const generateShowbackInfoTab = ({ groups }) => {
           flexDirection="row"
           justifyContent="space-between"
           mb={2}
+          flex={5}
         >
-          <Box flexGrow={1} mr={1} {...commonStyles}>
+          <Box flex={1} mr={1} {...commonStyles}>
             <MultiChart
               datasets={topChartsData}
               chartType={'table'}
               tableColumns={smallTableColumns}
               groupBy={'MONTH'}
-              metricNames={topMetricNames}
+              metricNames={topMetricNamesTranslated}
             />
           </Box>
 
-          <Box flexGrow={1} ml={1} {...commonStyles}>
+          <Box flex={1} ml={1} {...commonStyles}>
             <MultiChart
               datasets={topChartsData}
               chartType={'bar'}
               ItemsPerPage={12}
               groupBy={'MONTH'}
-              metricNames={topMetricNames}
+              metricNames={topMetricNamesTranslated}
               selectedMetrics={{ totalCost: true }}
             />
           </Box>
         </Box>
 
-        <Box flexGrow={1} minHeight="400px" {...commonStyles}>
+        <Box flex={7} {...commonStyles}>
           <MultiChart
             datasets={[
               {
@@ -258,7 +274,7 @@ const generateShowbackInfoTab = ({ groups }) => {
             ItemsPerPage={7}
             tableColumns={DataGridColumns}
             groupBy={'MONTH'}
-            metricNames={metricNames}
+            metricNames={metricNamesTranslated}
           />
         </Box>
       </Box>

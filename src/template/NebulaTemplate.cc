@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -45,7 +45,7 @@ int NebulaTemplate::load_configuration()
         return -1;
     }
 
-    for(iter=conf_default.begin();iter!=conf_default.end();)
+    for(iter=conf_default.begin(); iter!=conf_default.end();)
     {
         aname = iter->first;
         attr  = iter->second;
@@ -54,7 +54,7 @@ int NebulaTemplate::load_configuration()
 
         if ( j == attributes.end() )
         {
-            attributes.insert(make_pair(aname,attr));
+            attributes.insert(make_pair(aname, attr));
             ++iter;
         }
         else
@@ -81,7 +81,7 @@ void NebulaTemplate::set_conf_single(const std::string& attr,
     SingleAttribute *   attribute;
 
     attribute = new SingleAttribute(attr, value);
-    conf_default.insert(make_pair(attribute->name(),attribute));
+    conf_default.insert(make_pair(attribute->name(), attribute));
 }
 
 /* -------------------------------------------------------------------------- */

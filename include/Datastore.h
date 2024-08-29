@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------ */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems              */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems              */
 /*                                                                          */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may  */
 /* not use this file except in compliance with the License. You may obtain  */
@@ -327,22 +327,22 @@ private:
     /**
      * Disk types for the Images created in this datastore
      */
-     Image::DiskType disk_type;
+    Image::DiskType disk_type;
 
     /**
      * Total datastore capacity in MB
      */
-     long long total_mb;
+    long long total_mb;
 
     /**
      * Available datastore capacity in MB
      */
-     long long free_mb;
+    long long free_mb;
 
     /**
      * Used datastore capacity in MB
      */
-     long long used_mb;
+    long long used_mb;
 
     /**
      *  Datastore state

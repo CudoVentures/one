@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -77,7 +77,10 @@ const Hosts = memo(({ id, setTab, logTabId }) => {
             isSubmitting={loadingAddHost}
             onClick={async () => {
               addHost({ id, amount })
-              enqueueInfo(`Adding ${amount} Host${amount > 1 ? 's' : ''}`)
+              enqueueInfo(T.InfoProvisionAddHost, [
+                amount,
+                amount > 1 ? 's' : '',
+              ])
             }}
           />
         </Stack>
@@ -112,7 +115,7 @@ const Hosts = memo(({ id, setTab, logTabId }) => {
                   isSubmitting={loadingConfigure}
                   onClick={async () => {
                     configureHost({ provision: id, id: host.ID })
-                    enqueueInfo(`Configuring host - ID: ${host.ID}`)
+                    enqueueInfo(T.InfoProvisionConfigureHost, host.ID)
                     setTab(logTabId)
                   }}
                 />
@@ -126,7 +129,7 @@ const Hosts = memo(({ id, setTab, logTabId }) => {
                       id: host.ID,
                       resource: 'host',
                     })
-                    enqueueInfo(`Deleting Host - ID:${host.ID}`)
+                    enqueueInfo(T.InfoProvisionDeleteHost, host.ID)
                   }}
                 />
               </>

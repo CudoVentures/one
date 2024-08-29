@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -37,14 +37,14 @@ const formatError = 'Error: %s'
 const configError = (error) => ({
   color: 'red',
   message: formatError,
-  error: error && error.message,
+  error: error?.message,
 })
 
 // guacamole client options
 const clientOptions = {
   crypt: {
     cypher: 'AES-256-CBC',
-    key: (global && global.paths && global.paths.FIREEDGE_KEY) || '',
+    key: global?.paths?.FIREEDGE_KEY || '',
   },
   allowedUnencryptedConnectionSettings: {
     rdp: ['width', 'height', 'dpi'],
@@ -66,7 +66,7 @@ const clientOptions = {
 
 const clientCallbacks = {
   processConnectionSettings: (settings, callback) => {
-    if (settings.expiration && settings.expiration < Date.now()) {
+    if (settings?.expiration < Date.now()) {
       return callback(new Error('Token expired'))
     }
 
@@ -85,19 +85,14 @@ const guacdHost = guacd.host || 'localhost'
  * @param {object} appServer - express app
  */
 const guacamole = (appServer) => {
-  if (
-    appServer &&
-    appServer.constructor &&
-    appServer.constructor.name &&
-    appServer.constructor.name === 'Server'
-  ) {
+  if (appServer?.constructor?.name === 'Server') {
     const guacamoleServer = new GuacamoleOpennebula(
       { server: appServer, path: endpointGuacamole },
       { host: guacdHost, port: guacdPort },
       clientOptions,
       clientCallbacks
     )
-    guacamoleServer.on('error', (clientConnection, error) => {
+    guacamoleServer.on('error', (_, error) => {
       writeInLogger(error, {
         format: formatError,
       })

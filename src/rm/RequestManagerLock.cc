@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -119,7 +119,7 @@ void RequestManagerLock::request_execute(xmlrpc_c::paramList const& paramList,
 /* ------------------------------------------------------------------------- */
 
 void RequestManagerUnlock::request_execute(xmlrpc_c::paramList const& paramList,
-                                         RequestAttributes& att)
+                                           RequestAttributes& att)
 {
     int     oid     = xmlrpc_c::value_int(paramList.getInt(1));
 
@@ -177,7 +177,7 @@ DocumentLock::DocumentLock()
 
 DocumentUnlock::DocumentUnlock():
     RequestManagerUnlock("one.document.unlock",
-                        "Unlocks the object")
+                         "Unlocks the object")
 {
     Nebula& nd  = Nebula::instance();
     pool        = nd.get_docpool();

@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -48,14 +48,41 @@ const Steps = createSteps([General, UserInputs, Network, Charter], {
       }
     )
 
+    // Get schedule actions from vm template contents
+    const schedActions = parseVmTemplateContents(
+      ServiceTemplate?.TEMPLATE?.BODY?.roles[0]?.vm_template_contents,
+      true
+    )?.schedActions
+
     const knownTemplate = schema.cast({
       [GENERAL_ID]: {},
       [USERINPUTS_ID]: {},
       [NETWORK_ID]: { NETWORKS: networks },
-      [CHARTER_ID]: {},
+      [CHARTER_ID]: { SCHED_ACTION: schedActions },
     })
 
-    return { ...knownTemplate, roles: roles }
+    const newRoles = roles.map((role) => {
+      // Parse vm template content
+      const roleTemplateContent = parseVmTemplateContents(
+        role.vm_template_contents,
+        true
+      )
+
+      // Delete schedule actions
+      delete roleTemplateContent.schedActions
+
+      // Parse content without sched actions
+      const roleTemplateWithoutSchedActions = parseVmTemplateContents(
+        roleTemplateContent,
+        false
+      )
+      role.vm_template_contents = roleTemplateWithoutSchedActions
+
+      // Return content
+      return role
+    })
+
+    return { ...knownTemplate, roles: newRoles }
   },
 
   transformBeforeSubmit: (formData) => {
@@ -67,7 +94,12 @@ const Steps = createSteps([General, UserInputs, Network, Charter], {
     } = formData
 
     const formatTemplate = {
-      custom_attrs_values: { ...userInputsData },
+      custom_attrs_values: Object.fromEntries(
+        Object.entries(userInputsData).map(([key, value]) => [
+          key.toUpperCase(),
+          String(value),
+        ])
+      ),
       networks_values: networkData?.NETWORKS?.map((network) => ({
         [network?.name]: {
           [['existing', 'reserve'].includes(network?.tableType)
@@ -81,12 +113,12 @@ const Steps = createSteps([General, UserInputs, Network, Charter], {
           {
             vmTemplateContents: role?.vm_template_contents,
             customAttrsValues: userInputsData,
+            schedActions: charterData.SCHED_ACTION,
           },
           false,
           true
         ),
       })),
-      ...(!!charterData?.SCHED_ACTION?.length && { ...charterData }),
       name: generalData?.NAME,
     }
 

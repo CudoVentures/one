@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -24,6 +24,8 @@ import {
   FormControl,
   InputLabel,
 } from '@mui/material'
+import { Tr } from 'client/components/HOC'
+import { T } from 'client/constants'
 
 /**
  * Role Panel component for managing roles.
@@ -52,10 +54,10 @@ const RoleVmVmPanel = ({ roles, onChange, selectedRoleIndex }) => {
   return (
     <Box p={2}>
       <Box sx={{ flex: 1 }}>
-        <Typography variant="h6">Role Details</Typography>
+        <Typography variant="h6">{Tr(T.RoleDetails)}</Typography>
         <Box sx={{ mb: 2 }}>
           <TextField
-            label="Role Name"
+            label={Tr(T.RoleName)}
             name="NAME"
             value={roles?.[selectedRoleIndex]?.NAME ?? ''}
             onChange={handleInputChange}
@@ -69,7 +71,7 @@ const RoleVmVmPanel = ({ roles, onChange, selectedRoleIndex }) => {
           <FormControl fullWidth variant="outlined" sx={{ mt: 2 }}>
             <InputLabel>VM-VM Affinity</InputLabel>
             <Select
-              label="VM-VM Affinity"
+              label={Tr(T.VMAffinity)}
               name="POLICY"
               data-cy="policy-selector"
               value={roles?.[selectedRoleIndex]?.POLICY ?? 'None'}
@@ -77,19 +79,19 @@ const RoleVmVmPanel = ({ roles, onChange, selectedRoleIndex }) => {
               onChange={handleInputChange}
             >
               <MenuItem data-cy="policy-selector-policy-None" value="None">
-                None
+                {Tr(T.None)}
               </MenuItem>
               <MenuItem
                 data-cy="policy-selector-policy-AFFINED"
                 value="AFFINED"
               >
-                Affined
+                {Tr(T.Affined)}
               </MenuItem>
               <MenuItem
                 data-cy="policy-selector-policy-ANTI_AFFINED"
                 value="ANTI_AFFINED"
               >
-                Anti-Affined
+                {Tr(T.AntiAffined)}
               </MenuItem>
             </Select>
           </FormControl>

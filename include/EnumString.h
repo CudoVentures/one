@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -66,10 +66,10 @@ public:
     const std::string& _to_str(T ev) const
     {
         const auto it = std::find_if(enum_map.begin(), enum_map.end(),
-            [ev](const std::pair<std::string, T> & t) -> bool
-            {
-                return t.second == ev;
-            });
+                                     [ev](const std::pair<std::string, T> & t) -> bool
+        {
+            return t.second == ev;
+        });
 
         return it->first;
     }

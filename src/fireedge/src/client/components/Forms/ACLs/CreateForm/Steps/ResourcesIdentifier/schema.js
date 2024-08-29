@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -22,7 +22,7 @@ import { GroupsTable, ClustersTable } from 'client/components/Tables'
 export const ACL_TYPE_ID_TRANSLATIONS = {
   INDIVIDUAL: {
     value: 'INDIVIDUAL',
-    text: T['acls.form.create.resourcesUser.identifier'],
+    text: T.Identifier,
   },
   GROUP: { value: 'GROUP', text: T.Group },
   ALL: { value: 'ALL', text: T.All },

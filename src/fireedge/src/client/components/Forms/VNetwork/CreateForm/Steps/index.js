@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -58,9 +58,13 @@ export const getUnknownVars = (fromAttributes = {}, schema) => {
 
 const Steps = createSteps([General, ExtraConfiguration], {
   transformInitialValue: ({ TEMPLATE, AR_POOL, ...vnet } = {}, schema) => {
+    // Init switches of physical device and bridge
+    const phyDevSwitch = !vnet.PHYDEV
+    const bridgeSwitch = !!(vnet.BRIDGE && !vnet.BRIDGE.startsWith('onebr'))
+
     const initialValue = schema.cast(
       {
-        [GENERAL_ID]: { ...vnet },
+        [GENERAL_ID]: { ...vnet, phyDevSwitch, bridgeSwitch },
         [EXTRA_ID]: { ...TEMPLATE, AR: AR_POOL.AR, ...vnet },
       },
       { stripUnknown: true, context: vnet }
@@ -76,6 +80,14 @@ const Steps = createSteps([General, ExtraConfiguration], {
   transformBeforeSubmit: (formData) => {
     const { [GENERAL_ID]: general = {}, [EXTRA_ID]: extra = {} } =
       formData ?? {}
+
+    // Delete values of physical device and bridge depending of the value of their switches
+    general.phyDevSwitch && delete general.PHYDEV
+    !general.bridgeSwitch && delete general.BRIDGE
+
+    // Ensure that switches of physical device and bridge are not sent to the API
+    delete general.phyDevSwitch
+    delete general.bridgeSwitch
 
     return jsonToXml({ ...extra, ...general })
   },

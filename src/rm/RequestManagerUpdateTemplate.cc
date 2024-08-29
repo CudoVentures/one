@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -135,9 +135,9 @@ void RequestManagerUpdateTemplate::request_execute(int oid,
 /* ------------------------------------------------------------------------- */
 
 void VirtualMachineUpdateTemplate::request_execute(int oid,
-                                                  const std::string& tmpl,
-                                                  int update_type,
-                                                  RequestAttributes& att)
+                                                   const std::string& tmpl,
+                                                   int update_type,
+                                                   RequestAttributes& att)
 {
     int rc;
 
@@ -161,7 +161,7 @@ void VirtualMachineUpdateTemplate::request_execute(int oid,
     }
 
     // Apply generic quota deltas
-    auto new_tmpl = make_unique<VirtualMachineTemplate>(false,'=',"USER_TEMPLATE");
+    auto new_tmpl = make_unique<VirtualMachineTemplate>(false, '=', "USER_TEMPLATE");
 
     if ( new_tmpl->parse_str_or_xml(tmpl, att.resp_msg) != 0 )
     {
@@ -248,8 +248,6 @@ void VirtualMachineUpdateTemplate::request_execute(int oid,
     }
 
     pool->update(vm.get());
-
-    extra_updates(vm.get());
 
     success_response(oid, att);
 }

@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -39,7 +39,8 @@ const EXPIRE_FIELD = {
 const GROUP_FIELD = (userGroups) => ({
   name: constants.groupFieldName,
   label: T.Group,
-  type: INPUT_TYPES.SELECT,
+  type: INPUT_TYPES.AUTOCOMPLETE,
+  optionsOnly: true,
   values: () =>
     arrayToOptions(userGroups, {
       addEmpty: '-',

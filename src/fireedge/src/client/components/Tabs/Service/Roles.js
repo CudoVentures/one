@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -24,11 +24,12 @@ import {
   useServiceScaleRoleMutation,
 } from 'client/features/OneApi/service'
 
+import { useLazyGetTemplatesQuery } from 'client/features/OneApi/vmTemplate'
 import { VmsTable } from 'client/components/Tables'
 import VmActions from 'client/components/Tables/Vms/actions'
 import { StatusCircle } from 'client/components/Status'
 import { getRoleState } from 'client/models/Service'
-import { Box, Dialog, Typography } from '@mui/material'
+import { Box, Dialog, Typography, CircularProgress } from '@mui/material'
 import { Content as RoleAddDialog } from 'client/components/Forms/ServiceTemplate/CreateForm/Steps/RoleConfig'
 import { ScaleDialog } from 'client/components/Tabs/Service/ScaleDialog'
 import {
@@ -42,6 +43,8 @@ import {
 } from 'iconoir-react'
 
 import { useGeneralApi } from 'client/features/General'
+import { T } from 'client/constants'
+import { Tr } from 'client/components/HOC'
 
 // Filters actions based on the data-cy key
 const filterActions = ['vm_resume', 'vm-manage', 'vm-host', 'vm-terminate']
@@ -54,6 +57,7 @@ const filterActions = ['vm_resume', 'vm-manage', 'vm-host', 'vm-terminate']
  * @returns {ReactElement} Roles tab
  */
 const RolesTab = ({ id }) => {
+  const [fetch, { data, error, isFetching }] = useLazyGetTemplatesQuery()
   const { enqueueError, enqueueSuccess, enqueueInfo } = useGeneralApi()
   // wrapper
   const createApiCallback = (apiFunction) => async (params) => {
@@ -74,18 +78,16 @@ const RolesTab = ({ id }) => {
       const roleName = roles?.[roleIdx]?.name
 
       try {
-        enqueueInfo(`Starting '${actionType}' action on role: ${roleName}`)
+        enqueueInfo(T.InfoServiceActionRole, [actionType, roleName])
 
         await createApiCallback(addRoleAction)({
           perform: actionType,
           role: roleName,
         })
 
-        enqueueSuccess(`Action '${actionType}' completed on role: ${roleName}`)
+        enqueueSuccess(T.SuccessRoleActionCompleted, [actionType, roleName])
       } catch (error) {
-        enqueueError(
-          `Action '${actionType}' failed on role: ${roleName}. Error: ${error}`
-        )
+        enqueueError(T.ErrorServiceActionRole, [actionType, roleName, error])
       }
     }
   }
@@ -123,6 +125,7 @@ const RolesTab = ({ id }) => {
           handleAddRole(params)
           onClose()
         }}
+        fetchedVmTemplates={{ vmTemplates: data, error: error }}
       />
     </Dialog>
   )
@@ -154,7 +157,8 @@ const RolesTab = ({ id }) => {
     }
   }
 
-  const handleOpenAddRole = () => {
+  const handleOpenAddRole = async () => {
+    await fetch()
     setAddRoleOpen(true)
   }
 
@@ -186,12 +190,13 @@ const RolesTab = ({ id }) => {
           <>
             <ButtonGenerator
               items={{
-                name: 'Add Role',
+                name: T.AddRole,
                 onClick: handleOpenAddRole,
-                icon: Plus,
+                icon: isFetching ? <CircularProgress size={24} /> : <Plus />,
               }}
               options={{
                 singleButton: {
+                  disabled: !!isFetching,
                   sx: {
                     fontSize: '0.95rem',
                     padding: '6px 8px',
@@ -209,9 +214,9 @@ const RolesTab = ({ id }) => {
 
           <ButtonGenerator
             items={{
-              name: 'Scale',
+              name: T.Scale,
               onClick: handleOpenScale,
-              icon: Plus,
+              icon: <Plus />,
             }}
             options={{
               singleButton: {
@@ -242,12 +247,20 @@ const RolesTab = ({ id }) => {
             options={{
               singleButton: {
                 disabled: !selectedRoles?.length > 0,
-                startIcon: <PlayOutline />,
-                sx: {
-                  fontSize: 20,
-                  padding: '0px 8px',
-                },
+                icon: <PlayOutline />,
+                sx: (theme) => ({
+                  color: theme.palette.text.primary,
+                  padding: '0',
+                  borderRadius: '50%',
+                  '&:hover': {
+                    backgroundColor: theme.palette.action.hover,
+                  },
+                  '&.selected': {
+                    border: `2px solid ${theme.palette.secondary.main}`,
+                  },
+                }),
                 title: null,
+                type: 'icon',
               },
             }}
           />
@@ -255,21 +268,15 @@ const RolesTab = ({ id }) => {
           <ButtonGenerator
             items={[
               {
-                name: 'Suspend',
-                onClick: () =>
-                  handleAddRoleAction({
-                    perform: 'suspend',
-                    role: roles?.[selectedRoles?.[0]]?.name,
-                  }),
+                name: T.Suspend,
+                onClick: () => handleAddRoleAction('suspend'),
               },
               {
-                name: 'Poweroff',
-
+                name: T.Poweroff,
                 onClick: () => handleAddRoleAction('poweroff'),
               },
               {
-                name: 'Poweroff Hard',
-
+                name: T.PoweroffHard,
                 onClick: () => handleAddRoleAction('poweroff-hard'),
               },
             ]}
@@ -281,6 +288,7 @@ const RolesTab = ({ id }) => {
                 sx: {
                   fontSize: 20,
                   padding: '8px 16px',
+                  border: '0',
                 },
                 title: null,
               },
@@ -290,16 +298,15 @@ const RolesTab = ({ id }) => {
           <ButtonGenerator
             items={[
               {
-                name: 'Stop',
-
+                name: T.Stop,
                 onClick: () => handleAddRoleAction('stop'),
               },
               {
-                name: 'Undeploy',
+                name: T.Undeploy,
                 onClick: () => handleAddRoleAction('undeploy'),
               },
               {
-                name: 'Undeploy Hard',
+                name: T.UndeployHard,
                 onClick: () => handleAddRoleAction('undeploy-hard'),
               },
             ]}
@@ -320,11 +327,11 @@ const RolesTab = ({ id }) => {
           <ButtonGenerator
             items={[
               {
-                name: 'Reboot',
+                name: T.Reboot,
                 onClick: () => handleAddRoleAction('reboot'),
               },
               {
-                name: 'Reboot Hard',
+                name: T.RebootHard,
                 onClick: () => handleAddRoleAction('reboot-hard'),
               },
             ]}
@@ -346,11 +353,11 @@ const RolesTab = ({ id }) => {
           <ButtonGenerator
             items={[
               {
-                name: 'Terminate',
+                name: T.Terminate,
                 onClick: () => handleAddRoleAction('terminate'),
               },
               {
-                name: 'Terminate Hard',
+                name: T.TerminateHard,
                 onClick: () => handleAddRoleAction('terminate-hard'),
               },
             ]}
@@ -359,10 +366,12 @@ const RolesTab = ({ id }) => {
                 disabled: !selectedRoles?.length > 0,
                 startIcon: <Trash />,
                 endIcon: <NavArrowDown />,
+                color: 'error',
                 sx: {
                   fontSize: 20,
                   padding: '8px 16px',
                   marginLeft: '2em',
+                  color: 'primary',
                 },
                 title: null,
               },
@@ -388,8 +397,8 @@ const RolesTab = ({ id }) => {
             bgcolor: 'background.paper',
             border: `2px solid ${
               isSelected(idx)
-                ? theme.palette.grey[600]
-                : theme.palette.grey[400]
+                ? theme.palette.secondary.main
+                : theme.palette.divider
             }`,
           })}
           onClick={(event) => handleRoleClick(idx, role, event)}
@@ -458,9 +467,11 @@ const RoleComponent = memo(({ role, selected, status }) => {
           {name}
         </Typography>
         <Typography variant="body1" mb={1}>
-          VM Template ID: {templateId}
+          {Tr(T.VMTemplate)} {Tr(T.ID)}: {templateId}
         </Typography>
-        <Typography variant="body1">Cardinality: {cardinality}</Typography>
+        <Typography variant="body1">
+          {Tr(T.Cardinality)}: {cardinality}
+        </Typography>
       </Box>
     </Box>
   )

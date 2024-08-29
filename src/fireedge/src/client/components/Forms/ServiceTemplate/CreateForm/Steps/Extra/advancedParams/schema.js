@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -25,13 +25,14 @@ const STRATEGY_TYPES = {
 
 const VM_SHUTDOWN_TYPES = {
   terminate: 'Terminate',
-  terminateHard: 'Terminate Hard',
+  terminateHard: 'Terminate hard',
 }
 
 const STRATEGY_TYPE = {
-  label: 'Strategy',
+  label: T.Strategy,
   name: 'ADVANCED.DEPLOYMENT',
-  type: INPUT_TYPES.SELECT,
+  type: INPUT_TYPES.AUTOCOMPLETE,
+  optionsOnly: true,
   values: arrayToOptions(Object.keys(STRATEGY_TYPES), {
     addEmpty: false,
     getText: (key) => STRATEGY_TYPES[key],
@@ -47,9 +48,10 @@ const STRATEGY_TYPE = {
 }
 
 const VM_SHUTDOWN_TYPE = {
-  label: 'VM Shutdown',
+  label: T.VMShutdownAction,
   name: 'ADVANCED.VMSHUTDOWN',
-  type: INPUT_TYPES.SELECT,
+  type: INPUT_TYPES.AUTOCOMPLETE,
+  optionsOnly: true,
   values: arrayToOptions(Object.values(VM_SHUTDOWN_TYPES), { addEmpty: false }),
   validation: string()
     .trim()

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # -------------------------------------------------------------------------- #
-# Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                #
+# Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                #
 #                                                                            #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may    #
 # not use this file except in compliance with the License. You may obtain    #
@@ -104,12 +104,6 @@ FEDERATED = {
     :description => 'Limit backup/restore to federated tables'
 }
 
-RECREATE = {
-    :name => 'recreate',
-    :large => '--recreate',
-    :description => 'Delete FTS index and create a new one'
-}
-
 ###############################################################################
 # SQLite options
 ###############################################################################
@@ -126,7 +120,7 @@ SQLITE={
 }
 
 ###############################################################################
-# MySQL and PostgreSQL options
+# MySQL options
 ###############################################################################
 TYPE={
     :name => 'type',
@@ -144,8 +138,7 @@ SERVER={
     :short => '-S host',
     :large => '--server host',
     :format => String,
-    :description => 'MySQL or PostgreSQL server hostname or IP. ' \
-                    'Defaults to localhost',
+    :description => 'MySQL server hostname or IP. Defaults to localhost',
     :proc => lambda {|o, options|
         options[:server]  = o
     }
@@ -156,8 +149,7 @@ PORT={
     :short => '-P port',
     :large => '--port port',
     :format => String,
-    :description => 'MySQL or PostgreSQL server port. Defaults to ' \
-                    '3306 for MySQL and 5432 for PostgreSQL',
+    :description => 'MySQL server port. Defaults to 3306',
     :proc => lambda {|o, options|
         options[:port] = o
     }
@@ -168,7 +160,7 @@ USERNAME={
     :short => '-u user',
     :large => '--username user',
     :format => String,
-    :description => 'MySQL or PostgreSQL username',
+    :description => 'MySQL username',
     :proc => lambda {|o, options|
         options[:user]    = o
     }
@@ -179,8 +171,7 @@ PASSWORD={
     :short => '-p pass',
     :large => '--password pass',
     :format => String,
-    :description => 'MySQL or PostgreSQL password. Leave unset ' \
-                    'to be prompted for it',
+    :description => 'MySQL password. Leave unset to be prompted for it',
     :proc => lambda {|o, options|
         options[:passwd]  = o
     }
@@ -191,7 +182,7 @@ DBNAME={
     :short => '-d dbname',
     :large => '--dbname dbname',
     :format => String,
-    :description => 'MySQL or PostgreSQL DB name for OpenNebula',
+    :description => 'MySQL DB name for OpenNebula',
     :proc => lambda {|o, options|
         options[:db_name] = o
     }
@@ -201,7 +192,7 @@ ENCODING={
     :name => 'encoding',
     :large => '--encoding charset',
     :format => String,
-    :description => 'MySQL or PostgreSQL encoding to use for the connection',
+    :description => 'MySQL encoding to use for the connection',
     :proc => lambda {|o, options|
         options[:encoding] = o
     }
@@ -337,7 +328,7 @@ EXPR= {
 DRY= {
     :name => 'dry',
     :large => '--dry',
-    :description => 'Do not write in the database, output xml'
+    :description => 'Do not write in the database, output on stdout'
 }
 
 DELETE= {
@@ -488,7 +479,7 @@ CommandParser::CmdParser.new(ARGV) do
         Checks the consistency of the DB, and fixes the problems found
     EOT
 
-    command :fsck, fsck_desc, :options=>[FORCE, BACKUP] do
+    command :fsck, fsck_desc, :options=>[FORCE, BACKUP, DRY] do
         begin
             helper = OneDB.new(options)
             helper.fsck(options)
@@ -552,14 +543,14 @@ CommandParser::CmdParser.new(ARGV) do
 
     LIVE_ACTION_HELP = <<-EOT.unindent
         **WARNING**: This action is done while OpenNebula is running. Make
-        a backup of the datasbase before executing.
+        a backup of the database before executing.
     EOT
 
     ###########################################################################
     # Purge history
     ###########################################################################
     purge_history_desc = <<-EOT.unindent
-        Deletes all but the last history records from non DONE VMs. A single VM
+        Deletes all but the last two history records from non DONE VMs. A single VM
         history deletion can be specified with the --id option.
 
         #{LIVE_ACTION_HELP}
@@ -693,9 +684,9 @@ CommandParser::CmdParser.new(ARGV) do
             * --id: vm id, example: 156
             * --seq: sequence number of the record, example: 0
 
-        The new value for this elemente is set in the third parameter.
+        The new value for this element is set in the third parameter.
 
-        Change the the hostname of first record:
+        Change the hostname of first record:
 
             onedb change-history --id 3 --seq 0 '/HISTORY/HOSTNAME' new_host
 
@@ -863,7 +854,7 @@ CommandParser::CmdParser.new(ARGV) do
             * --seq: sequence number of the record, example: 0
 
         For example to show the 3rd record of VM 0
-            onedb update-history --id 0 --seq 3
+            onedb show-history --id 0 --seq 3
 
         #{LIVE_ACTION_HELP}
     EOT
@@ -890,24 +881,5 @@ CommandParser::CmdParser.new(ARGV) do
         end
 
         0 # exit code
-    end
-
-    ###########################################################################
-    # Create and recreate FTS index in vmpool
-    ###########################################################################
-    fts_desc = <<-EOT.unindent
-        Create or recreate FTS index in vm pool to be able to search VMs
-    EOT
-
-    command :'create-index', fts_desc, :options => [RECREATE] do
-        begin
-            helper = OneDB.new(options)
-            helper.fts_index(options.key?(:recreate))
-        rescue StandardError => e
-            STDERR.puts e.message
-            [-1, e.message]
-        end
-
-        0
     end
 end

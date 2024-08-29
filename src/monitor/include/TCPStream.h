@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -103,7 +103,7 @@ private:
 /* -------------------------------------------------------------------------- */
 template<typename MSG>
 int TCPStream<MSG>
-    ::action_loop(int threads, std::string& error)
+::action_loop(int threads, std::string& error)
 {
     struct addrinfo hints;
     struct addrinfo *res;
@@ -125,7 +125,7 @@ int TCPStream<MSG>
     /* Create TCP socket for incoming monitord client connections             */
     /* ---------------------------------------------------------------------- */
     _socket = socket(res->ai_family, res->ai_socktype | SOCK_NONBLOCK,
-            res->ai_protocol);
+                     res->ai_protocol);
 
     if ( _socket < 0 )
     {
@@ -169,8 +169,10 @@ int TCPStream<MSG>
 
     for (int i = 0 ; i < threads; ++i)
     {
-        std::thread action_thread = std::thread([this]{
-            while (true) {
+        std::thread action_thread = std::thread([this]
+        {
+            while (true)
+            {
                 std::string line;
 
                 if (read_line(line) != 0)
@@ -203,7 +205,7 @@ int TCPStream<MSG>
 
 template<typename MSG>
 int TCPStream<MSG>
-    ::read_line(std::string& line)
+::read_line(std::string& line)
 {
     char buffer[BUFFER_SIZE];
 

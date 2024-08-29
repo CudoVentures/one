@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -407,10 +407,14 @@ define(function(require) {
 
       var topology = {};
 
-      if (tmp_json && tmp_json.CORES){
+      var vcpu_value = tmp_json.VCPU === undefined? 
+          original_tmpl.TEMPLATE.VCPU === undefined? original_tmpl.TEMPLATE.CPU : original_tmpl.TEMPLATE.VCPU
+        : tmp_json.VCPU
+
+      if (tmp_json && tmp_json.CORES && vcpu_value){
         topology.CORES = tmp_json["CORES"];
-        topology.SOCKETS = parseInt(tmp_json["VCPU"]) / parseInt(tmp_json["CORES"]);
-        topology.THREADS = 1;
+        topology.SOCKETS = tmp_json.SOCKETS !== undefined? tmp_json.SOCKETS : "" + parseInt(vcpu_value) / parseInt(tmp_json["CORES"]);
+        topology.THREADS = "1";
         delete tmp_json["CORES"];
       }
 

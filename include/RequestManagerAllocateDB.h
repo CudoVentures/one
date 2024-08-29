@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -26,12 +26,12 @@ class RequestManagerAllocateDB: public Request
 {
 protected:
     RequestManagerAllocateDB(const std::string& name): Request(name, "A:ss",
-            "Allocates a new object from its template representation")
+                                                                   "Allocates a new object from its template representation")
     {
         auth_op = AuthRequest::MANAGE;
     };
 
-    ~RequestManagerAllocateDB(){};
+    ~RequestManagerAllocateDB() {};
 
     virtual PoolObjectSQL * create(const std::string& xml) = 0;
 
@@ -75,7 +75,7 @@ public:
         pool        =  Nebula::instance().get_apppool();
     };
 
-    ~MarketPlaceAppAllocateDB(){};
+    ~MarketPlaceAppAllocateDB() {};
 
     /* -------------------------------------------------------------------- */
 
@@ -101,7 +101,7 @@ public:
         pool        =  Nebula::instance().get_marketpool();
     };
 
-    ~MarketPlaceAllocateDB(){};
+    ~MarketPlaceAllocateDB() {};
 
     /* -------------------------------------------------------------------- */
 

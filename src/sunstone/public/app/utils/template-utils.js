@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -181,13 +181,21 @@ define(function(require) {
     return rtn;
   }
 
+  function _fetchOvmfValues() {
+    return $.ajax({
+      url: '/ovmf_uefis',
+      method: 'GET'
+    });
+  }
+
   return {
     "stringToTemplate": _convert_string_to_template,
     "templateToString": _convert_template_to_string,
     "htmlDecode": _htmlDecode,
     "htmlEncode": _htmlEncode,
     "escapeDoubleQuotes": _escapeDoubleQuotes,
-    "removeHTMLTags": _removeHTMLTags
+    "removeHTMLTags": _removeHTMLTags,
+    "fetchOvmfValues": _fetchOvmfValues,
   };
 });
 

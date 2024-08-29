@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -19,8 +19,8 @@
 using namespace std;
 
 void GroupSetQuota::
-    request_execute(xmlrpc_c::paramList const& paramList,
-                    RequestAttributes& att)
+request_execute(xmlrpc_c::paramList const& paramList,
+                RequestAttributes& att)
 {
     int     id        = xmlrpc_c::value_int(paramList.getInt(1));
     string  quota_str = xmlrpc_c::value_string(paramList.getString(2));
@@ -95,7 +95,7 @@ void GroupEditAdmin::request_execute(
     // -------------------------------------------------------------------------
 
     rc = get_info(pool, group_id, PoolObjectSQL::GROUP,
-                    att, group_perms, group_name, true);
+                  att, group_perms, group_name, true);
 
     if ( rc == -1 )
     {
@@ -103,7 +103,7 @@ void GroupEditAdmin::request_execute(
     }
 
     rc = get_info(upool, user_id, PoolObjectSQL::USER, att, user_perms,
-                    user_name, false);
+                  user_name, false);
 
     if ( rc == -1 )
     {

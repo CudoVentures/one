@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -34,6 +34,7 @@ import {
   MultiplePagesEmpty as ServiceTemplateIcon,
   Packages as ServicesIcon,
   Box as StorageIcon,
+  HeadsetHelp as SupportIcon,
   Home as SystemIcon,
   EmptyPage as TemplateIcon,
   Archive as TemplatesIcon,
@@ -43,7 +44,6 @@ import {
   Folder as VmGroupIcon,
   ModernTv as VmsIcons,
   MinusPinAlt as ZoneIcon,
-  HeadsetHelp as SupportIcon,
 } from 'iconoir-react'
 
 import loadable from '@loadable/component'
@@ -194,12 +194,6 @@ const BackupDetail = loadable(
 const CreateImages = loadable(() => import('client/containers/Images/Create'), {
   ssr: false,
 })
-const CreateDockerfile = loadable(
-  () => import('client/containers/Images/Dockerfile'),
-  {
-    ssr: false,
-  }
-)
 
 // Marketplace
 const Marketplaces = loadable(() => import('client/containers/Marketplaces'), {
@@ -352,6 +346,7 @@ export const PATH = {
     SERVICES: {
       LIST: `/${RESOURCE_NAMES.SERVICE}`,
       DETAIL: `/${RESOURCE_NAMES.SERVICE}/:id`,
+      INSTANTIATE: `/${RESOURCE_NAMES.SERVICE}/instantiate/`,
     },
   },
   TEMPLATE: {
@@ -359,6 +354,7 @@ export const PATH = {
       LIST: `/${RESOURCE_NAMES.VM_TEMPLATE}`,
       INSTANTIATE: `/${RESOURCE_NAMES.VM_TEMPLATE}/instantiate`,
       CREATE: `/${RESOURCE_NAMES.VM_TEMPLATE}/create`,
+      UPDATE: `/${RESOURCE_NAMES.VM_TEMPLATE}/update`,
       DETAIL: `/${RESOURCE_NAMES.VM_TEMPLATE}/:id`,
     },
     VMGROUP: {
@@ -390,7 +386,6 @@ export const PATH = {
       LIST: `/${RESOURCE_NAMES.IMAGE}`,
       DETAIL: `/${RESOURCE_NAMES.IMAGE}/:id`,
       CREATE: `/${RESOURCE_NAMES.IMAGE}/create`,
-      DOCKERFILE: `/${RESOURCE_NAMES.IMAGE}/dockerfile`,
     },
     FILES: {
       LIST: `/${RESOURCE_NAMES.FILE}`,
@@ -523,6 +518,13 @@ const ENDPOINTS = [
         Component: Services,
       },
       {
+        title: T.InstantiateServiceTemplate,
+        description: (_, state) =>
+          state?.ID !== undefined && `#${state.ID} ${state.NAME}`,
+        path: PATH.INSTANCE.SERVICES.INSTANTIATE,
+        Component: InstantiateServiceTemplate,
+      },
+      {
         title: T.Service,
         description: (params) => `#${params?.id}`,
         path: PATH.INSTANCE.SERVICES.DETAIL,
@@ -554,6 +556,14 @@ const ENDPOINTS = [
         description: (_, state) =>
           state?.ID !== undefined && `#${state.ID} ${state.NAME}`,
         path: PATH.TEMPLATE.VMS.CREATE,
+        Component: CreateVmTemplate,
+      },
+      {
+        title: (_, state) =>
+          state?.ID !== undefined ? T.UpdateVmTemplate : T.CreateVmTemplate,
+        description: (_, state) =>
+          state?.ID !== undefined && `#${state.ID} ${state.NAME}`,
+        path: PATH.TEMPLATE.VMS.UPDATE,
         Component: CreateVmTemplate,
       },
       {
@@ -690,11 +700,6 @@ const ENDPOINTS = [
         title: T.CreateFile,
         path: PATH.STORAGE.FILES.CREATE,
         Component: CreateFiles,
-      },
-      {
-        title: T.CreateDockerfile,
-        path: PATH.STORAGE.IMAGES.DOCKERFILE,
-        Component: CreateDockerfile,
       },
       {
         title: T.Backups,

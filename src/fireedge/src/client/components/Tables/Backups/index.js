@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -35,6 +35,7 @@ const BackupsTable = (props) => {
     searchProps = {},
     vm,
     refetchVm,
+    filter,
     isFetchingVm,
     ...rest
   } = props ?? {}
@@ -54,11 +55,13 @@ const BackupsTable = (props) => {
           : [vm?.BACKUPS?.BACKUP_IDS?.ID]
         : []
 
+      const backupData = result?.data?.filter((backup) =>
+        vm ? backupsIds?.includes(backup.ID) : true
+      )
+
       return {
         ...result,
-        data: result?.data?.filter((backup) =>
-          vm ? backupsIds?.includes(backup.ID) : true
-        ),
+        data: typeof filter === 'function' ? filter(backupData) : backupData,
       }
     },
   })
@@ -73,12 +76,16 @@ const BackupsTable = (props) => {
   )
 
   /**
-   * Refetch vms and backups. If a new backup is created, the id of the backup will be in the data of a vm, so we need to refetch also the vms query.
+   * Refetch vms and backups. If a new backup is created, the id of the backup will be in the data of a vm, so we need to refetch also the vms query when we are showing the backups of a vm.
    */
   const refetchAll = () => {
-    refetchVm()
+    // Refetch vm only if the function exists (if not, we are looking for all backups, no matter which vm is associated)
+    refetchVm && refetchVm()
     refetch()
   }
+
+  const isFetchingAll = () =>
+    isFetchingVm ? !!(isFetchingVm && isFetching) : isFetching
 
   return (
     <EnhancedTable
@@ -87,7 +94,7 @@ const BackupsTable = (props) => {
       rootProps={rootProps}
       searchProps={searchProps}
       refetch={refetchAll}
-      isLoading={isFetching && isFetchingVm}
+      isLoading={isFetchingAll()}
       getRowId={(row) => String(row.ID)}
       RowComponent={BackupRow}
       {...rest}

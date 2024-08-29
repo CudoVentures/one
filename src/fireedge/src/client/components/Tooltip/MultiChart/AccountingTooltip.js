@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -17,6 +17,7 @@
 import PropTypes from 'prop-types'
 import React, { useMemo } from 'react'
 import { Box, Paper, Typography } from '@mui/material'
+import { Tr } from 'client/components/HOC'
 
 export const CustomTooltip = React.memo(
   ({ active, payload, labels, generateColor, formatMetric, metricHues }) => {
@@ -85,7 +86,7 @@ export const CustomTooltip = React.memo(
                     style={{ margin: '0.5px 0' }}
                   >
                     <span style={{ color: metricColor }}>
-                      {formatMetric(entry.metric)}:
+                      {Tr(formatMetric(entry.metric))}:
                     </span>
                     {formattedValue}
                   </Typography>

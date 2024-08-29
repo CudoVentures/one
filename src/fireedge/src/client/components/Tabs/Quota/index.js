@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -14,7 +14,7 @@
  * limitations under the License.                                            *
  * ------------------------------------------------------------------------- */
 import PropTypes from 'prop-types'
-import { useState, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { Box, Card, CardContent, Grid, Typography } from '@mui/material'
 import { MultiChart } from 'client/components/Charts'
 import { transformApiResponseToDataset } from 'client/components/Charts/MultiChart/helpers/scripts'
@@ -25,7 +25,8 @@ import { nameMapper } from 'client/components/Tabs/Quota/Components/helpers/scri
 import { useGetDatastoresQuery } from 'client/features/OneApi/datastore'
 import { useGetVNetworksQuery } from 'client/features/OneApi/network'
 import { useGetImagesQuery } from 'client/features/OneApi/image'
-
+import { Tr } from 'client/components/HOC'
+import { T } from 'client/constants'
 /**
  * Generates a QuotaInfoTab for an user or a group.
  *
@@ -49,17 +50,23 @@ const generateQuotasInfoTab = ({ groups }) => {
 
     const apiData = queryInfo?.data || {}
 
-    useMemo(() => {
+    useEffect(() => {
       if (datastoresResponse.isSuccess && datastoresResponse.data) {
         setDsNameMap(nameMapper(datastoresResponse))
       }
+    }, [datastoresResponse])
+
+    useEffect(() => {
       if (networksResponse.isSuccess && networksResponse.data) {
         setNetNameMap(nameMapper(networksResponse))
       }
+    }, [networksResponse])
+
+    useEffect(() => {
       if (imagesResponse.isSuccess && imagesResponse.data) {
         setImgNameMap(nameMapper(imagesResponse))
       }
-    }, [datastoresResponse, networksResponse, imagesResponse])
+    }, [imagesResponse])
 
     const nameMaps = {
       DATASTORE: dsNameMap,
@@ -105,9 +112,8 @@ const generateQuotasInfoTab = ({ groups }) => {
           const transformedKey = key
             .replace(/_/g, ' ')
             .split(' ')
-            .map(
-              (word) =>
-                word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+            .map((word) =>
+              Tr(word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
             )
             .join(' ')
 
@@ -144,7 +150,7 @@ const generateQuotasInfoTab = ({ groups }) => {
 
     const quotaTypesConfig = [
       {
-        title: 'VM Quota',
+        title: Tr(T.VMQuota),
         quota: Array.isArray(apiData.VM_QUOTA)
           ? apiData.VM_QUOTA
           : [apiData.VM_QUOTA],
@@ -152,7 +158,7 @@ const generateQuotasInfoTab = ({ groups }) => {
         keyMap: generateKeyMap(apiData.VM_QUOTA),
       },
       {
-        title: 'Datastore Quota',
+        title: Tr(T.DatastoreQuota),
         quota: Array.isArray(apiData.DATASTORE_QUOTA)
           ? apiData.DATASTORE_QUOTA
           : [apiData.DATASTORE_QUOTA],
@@ -160,7 +166,7 @@ const generateQuotasInfoTab = ({ groups }) => {
         keyMap: generateKeyMap(apiData.DATASTORE_QUOTA),
       },
       {
-        title: 'Network Quota',
+        title: Tr(T.NetworkQuota),
         quota: Array.isArray(apiData.NETWORK_QUOTA)
           ? apiData.NETWORK_QUOTA
           : [apiData.NETWORK_QUOTA],
@@ -168,7 +174,7 @@ const generateQuotasInfoTab = ({ groups }) => {
         keyMap: generateKeyMap(apiData.NETWORK_QUOTA),
       },
       {
-        title: 'Image Quota',
+        title: Tr(T.ImageQuota),
         quota: Array.isArray(apiData.IMAGE_QUOTA)
           ? apiData.IMAGE_QUOTA
           : [apiData.IMAGE_QUOTA],
@@ -207,7 +213,7 @@ const generateQuotasInfoTab = ({ groups }) => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          height: '100%',
+          height: '100vh',
           minWidth: '300px',
           minHeight: '600px',
         }}
@@ -249,7 +255,7 @@ const generateQuotasInfoTab = ({ groups }) => {
                   textAlign={'center'}
                   sx={{ opacity: 0.8 }}
                 >
-                  Quota Controls
+                  {Tr(T.QuotaControls)}
                 </Typography>
                 <Box overflow={'auto'}>
                   <QuotaControls

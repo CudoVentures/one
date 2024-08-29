@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -44,10 +44,10 @@ class HostMonitorManager
 {
 public:
     HostMonitorManager(HostRPCPool *hp, VMRPCPool *vmp,
-            const std::string& addr, unsigned int port, unsigned int threads,
-            const std::string& driver_path,
-            int timer_period,
-            int monitor_interval_host);
+                       const std::string& addr, unsigned int port, unsigned int threads,
+                       const std::string& driver_path,
+                       int timer_period,
+                       int monitor_interval_host);
 
     ~HostMonitorManager();
 

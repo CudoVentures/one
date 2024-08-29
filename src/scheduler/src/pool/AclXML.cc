@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -33,7 +33,7 @@ int AclXML::set_up()
         client->call("one.acl.info", "", &result);
 
         vector<xmlrpc_c::value> values =
-                        xmlrpc_c::value_array(result).vectorValueValue();
+                xmlrpc_c::value_array(result).vectorValueValue();
 
         bool   success = xmlrpc_c::value_boolean(values[0]);
         string message = xmlrpc_c::value_string(values[1]);
@@ -75,11 +75,11 @@ int AclXML::load_rules(const string& xml_str)
 
     vector<xmlNodePtr>           rules;
 
-    acl_xml.get_nodes("/ACL_POOL/ACL",rules);
+    acl_xml.get_nodes("/ACL_POOL/ACL", rules);
 
     for (auto node : rules)
     {
-        AclRule * rule = new AclRule(0,0,0,0,0);
+        AclRule * rule = new AclRule(0, 0, 0, 0, 0);
         int       rc   = rule->from_xml(node);
 
         if ( rc == 0 )

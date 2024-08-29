@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -41,7 +41,7 @@ static void print_license()
     oss << "\n";
 #endif
 
-    oss << "Copyright 2002-2023, OpenNebula Project, OpenNebula Systems \n\n";
+    oss << "Copyright 2002-2024, OpenNebula Project, OpenNebula Systems \n\n";
 
 #ifdef ENTERPRISE
     oss << "Licensed under the OpenNebula Software License (the \"License\"); "
@@ -124,11 +124,12 @@ int main(int argc, char **argv)
     bool            foreground = false;
     const char *    nl;
     int             fd;
-    pid_t           pid,sid;
+    pid_t           pid, sid;
     string          wd;
     int             rc = 0;
 
-    static struct option long_options[] = {
+    static struct option long_options[] =
+    {
         {"version",    no_argument, 0, 'v'},
         {"help",       no_argument, 0, 'h'},
         {"foreground", no_argument, 0, 'f'},
@@ -139,7 +140,7 @@ int main(int argc, char **argv)
     int long_index = 0;
 
     while ((opt = getopt_long(argc, argv, "vhif",
-                    long_options, &long_index)) != -1)
+                              long_options, &long_index)) != -1)
     {
         switch(opt)
         {
@@ -213,7 +214,8 @@ int main(int argc, char **argv)
     }
 
 
-    switch (pid){
+    switch (pid)
+    {
         case -1: // Error
             cerr << "Error: Unable to fork.\n";
             exit(-1);

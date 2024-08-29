@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -615,6 +615,9 @@ const genPathResources = () => {
     }
     if (!global.paths.SUNSTONE_VIEWS) {
       global.paths.SUNSTONE_VIEWS = `${ETC_LOCATION}/${defaultSunstonePath}/${defaultSunstoneViews}`
+    }
+    if (!global.paths.VMM_EXEC_CONFIG) {
+      global.paths.VMM_EXEC_CONFIG = `${ETC_LOCATION}/vmm_exec`
     }
     if (!global.paths.FIREEDGE_KEY_PATH) {
       global.paths.FIREEDGE_KEY_PATH = `${VAR_LOCATION}/.one/${defaultKeyFilename}`

@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -69,7 +69,8 @@ const SPECIFIC_DEVICE = {
 const NAME_FIELD = {
   name: 'PCI_DEVICE_NAME',
   label: T.DeviceName,
-  type: INPUT_TYPES.SELECT,
+  type: INPUT_TYPES.AUTOCOMPLETE,
+  optionsOnly: true,
   dependOf: SPECIFIC_DEVICE.name,
   htmlType: (specificDevice) => specificDevice && INPUT_TYPES.HIDDEN,
   values: () => {

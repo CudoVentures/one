@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -29,13 +29,13 @@ const std::vector<std::string> QuotaNetwork::NET_METRICS = {"LEASES"};
 /* -------------------------------------------------------------------------- */
 
 bool QuotaNetwork::check(PoolObjectSQL::ObjectType otype, Template * tmpl,
-        Quotas& default_quotas, string& error)
+                         Quotas& default_quotas, string& error)
 {
     bool uses_lease;
 
     map<string, float> net_request;
 
-    net_request.insert(make_pair("LEASES",1));
+    net_request.insert(make_pair("LEASES", 1));
 
     VirtualMachineNics *nics = new VirtualMachineNics(tmpl);
     VirtualMachineNics::NicIterator nic;
@@ -84,7 +84,7 @@ void QuotaNetwork::del(PoolObjectSQL::ObjectType otype, Template * tmpl)
 
     map<string, float> net_request;
 
-    net_request.insert(make_pair("LEASES",1));
+    net_request.insert(make_pair("LEASES", 1));
 
     VirtualMachineNics *nics = new VirtualMachineNics(tmpl);
     VirtualMachineNics::NicIterator nic;

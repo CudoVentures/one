@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -29,9 +29,9 @@
 class SchedulerPolicy
 {
 public:
-    SchedulerPolicy(float w=1.0):sw(w){};
+    SchedulerPolicy(float w=1.0):sw(w) {};
 
-    virtual ~SchedulerPolicy(){};
+    virtual ~SchedulerPolicy() {};
 
     /**
      *  Main interface for the class schedule the objects applying the policy.
@@ -72,7 +72,7 @@ protected:
      *    @param obj pointer to the object
      *    @return a reference to the vector
      */
-     virtual const std::vector<Resource *>& get_match_resources(ObjectXML *obj) const = 0;
+    virtual const std::vector<Resource *>& get_match_resources(ObjectXML *obj) const = 0;
 
     /**
      *  Implements the actual schedule by computing the priority of each
@@ -97,9 +97,9 @@ private:
     class ScaleWeight
     {
     public:
-        ScaleWeight(float _weight):weight(_weight){};
+        ScaleWeight(float _weight):weight(_weight) {};
 
-        ~ScaleWeight(){};
+        ~ScaleWeight() {};
 
         float operator() (float pr)
         {

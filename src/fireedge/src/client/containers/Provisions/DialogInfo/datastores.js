@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -28,6 +28,7 @@ import { useGeneralApi } from 'client/features/General'
 import { DatastoresTable } from 'client/components/Tables'
 import { DatastoreCard } from 'client/components/Cards'
 import { SubmitButton } from 'client/components/FormControl'
+import { T } from 'client/constants'
 
 const Datastores = memo(
   ({ id }) => {
@@ -50,7 +51,7 @@ const Datastores = memo(
 
     useEffect(() => {
       successRemove &&
-        enqueueSuccess(`Datastore deleted - ID: ${deletedDatastoreId}`)
+        enqueueSuccess(T.SuccessDatastoreDeleted, deletedDatastoreId)
     }, [successRemove])
 
     return (

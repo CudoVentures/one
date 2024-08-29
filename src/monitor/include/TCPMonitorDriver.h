@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -29,25 +29,25 @@ public:
         :TCPStream(a, p)
     {
         register_action(MonitorDriverMessages::UNDEFINED,
-                &MonitorDriverProtocol::_undefined);
+                        &MonitorDriverProtocol::_undefined);
 
         register_action(MonitorDriverMessages::MONITOR_VM,
-                &MonitorDriverProtocol::_monitor_vm);
+                        &MonitorDriverProtocol::_monitor_vm);
 
         register_action(MonitorDriverMessages::BEACON_HOST,
-                &MonitorDriverProtocol::_beacon_host);
+                        &MonitorDriverProtocol::_beacon_host);
 
         register_action(MonitorDriverMessages::MONITOR_HOST,
-                &MonitorDriverProtocol::_monitor_host);
+                        &MonitorDriverProtocol::_monitor_host);
 
         register_action(MonitorDriverMessages::SYSTEM_HOST,
-                &MonitorDriverProtocol::_system_host);
+                        &MonitorDriverProtocol::_system_host);
 
         register_action(MonitorDriverMessages::STATE_VM,
-                &MonitorDriverProtocol::_state_vm);
+                        &MonitorDriverProtocol::_state_vm);
     };
 
-   ~TCPMonitorDriver() = default;
+    ~TCPMonitorDriver() = default;
 };
 
 #endif // TCP_MONITOR_DRIVER_H_

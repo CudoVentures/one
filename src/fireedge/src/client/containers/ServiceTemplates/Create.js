@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -34,6 +34,7 @@ import {
 } from 'client/components/FormStepper'
 import { CreateForm } from 'client/components/Forms/ServiceTemplate'
 import { PATH } from 'client/apps/sunstone/routesOne'
+import { T } from 'client/constants'
 
 const _ = require('lodash')
 
@@ -65,11 +66,17 @@ function CreateServiceTemplate() {
   const onSubmit = async (jsonTemplate) => {
     try {
       if (!templateId) {
-        const newTemplateId = await allocate({
+        const {
+          DOCUMENT: { ID: newTemplateId, NAME: templateName },
+        } = await allocate({
           template: jsonTemplate,
         }).unwrap()
+
         history.push(PATH.TEMPLATE.SERVICES.LIST)
-        enqueueSuccess(`Service Template created - #${newTemplateId} ${NAME}`)
+        enqueueSuccess(T.SuccessServiceTemplateCreated, [
+          newTemplateId,
+          templateName,
+        ])
       } else {
         await update({
           id: templateId,
@@ -77,7 +84,7 @@ function CreateServiceTemplate() {
           merge: false,
         }).unwrap()
         history.push(PATH.TEMPLATE.SERVICES.LIST)
-        enqueueSuccess(`Service Template updated - #${templateId} ${NAME}`)
+        enqueueSuccess(T.SuccessServiceTemplateUpdated, [templateId, NAME])
       }
     } catch {}
   }

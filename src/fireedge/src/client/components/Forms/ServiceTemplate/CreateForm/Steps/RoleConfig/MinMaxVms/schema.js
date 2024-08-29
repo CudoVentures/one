@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -16,7 +16,7 @@
 
 import { object, number } from 'yup'
 import { getValidationFromFields } from 'client/utils'
-import { INPUT_TYPES } from 'client/constants'
+import { INPUT_TYPES, T } from 'client/constants'
 
 const MAX_VALUE = 999999
 
@@ -24,26 +24,21 @@ const MAX_VALUE = 999999
  * Creates fields for minmax vms schema based on a path prefix.
  *
  * @param {string} pathPrefix - Path prefix for field names.
- * @param { number } cardinality - Number of VMs defined in Role Def. step.
  * @returns {object[]} - Array of field definitions for minmax vms.
  */
-export const createMinMaxVmsFields = (pathPrefix, cardinality) => {
+export const createMinMaxVmsFields = (pathPrefix) => {
   const getPath = (fieldName) =>
     pathPrefix ? `${pathPrefix}.${fieldName}` : fieldName
 
   return [
     {
       name: getPath('min_vms'),
-      label: 'Min VMs',
+      label: T.RolesMinVms,
       type: INPUT_TYPES.TEXT,
       cy: 'elasticity',
       validation: number()
         .integer('Min VMs must be an integer')
-        .min(
-          cardinality,
-          `Min VMs cannot be less than defined cardinality: ${cardinality}`
-        )
-        .default(() => cardinality),
+        .default(() => undefined),
       fieldProps: {
         type: 'number',
       },
@@ -51,14 +46,13 @@ export const createMinMaxVmsFields = (pathPrefix, cardinality) => {
     },
     {
       name: getPath('max_vms'),
-      label: 'Max VMs',
+      label: T.RolesMaxVms,
       type: INPUT_TYPES.TEXT,
       cy: 'elasticity',
       validation: number()
         .integer('Max VMs must be an integer')
-        .min(cardinality, `Max VMs cannot be less than ${cardinality}`)
         .max(MAX_VALUE, `Max VMs cannot exceed ${MAX_VALUE}`)
-        .default(() => cardinality),
+        .default(() => undefined),
       fieldProps: {
         type: 'number',
       },
@@ -66,14 +60,14 @@ export const createMinMaxVmsFields = (pathPrefix, cardinality) => {
     },
     {
       name: getPath('cooldown'),
-      label: 'Cooldown',
+      label: T.Cooldown,
       type: INPUT_TYPES.TEXT,
       cy: 'elasticity',
       validation: number()
         .integer('Cooldown must be an integer')
         .min(0, 'Cooldown cannot be less than 0')
         .max(MAX_VALUE, `Cooldown exceed ${MAX_VALUE}`)
-        .default(() => 0),
+        .default(() => undefined),
       fieldProps: {
         type: 'number',
       },
@@ -86,11 +80,10 @@ export const createMinMaxVmsFields = (pathPrefix, cardinality) => {
  * Creates a Yup schema for minmax vms based on a given path prefix.
  *
  * @param {string} pathPrefix - Path prefix for field names in the schema.
- * @param { number } cardinality - Number of VMs defined in Role Def. step.
  * @returns {object} - Yup schema object for minmax vms.
  */
-export const createMinMaxVmsSchema = (pathPrefix, cardinality = 0) => {
-  const fields = createMinMaxVmsFields(pathPrefix, cardinality)
+export const createMinMaxVmsSchema = (pathPrefix) => {
+  const fields = createMinMaxVmsFields(pathPrefix)
 
   return object(getValidationFromFields(fields))
 }

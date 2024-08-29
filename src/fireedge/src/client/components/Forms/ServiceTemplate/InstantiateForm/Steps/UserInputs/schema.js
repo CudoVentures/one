@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -45,7 +45,7 @@ const getFieldProps = (type) => {
   }
 }
 
-const getValidation = (type, mandatory) => {
+const getValidation = (type, mandatory, defaultValue = undefined) => {
   const isMandatory = mandatory === 'M'
 
   switch (type) {
@@ -55,20 +55,20 @@ const getValidation = (type, mandatory) => {
         ? string()
             .trim()
             .required()
-            .default(() => undefined)
+            .default(() => defaultValue)
         : string()
             .trim()
             .notRequired()
-            .default(() => undefined)
+            .default(() => defaultValue)
     case 'number':
     case 'numberfloat':
       return isMandatory
         ? number()
             .required()
-            .default(() => undefined)
+            .default(() => defaultValue)
         : number()
             .notRequired()
-            .default(() => undefined)
+            .default(() => defaultValue)
     case 'boolean':
       return isMandatory
         ? boolean().yesOrNo().required()
@@ -78,23 +78,23 @@ const getValidation = (type, mandatory) => {
         ? string()
             .trim()
             .required()
-            .default(() => undefined)
+            .default(() => defaultValue)
         : string()
             .trim()
             .notRequired()
-            .default(() => undefined)
+            .default(() => defaultValue)
   }
 }
 
 const generateField = (input) => {
-  const { key, type, defaultValue, mandatory } = input
+  const { key, description, type, defaultValue, mandatory } = input
 
   return {
     name: key.toLowerCase(),
-    label: key,
+    label: description ?? key,
     type: getTypeProp(type),
     fieldProps: getFieldProps(type),
-    validation: getValidation(type, mandatory),
+    validation: getValidation(type, mandatory, defaultValue),
     defaultValue: defaultValue,
     grid: { md: 12 },
   }

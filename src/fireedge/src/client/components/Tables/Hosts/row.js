@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -70,7 +70,7 @@ Row.propTypes = {
   className: PropTypes.string,
   handleClick: PropTypes.func,
   onClickLabel: PropTypes.func,
-  zone: PropTypes.string,
+  zone: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 }
 
 Row.displayName = 'HostRow'

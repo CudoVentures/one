@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -158,14 +158,8 @@ void PoolSQL::exist(const string& id_str, std::set<int>& id_list)
     std::vector<int> existing_items;
 
     one_util::split_unique(id_str, ',', id_list);
-    if (Nebula::instance().get_db_backend() == "postgresql")
-    {
-        search(existing_items, table.c_str(), "true order by 1 ASC");
-    }
-    else
-    {
-        search(existing_items, table.c_str(), "1 order by 1 ASC");
-    }
+
+    search(existing_items, table.c_str(), "1 order by 1 ASC");
 
     for (auto iterator = id_list.begin(); iterator != id_list.end();)
     {
@@ -184,7 +178,7 @@ void PoolSQL::exist(const string& id_str, std::set<int>& id_list)
 /* -------------------------------------------------------------------------- */
 
 int PoolSQL::dump(string& oss, const string& elem_name, const string& column,
-        const char* table, const string& where, int sid, int eid, bool desc)
+                  const char* table, const string& where, int sid, int eid, bool desc)
 {
     ostringstream   cmd;
 
@@ -214,7 +208,7 @@ int PoolSQL::dump(string& oss, const string& elem_name, const string& column,
 /* -------------------------------------------------------------------------- */
 
 int PoolSQL::dump(string& oss, const string& root_elem_name,
-    ostringstream& sql_query)
+                  ostringstream& sql_query)
 {
     int rc;
 
@@ -251,9 +245,9 @@ int PoolSQL::dump(string& oss, const string& root_elem_name,
 /* -------------------------------------------------------------------------- */
 
 int PoolSQL::search(
-    vector<int>&    oids,
-    const char *    table,
-    const string&   where)
+        vector<int>&    oids,
+        const char *    table,
+        const string&   where)
 {
     ostringstream   sql;
     int             rc;
@@ -291,7 +285,7 @@ void PoolSQL::acl_filter(int                       uid,
     filter.clear();
 
     if ( uid == UserPool::ONEADMIN_ID ||
-            user_groups.count( GroupPool::ONEADMIN_ID ) == 1 )
+         user_groups.count( GroupPool::ONEADMIN_ID ) == 1 )
     {
         all = true;
         return;
@@ -386,7 +380,7 @@ void PoolSQL::usr_filter(int                uid,
         if (!all)
         {
             uid_filter << " uid = " << uid
-                    << " OR other_u = 1";
+                       << " OR other_u = 1";
 
             for (auto g_id : user_groups)
             {

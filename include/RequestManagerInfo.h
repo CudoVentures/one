@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -64,7 +64,7 @@ protected:
     /* -------------------------------------------------------------------- */
 
     virtual void to_xml(RequestAttributes& att, PoolObjectSQL * object,
-        std::string& str)
+                        std::string& str)
     {
         object->to_xml(str);
     };
@@ -93,7 +93,7 @@ public:
 
 protected:
     void to_xml(RequestAttributes& att, PoolObjectSQL * object,
-            std::string& str) override
+                std::string& str) override
     {
         static_cast<VirtualMachine *>(object)->to_xml_extended(str);
     };
@@ -436,7 +436,7 @@ public:
         auth_object = PoolObjectSQL::HOOK;
     };
 
-    ~HookInfo(){};
+    ~HookInfo() {};
 
 protected:
     void to_xml(RequestAttributes& att, PoolObjectSQL * object,
@@ -463,7 +463,7 @@ public:
 
 protected:
     void to_xml(RequestAttributes& att, PoolObjectSQL * object,
-            std::string& str) override
+                std::string& str) override
     {
         static_cast<BackupJob *>(object)->to_xml_extended(str, true);
     };

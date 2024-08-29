@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -132,7 +132,7 @@ int ImagePool::allocate (
             {
                 goto error_types_missmatch_file;
             }
-        break;
+            break;
 
         case Image::KERNEL:
         case Image::RAMDISK:
@@ -141,14 +141,14 @@ int ImagePool::allocate (
             {
                 goto error_types_missmatch_image;
             }
-        break;
+            break;
 
         case Image::BACKUP:
             if ( ds_type != Datastore::BACKUP_DS  )
             {
                 goto error_types_missmatch_backup;
             }
-        break;
+            break;
     }
 
     db_oid = exist(name, uid);
@@ -193,7 +193,7 @@ int ImagePool::allocate (
         else
         {
             rc = imagem->clone_image(*oid, cloning_id, ds_data, extra_data,
-                    error_str);
+                                     error_str);
         }
 
         if ( rc == -1 )

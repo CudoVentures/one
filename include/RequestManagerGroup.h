@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -30,7 +30,7 @@ protected:
     RequestManagerGroup(const std::string& method_name,
                         const std::string& help,
                         const std::string& params)
-        :Request(method_name,params,help)
+        :Request(method_name, params, help)
     {
         Nebula& nd  = Nebula::instance();
         pool        = nd.get_gpool();
@@ -38,7 +38,7 @@ protected:
         auth_object = PoolObjectSQL::GROUP;
     };
 
-    ~RequestManagerGroup(){};
+    ~RequestManagerGroup() {};
 };
 
 /* ------------------------------------------------------------------------- */
@@ -49,13 +49,13 @@ class GroupSetQuota : public RequestManagerGroup
 public:
     GroupSetQuota():
         RequestManagerGroup("one.group.quota",
-                           "Sets group quota limits",
-                           "A:sis")
+                            "Sets group quota limits",
+                            "A:sis")
     {
         auth_op = AuthRequest::ADMIN;
     };
 
-    ~GroupSetQuota(){};
+    ~GroupSetQuota() {};
 
     void request_execute(xmlrpc_c::paramList const& _paramList,
                          RequestAttributes& att) override;
@@ -74,7 +74,7 @@ protected:
     GroupEditAdmin( const std::string& method_name,
                     const std::string& help,
                     const std::string& params)
-        :Request(method_name,params,help)
+        :Request(method_name, params, help)
     {
         Nebula& nd  = Nebula::instance();
         pool        = nd.get_gpool();
@@ -98,9 +98,9 @@ public:
     GroupAddAdmin():
         GroupEditAdmin( "one.group.addadmin",
                         "Adds a user to the group admin set",
-                        "A:sii"){};
+                        "A:sii") {};
 
-    ~GroupAddAdmin(){};
+    ~GroupAddAdmin() {};
 
     int edit_admin(Group* group, int user_id, std::string& error_msg) override;
 };
@@ -114,9 +114,9 @@ public:
     GroupDelAdmin():
         GroupEditAdmin( "one.group.deladmin",
                         "Removes a user from the group admin set",
-                        "A:sii"){};
+                        "A:sii") {};
 
-    ~GroupDelAdmin(){};
+    ~GroupDelAdmin() {};
 
     int edit_admin(Group* group, int user_id, std::string& error_msg) override;
 };

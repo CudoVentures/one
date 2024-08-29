@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -168,6 +168,8 @@ private:
 
     std::string _message;
 
+    time_t _warning;
+
     /**
      *  Rebuilds the object from an xml formatted string
      *    @param xml_str The xml-formatted string
@@ -212,12 +214,12 @@ private:
      *    @param db pointer to the database.
      *    @return 0 on success.
      */
-     int update(SqlDB * db) override
-     {
+    int update(SqlDB * db) override
+    {
         std::string error;
 
         return insert_replace(db, true, error);
-     }
+    }
 
     /**
      *  Execute an INSERT or REPLACE Sql query.

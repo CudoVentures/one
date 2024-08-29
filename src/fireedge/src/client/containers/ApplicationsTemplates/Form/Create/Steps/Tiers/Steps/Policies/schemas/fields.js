@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -38,7 +38,8 @@ export const ID = {
 export const TYPE = {
   name: 'type',
   label: 'Type of adjustment',
-  type: INPUT_TYPES.SELECT,
+  type: INPUT_TYPES.AUTOCOMPLETE,
+  optionsOnly: true,
   values: TYPES_POLICY,
   tooltip: `
     CHANGE: Add/subtract the given number of VMs
@@ -159,7 +160,8 @@ export const COOLDOWN = {
 export const TIME_FORMAT = {
   name: 'time_format',
   label: 'Time format',
-  type: INPUT_TYPES.SELECT,
+  type: INPUT_TYPES.AUTOCOMPLETE,
+  optionsOnly: true,
   values: TIME_FORMATS,
   tooltip: `
     START TIME: Exact time for the adjustment

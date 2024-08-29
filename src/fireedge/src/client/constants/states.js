@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -123,6 +123,7 @@ export const PROLOG_RESUME_FAILURE = 'PROLOG_RESUME_FAILURE'
 export const PROLOG_UNDEPLOY = 'PROLOG_UNDEPLOY'
 export const PROLOG_UNDEPLOY_FAILURE = 'PROLOG_UNDEPLOY_FAILURE'
 export const READY = 'READY'
+export const RESTORE = 'RESTORE'
 export const RUNNING = 'RUNNING'
 export const SAVE_MIGRATE = 'SAVE_MIGRATE'
 export const SAVE_STOP = 'SAVE_STOP'

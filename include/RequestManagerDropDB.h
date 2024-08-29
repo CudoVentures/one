@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -26,12 +26,12 @@ class RequestManagerDropDB: public Request
 {
 protected:
     RequestManagerDropDB(const std::string& name): Request(name, "A:si",
-            "Drops an object from DB")
+                                                               "Drops an object from DB")
     {
         auth_op = AuthRequest::MANAGE;
     };
 
-    virtual ~RequestManagerDropDB(){};
+    virtual ~RequestManagerDropDB() {};
 
     /* -------------------------------------------------------------------- */
 
@@ -79,7 +79,7 @@ public:
         pool        =  Nebula::instance().get_apppool();
     }
 
-    ~MarketPlaceAppDropDB(){};
+    ~MarketPlaceAppDropDB() {};
 };
 
 #endif /* REQUEST_MANAGER_DROP_DB_H */

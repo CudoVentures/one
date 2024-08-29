@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -28,7 +28,7 @@ template <typename T>
 class ActionSet
 {
 public:
-    ActionSet():action_set(0UL){};
+    ActionSet():action_set(0UL) {};
     ActionSet(const T * actions, int actions_len):action_set(0)
     {
         for (int i=0; i<actions_len; i++)
@@ -37,7 +37,7 @@ public:
         }
     };
 
-    ~ActionSet(){};
+    ~ActionSet() {};
 
     /* Set the action in the set */
     void set(T action)

@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -15,7 +15,7 @@
  * ------------------------------------------------------------------------- */
 import { object, string, number } from 'yup'
 import { getValidationFromFields, arrayToOptions } from 'client/utils'
-import { INPUT_TYPES } from 'client/constants'
+import { INPUT_TYPES, T } from 'client/constants'
 
 // Define the CA types
 export const ELASTICITY_TYPES = {
@@ -37,8 +37,9 @@ export const createElasticityPolicyFields = (pathPrefix) => {
   return [
     {
       name: getPath('TYPE'),
-      label: 'Type',
-      type: INPUT_TYPES.SELECT,
+      label: T.Type,
+      type: INPUT_TYPES.AUTOCOMPLETE,
+      optionsOnly: true,
       cy: 'roleconfig-elasticitypolicies',
       values: arrayToOptions(Object.keys(ELASTICITY_TYPES), {
         addEmpty: false,
@@ -54,7 +55,7 @@ export const createElasticityPolicyFields = (pathPrefix) => {
     },
     {
       name: getPath('ADJUST'),
-      label: 'Adjust',
+      label: T.Adjust,
       type: INPUT_TYPES.TEXT,
       cy: 'roleconfig-elasticitypolicies',
       fieldProps: {
@@ -65,7 +66,7 @@ export const createElasticityPolicyFields = (pathPrefix) => {
     },
     {
       name: getPath('MIN'),
-      label: 'Min',
+      label: T.Min,
       dependOf: getPath('TYPE'),
       htmlType: (type) =>
         // ONLY DISPLAY ON PERCENTAGE_CHANGE
@@ -85,7 +86,7 @@ export const createElasticityPolicyFields = (pathPrefix) => {
     {
       name: getPath('EXPRESSION'),
       dependOf: getPath('TYPE'),
-      label: 'Expression',
+      label: T.Expression,
       type: INPUT_TYPES.TEXT,
       cy: 'roleconfig-elasticitypolicies',
       validation: string().trim().required(),

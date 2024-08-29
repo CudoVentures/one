@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -41,28 +41,26 @@ const DialogInfo = ({ info, handleClose }) => {
   const [tabSelected, setTab] = useState(0)
   const { name } = info?.TEMPLATE?.BODY
 
-  const renderTabs = useMemo(
-    () => (
-      <AppBar position="static">
-        <Tabs
-          value={tabSelected}
-          variant="scrollable"
-          scrollButtons="auto"
-          onChange={(_, tab) => setTab(tab)}
-        >
-          {TABS.map(({ name: tabName, icon: Icon }, idx) => (
-            <Tab
-              key={`tab-${tabName}`}
-              id={`tab-${tabName}`}
-              icon={<Icon />}
-              value={idx}
-              label={String(tabName).toUpperCase()}
-            />
-          ))}
-        </Tabs>
-      </AppBar>
-    ),
-    [tabSelected]
+  // Removed memoization, might need to optimize later
+  const renderTabs = (
+    <AppBar position="static">
+      <Tabs
+        value={tabSelected}
+        variant="scrollable"
+        scrollButtons="auto"
+        onChange={(_, tab) => setTab(tab)}
+      >
+        {TABS.map(({ name: tabName, icon: Icon }, idx) => (
+          <Tab
+            key={`tab-${tabName}`}
+            id={`tab-${tabName}`}
+            icon={<Icon />}
+            value={idx}
+            label={String(tabName).toUpperCase()}
+          />
+        ))}
+      </Tabs>
+    </AppBar>
   )
 
   return (

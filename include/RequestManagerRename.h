@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -49,7 +49,7 @@ protected:
     RequestManagerRename(const std::string& method_name,
                          const std::string& help,
                          const std::string& params = "A:sis")
-        :Request(method_name,params,help)
+        :Request(method_name, params, help)
     {
         auth_op = AuthRequest::MANAGE;
     }
@@ -59,7 +59,7 @@ protected:
     /* -------------------------------------------------------------------- */
 
     void request_execute(xmlrpc_c::paramList const& _paramList,
-                        RequestAttributes& att) override;
+                         RequestAttributes& att) override;
 
     /**
      *  Gets and object by name and owner. Default implementation returns no
@@ -70,7 +70,7 @@ protected:
     /**
      *  Batch rename of related objects. Default implementation does nothing
      */
-    virtual void batch_rename(int oid){};
+    virtual void batch_rename(int oid) {};
 
     /**
      *  Test if a rename is being perform on a given object. If not it set it.
@@ -95,17 +95,6 @@ protected:
         rename_ids.erase(oid);
     }
 
-    /**
-     *  Method por updating custom values not included in PoolSQL::update
-     *  mainly used for updating search information in the VMs.
-     *    @param object to be updated
-     *    @return 0 on success
-     */
-    virtual int extra_updates(PoolObjectSQL * obj)
-    {
-        return 0;
-    }
-
 private:
     /**
      *  Mutex to control concurrent access to the ongoing rename operations
@@ -126,7 +115,7 @@ class VirtualMachineRename : public RequestManagerRename
 {
 public:
     VirtualMachineRename():
-        RequestManagerRename("one.vm.rename","Renames a virtual machine")
+        RequestManagerRename("one.vm.rename", "Renames a virtual machine")
     {
         Nebula& nd  = Nebula::instance();
         pool        = nd.get_vmpool();
@@ -139,22 +128,6 @@ public:
     int exist(const std::string& name, int uid) override
     {
         return -1;
-    }
-
-    int extra_updates(PoolObjectSQL * obj) override
-    {
-        VirtualMachine * vm;
-
-        VirtualMachinePool * vmpool = static_cast<VirtualMachinePool *>(pool);
-
-        if (obj == 0)
-        {
-            return -1;
-        }
-
-        vm = static_cast<VirtualMachine *>(obj);
-
-        return vmpool->update_search(vm);
     }
 };
 
@@ -212,7 +185,7 @@ class VirtualNetworkRename: public RequestManagerRename
 {
 public:
     VirtualNetworkRename():
-        RequestManagerRename("one.vn.rename","Renames a virtual network")
+        RequestManagerRename("one.vn.rename", "Renames a virtual network")
     {
         Nebula& nd  = Nebula::instance();
         pool        = nd.get_vnpool();

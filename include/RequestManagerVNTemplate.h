@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -41,7 +41,7 @@ class VNTemplateInstantiate : public RequestManagerVNTemplate
 public:
     VNTemplateInstantiate():
         RequestManagerVNTemplate("one.vntemplate.instantiate", "Instantiates a new "
-            "virtual network using a template", "A:siss")
+                                 "virtual network using a template", "A:siss")
     {
         auth_op = AuthRequest::USE;
     };
@@ -63,8 +63,8 @@ public:
      * @return ErroCode for the request.
      */
     ErrorCode request_execute(int id, const std::string& name,
-        const std::string& s_uattr, Template* extra_attrs, int& vid,
-        RequestAttributes& att);
+                              const std::string& s_uattr, Template* extra_attrs, int& vid,
+                              RequestAttributes& att);
 
     /**
      * Parse & merge user attributes (check if the request user is not oneadmin)

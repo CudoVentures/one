@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -22,10 +22,12 @@ const {
   Actions: ActionSystem,
 } = require('server/utils/constants/commands/system')
 const { createTokenServerAdmin } = require('server/routes/api/auth/utils')
+const { getVmmConfig } = require('server/utils/vmm')
 
 const { defaultEmptyFunction, httpMethod } = defaults
-const { ok, internalServerError, badRequest } = httpCodes
+const { ok, internalServerError, badRequest, notFound } = httpCodes
 const { GET } = httpMethod
+const { writeInLogger } = require('server/utils/logger')
 
 const ALLOWED_KEYS_ONED_CONF = [
   'DEFAULT_COST',
@@ -112,6 +114,56 @@ const getConfig = (
   })
 }
 
+/**
+ *
+ * @param {object} res - http response
+ * @param {Function} next - express stepper
+ * @param {object} params - params of http request
+ * @param {object} [params.hypervisor="kvm"] - fetch vmm_exec_[hypervisor].conf
+ * @returns {void}
+ */
+const getVmmConfigHandler = async (
+  res = {},
+  next = defaultEmptyFunction,
+  params = {}
+) => {
+  try {
+    const { hypervisor } = params
+    const vmmConfig = (await getVmmConfig(hypervisor)) ?? {}
+
+    if (!vmmConfig) {
+      res.locals.httpCode = httpResponse(
+        notFound,
+        'No vmm_exec config found',
+        ''
+      )
+
+      return next()
+    }
+
+    if (Object.keys(vmmConfig)?.length === 0) {
+      res.locals.httpCode = httpResponse(
+        notFound,
+        'No valid vmm_exec config found',
+        ''
+      )
+    } else {
+      res.locals.httpCode = httpResponse(ok, vmmConfig)
+    }
+  } catch (error) {
+    const httpError = httpResponse(
+      internalServerError,
+      'Failed to load vmm_exec config',
+      ''
+    )
+    writeInLogger(httpError)
+    res.locals.httpCode = httpError
+  }
+
+  next()
+}
+
 module.exports = {
   getConfig,
+  getVmmConfigHandler,
 }

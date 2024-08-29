@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -26,12 +26,6 @@ define(function(require) {
   require('flot.time');
 
   var Humanize = require('utils/humanize');
-
-  /*
-    VARIABLES
-   */
-
-  var currentGraph = undefined;
 
   /*
     CONSTRUCTOR
@@ -128,10 +122,7 @@ define(function(require) {
     //options.xaxis.zoomRange = false;
     options.yaxis.panRange = false;
     if (series.length > 0) {
-      currentGraph && currentGraph.shutdown();
-      info.div_graph.removeData('plot').empty();
-
-      currentGraph = $.plot(info.div_graph, series, options);
+      $.plot(info.div_graph, series, options);
     };
   }
 

@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -30,6 +30,7 @@ import {
 } from 'client/components/FormStepper'
 import { CreateForm } from 'client/components/Forms/File'
 import { PATH } from 'client/apps/sunstone/routesOne'
+import { T } from 'client/constants'
 
 /**
  * Displays the creation or modification form to a VM Template.
@@ -67,7 +68,7 @@ function CreateFile() {
         datastore,
       }).unwrap()
       history.push(PATH.STORAGE.FILES.LIST)
-      enqueueSuccess(`File created - #${newTemplateId}`)
+      enqueueSuccess(T.SuccessFileCreated, newTemplateId)
     } catch {}
   }
 

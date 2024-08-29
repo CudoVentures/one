@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -25,11 +25,11 @@
 class ImageTemplate : public Template
 {
 public:
-    ImageTemplate() : Template(true,'=',"TEMPLATE"){};
+    ImageTemplate() : Template(true, '=', "TEMPLATE") {};
 
-    ImageTemplate(const Template& tmpl):Template(tmpl){};
+    ImageTemplate(const Template& tmpl):Template(tmpl) {};
 
-    ~ImageTemplate(){};
+    ~ImageTemplate() {};
 
     bool is_saving()
     {

@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -29,7 +29,7 @@ public:
                   const std::vector<const SingleAttribute *>& _inherit_attrs,
                   const std::vector<const SingleAttribute *>& encrypted_attrs);
 
-    ~DatastorePool(){};
+    ~DatastorePool() {};
 
     /* ---------------------------------------------------------------------- */
     /* Constants for DB management                                            */
@@ -149,10 +149,10 @@ public:
      *  @return 0 on success
      */
     int dump(std::string& oss, const std::string& where, int sid, int eid,
-        bool desc) override
+             bool desc) override
     {
         return PoolSQL::dump(oss, "DATASTORE_POOL", "body", one_db::ds_table,
-                where, sid, eid, desc);
+                             where, sid, eid, desc);
     };
 
     /**
@@ -161,18 +161,18 @@ public:
      *
      *  @return 0 on success
      */
-     int list(std::vector<int>& oids)
-     {
+    int list(std::vector<int>& oids)
+    {
         return PoolSQL::list(oids, one_db::ds_table);
-     }
+    }
 
-     /**
-      *  Adds to the disk the datastore inherit attributes and conf values
-      *    @param ds_id of the datastore to use
-      *    @para disk vector attribute for the disk
-      *
-      *    @return -1 if the DS does not exists
-      */
+    /**
+     *  Adds to the disk the datastore inherit attributes and conf values
+     *    @param ds_id of the datastore to use
+     *    @para disk vector attribute for the disk
+     *
+     *    @return -1 if the DS does not exists
+     */
     int disk_attribute(int ds_id, VirtualMachineDisk * disk);
 
     /**
@@ -209,7 +209,7 @@ private:
     {
         std::set<int> empty;
 
-        return new Datastore(-1,-1,"","", 0, 0, empty);
+        return new Datastore(-1, -1, "", "", 0, 0, empty);
     };
 };
 

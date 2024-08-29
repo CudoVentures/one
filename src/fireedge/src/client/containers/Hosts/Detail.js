@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -14,8 +14,9 @@
  * limitations under the License.                                            *
  * ------------------------------------------------------------------------- */
 import { ReactElement } from 'react'
-import { useParams, Redirect } from 'react-router-dom'
+import { Redirect, useParams } from 'react-router-dom'
 
+import BackButton from 'client/components/ResourcesBackButton/BackButton'
 import HostTabs from 'client/components/Tabs/Host'
 
 /**
@@ -30,7 +31,12 @@ function HostDetail() {
     return <Redirect to="/" />
   }
 
-  return <HostTabs id={id} />
+  return (
+    <>
+      <BackButton />
+      <HostTabs id={id} />
+    </>
+  )
 }
 
 export default HostDetail

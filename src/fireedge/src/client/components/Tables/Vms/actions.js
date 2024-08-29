@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -35,6 +35,7 @@ import { useGetDatastoresQuery } from 'client/features/OneApi/datastore'
 import {
   useActionVmMutation,
   useBackupMutation,
+  useRestoreMutation,
   useChangeVmOwnershipMutation,
   useDeployMutation,
   useLockVmMutation,
@@ -52,11 +53,12 @@ import {
   RecoverForm,
   SaveAsTemplateForm,
 } from 'client/components/Forms/Vm'
+import { RestoreForm } from 'client/components/Forms/Backup'
 import {
   GlobalAction,
   createActions,
 } from 'client/components/Tables/Enhanced/Utils'
-import VmTemplatesTable from 'client/components/Tables/VmTemplates'
+import VmTemplatesTable from 'client/components/Tables/Vms/VmTemplateTable'
 
 import { PATH } from 'client/apps/sunstone/routesOne'
 import { Translate } from 'client/components/HOC'
@@ -124,6 +126,7 @@ const Actions = () => {
   const [actionVm] = useActionVmMutation()
   const [recover] = useRecoverMutation()
   const [backup] = useBackupMutation()
+  const [restore] = useRestoreMutation()
   const [changeOwnership] = useChangeVmOwnershipMutation()
   const [deploy] = useDeployMutation()
   const [migrate] = useMigrateMutation()
@@ -514,12 +517,57 @@ const Actions = () => {
                   subheader: SubHeader,
                   dataCy: `modal-${VM_ACTIONS.BACKUP}`,
                 },
-                form: BackupForm,
+                form: (row) => {
+                  const vm = row?.[0]?.original
+                  const vmId = vm?.ID
+
+                  return BackupForm({
+                    stepProps: {
+                      vmId,
+                    },
+                  })
+                },
                 onSubmit: (rows) => async (formData) => {
                   const ids = rows?.map?.(({ original }) => original?.ID)
                   await Promise.all(
                     ids.map((id) => backup({ id, ...formData }))
                   )
+                },
+              },
+              {
+                accessor: VM_ACTIONS.RESTORE,
+                disabled: isDisabled(VM_ACTIONS.RESTORE),
+                name: T.Restore,
+                selected: { max: 1 },
+                dialogProps: {
+                  title: T.RestoreVm,
+                  subheader: SubHeader,
+                  dataCy: `modal-${VM_ACTIONS.RESTORE}`,
+                },
+                form: (row) => {
+                  const vm = row?.[0]?.original
+                  const vmId = vm?.ID
+                  const backupIds = [].concat(vm?.BACKUPS?.BACKUP_IDS?.ID ?? [])
+
+                  return RestoreForm({
+                    stepProps: {
+                      disableImageSelection: false,
+                      vmsId: [vmId],
+                      backupIds,
+                    },
+                  })
+                },
+                onSubmit: (rows) => async (formData) => {
+                  const vmId = rows?.[0]?.id
+                  const imageId = formData?.backupImgId?.ID
+                  const incrementId = formData?.increment_id
+                  const diskId = formData?.individualDisk
+                  await restore({
+                    id: vmId,
+                    imageId,
+                    incrementId,
+                    diskId,
+                  })
                 },
               },
             ],

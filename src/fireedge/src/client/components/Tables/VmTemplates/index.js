@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and       *
  * limitations under the License.                                            *
  * ------------------------------------------------------------------------- */
-import { useMemo, ReactElement } from 'react'
+import { ReactElement, useEffect, useMemo } from 'react'
 
 import { useViews } from 'client/features/Auth'
 import { useGetTemplatesQuery } from 'client/features/OneApi/vmTemplate'
@@ -45,6 +45,7 @@ const VmTemplatesTable = (props) => {
       }),
     [view]
   )
+  useEffect(() => refetch(), [])
 
   return (
     <EnhancedTable

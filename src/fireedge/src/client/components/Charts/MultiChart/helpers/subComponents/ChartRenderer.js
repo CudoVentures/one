@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and       *
  * limitations under the License.                                            *
  * ------------------------------------------------------------------------- */
-import React, { useMemo } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import {
   Area,
@@ -30,15 +30,19 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
+import { mapValues } from 'lodash'
 
+import { Tr } from 'client/components/HOC'
 import { DataGridTable } from 'client/components/Tables'
 import { useTheme } from '@mui/material'
 import { CustomTooltip } from 'client/components/Tooltip'
+import { sentenceCase } from 'client/utils'
 
 import {
   generateColorByMetric,
   GetChartConfig,
   GetChartElementConfig,
+  CustomXAxisTick,
 } from 'client/components/Charts/MultiChart/helpers/scripts'
 import {
   FormatPolarDataset,
@@ -115,27 +119,37 @@ export const ChartRenderer = ({
   const ChartElement = ChartElements[coordinateType][chartType]
   const theme = useTheme()
 
-  const polarDataset = useMemo(
-    () => (coordinateType === 'POLAR' ? FormatPolarDataset(datasets) : null),
-    [coordinateType, datasets]
+  // Map with translation for each metric
+  const translationMap = mapValues(selectedMetrics, (value, key) => {
+    const finalWord = key
+      .split('_')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ')
+
+    return Tr(finalWord)
+  })
+
+  const polarDataset =
+    coordinateType === 'POLAR' ? FormatPolarDataset(datasets) : null
+
+  const chartConfig = GetChartConfig(
+    coordinateType,
+    chartType,
+    coordinateType === 'CARTESIAN' ? datasets : polarDataset,
+    paginatedData
   )
 
-  const chartConfig = useMemo(
-    () =>
-      GetChartConfig(
-        coordinateType,
-        chartType,
-        coordinateType === 'CARTESIAN' ? datasets : polarDataset,
-        paginatedData
-      ),
-    [coordinateType, chartType, datasets, polarDataset, paginatedData]
-  )
+  // Translate columns in tables
+  const tableColumnsTranslated = tableColumns?.map((column) => ({
+    ...column,
+    headerName: Tr(column.headerName),
+  }))
 
   return (
     <ResponsiveContainer height="100%" width="100%">
       {chartType === CHART_TYPES.TABLE ? (
         <DataGridTable
-          columns={tableColumns}
+          columns={tableColumnsTranslated}
           data={datasets}
           selectedItems={selectedMetrics}
         />
@@ -161,7 +175,11 @@ export const ChartRenderer = ({
 
           {coordinateType === 'CARTESIAN' && (
             <>
-              <XAxis interval={0} dataKey={groupBy} />
+              <XAxis
+                interval={0}
+                dataKey={groupBy}
+                tick={<CustomXAxisTick />}
+              />
               <YAxis />
             </>
           )}
@@ -170,7 +188,7 @@ export const ChartRenderer = ({
             content={
               coordinateType === 'CARTESIAN' ? (
                 <CustomTooltip
-                  labels={datasets.map((ds) => ds.label)}
+                  labels={datasets.map((ds) => Tr(sentenceCase(ds.label)))}
                   generateColor={generateColorByMetric}
                   formatMetric={humanReadableMetric}
                   metricHues={metricHues}
@@ -191,14 +209,12 @@ export const ChartRenderer = ({
                     (ds) => ds.id === parseInt(datasetId, 10)
                   )
 
-                  const datasetLabel = currentDataset.label
-
                   const lastSelectedMetric = [...currentDataset.metrics]
                     .reverse()
                     .find((m) => selectedMetrics[m.key])
 
                   if (lastSelectedMetric && metric === lastSelectedMetric.key) {
-                    return `${humanReadableMetric(metric)} (${datasetLabel})`
+                    return `${humanReadableMetric(metric)}`
                   }
 
                   return humanReadableMetric(metric)
@@ -210,16 +226,7 @@ export const ChartRenderer = ({
               />
             ) : (
               <Legend
-                formatter={(value) =>
-                  value
-                    .split('_')
-                    .map(
-                      (word) =>
-                        word.charAt(0).toUpperCase() +
-                        word.slice(1).toLowerCase()
-                    )
-                    .join(' ')
-                }
+                formatter={(value) => translationMap[value]}
                 iconSize={12}
                 layout="vertical"
                 verticalAlign="middle"

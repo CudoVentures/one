@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -17,6 +17,8 @@ import { useCallback, Component } from 'react'
 import PropTypes from 'prop-types'
 import { Box, Button, List, ListItem, IconButton } from '@mui/material'
 import { Cancel } from 'iconoir-react'
+import { Tr } from 'client/components/HOC'
+import { T } from 'client/constants'
 
 /**
  * RoleColumn component for displaying and managing roles.
@@ -84,7 +86,7 @@ const RoleColumn = ({
             size="large"
             data-cy="add-role"
           >
-            Add Role
+            {Tr(T.AddRole)}
           </Button>
         )}
         <Box

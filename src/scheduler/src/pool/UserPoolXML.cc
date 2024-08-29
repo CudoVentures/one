@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project Leads (OpenNebula.org)             */
+/* Copyright 2002-2024, OpenNebula Project Leads (OpenNebula.org)             */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -22,7 +22,7 @@ void UserPoolXML::add_object(xmlNodePtr node)
 {
     if ( node == 0 || node->children == 0 )
     {
-        NebulaLog::log("USER",Log::ERROR,
+        NebulaLog::log("USER", Log::ERROR,
                        "XML Node does not represent a valid user");
 
         return;
@@ -30,7 +30,7 @@ void UserPoolXML::add_object(xmlNodePtr node)
 
     UserXML* user = new UserXML( node );
 
-    objects.insert( pair<int,ObjectXML*>(user->get_oid(), user) );
+    objects.insert( pair<int, ObjectXML*>(user->get_oid(), user) );
 }
 
 /* -------------------------------------------------------------------------- */

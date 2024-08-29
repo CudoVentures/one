@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -43,7 +43,7 @@ void RequestManagerCluster::action_generic(
     PoolObjectAuth obj_perms;
 
     rc = get_info(clpool, cluster_id, PoolObjectSQL::CLUSTER, att, c_perms,
-            cluster_name, true);
+                  cluster_name, true);
 
     if ( rc == -1 )
     {
@@ -191,7 +191,7 @@ void RequestManagerClusterHost::add_generic(
     string  old_cluster_name;
 
     rc = get_info(clpool, cluster_id, PoolObjectSQL::CLUSTER, att, c_perms,
-            cluster_name, true);
+                  cluster_name, true);
 
     if ( rc == -1 )
     {

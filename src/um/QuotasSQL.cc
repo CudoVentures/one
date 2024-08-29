@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -29,8 +29,8 @@ string& QuotasSQL::to_xml_db(string& xml) const
     ostringstream oss;
 
     oss << "<QUOTAS>"
-            << "<ID>" << oid << "</ID>"
-            << Quotas::to_xml(xml)
+        << "<ID>" << oid << "</ID>"
+        << Quotas::to_xml(xml)
         << "</QUOTAS>";
 
     xml = oss.str();
@@ -66,7 +66,7 @@ int QuotasSQL::select(SqlDB * db)
     oss << "SELECT body FROM " << table()
         << " WHERE " << table_oid_column() << " = " << oid;
 
-    rc = db->exec_rd(oss,this);
+    rc = db->exec_rd(oss, this);
 
     unset_callback();
 

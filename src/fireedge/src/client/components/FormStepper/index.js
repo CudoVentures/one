@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -23,12 +23,10 @@ import {
   ReactElement,
 } from 'react'
 import PropTypes from 'prop-types'
-
 import { BaseSchema } from 'yup'
 import { useForm, FormProvider, useFormContext } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMediaQuery } from '@mui/material'
-
 import {
   useGeneral,
   updateDisabledSteps,
@@ -37,7 +35,13 @@ import {
 import CustomMobileStepper from 'client/components/FormStepper/MobileStepper'
 import CustomStepper from 'client/components/FormStepper/Stepper'
 import SkeletonStepsForm from 'client/components/FormStepper/Skeleton'
-import { groupBy, Step, StepsForm, isDevelopment } from 'client/utils'
+import {
+  groupBy,
+  Step,
+  StepsForm,
+  isDevelopment,
+  deepStringify,
+} from 'client/utils'
 import { T } from 'client/constants'
 import get from 'lodash.get'
 import { set, isEmpty } from 'lodash'
@@ -99,6 +103,7 @@ const DisableStepContext = createContext(() => {})
  * disableStep('step1', true); // This will disable 'step1'
  */
 export const useDisableStep = () => useContext(DisableStepContext)
+
 /**
  * Represents a form with one or more steps.
  * Finally, it submit the result.
@@ -123,8 +128,12 @@ const FormStepper = ({
     formState: { errors },
     setError,
   } = useFormContext()
-
   const { setModifiedFields } = useGeneralApi()
+  const { isLoading } = useGeneral()
+  const [steps, setSteps] = useState(initialSteps)
+  const [disabledSteps, setDisabledSteps] = useState({})
+  const dispatch = useDispatch()
+  const currentState = useSelector((state) => state)
 
   // Used to control the default visibility of a step
   useEffect(() => {
@@ -151,17 +160,11 @@ const FormStepper = ({
       },
       {}
     )
+
     // Set the initial state of the steps accessible from redux
     dispatch(updateDisabledSteps(newState))
     setDisabledSteps(newState)
   }, [])
-
-  const { isLoading } = useGeneral()
-  const [steps, setSteps] = useState(initialSteps)
-  const [disabledSteps, setDisabledSteps] = useState({})
-  const dispatch = useDispatch()
-
-  const currentState = useSelector((state) => state)
 
   const disableStep = useCallback((stepIds, shouldDisable) => {
     const ids = Array.isArray(stepIds) ? stepIds : [stepIds]
@@ -169,11 +172,10 @@ const FormStepper = ({
     setDisabledSteps((prev) => {
       let newDisabledSteps = { ...prev }
 
-      // eslint-disable-next-line no-shadow
-      ids.forEach((stepId) => {
+      ids.forEach((sId) => {
         newDisabledSteps = shouldDisable
-          ? { ...newDisabledSteps, [stepId]: true }
-          : (({ [stepId]: _, ...rest }) => rest)(newDisabledSteps)
+          ? { ...newDisabledSteps, [sId]: true }
+          : (({ [sId]: _, ...rest }) => rest)(newDisabledSteps)
       })
 
       return newDisabledSteps
@@ -212,14 +214,21 @@ const FormStepper = ({
 
   const setErrors = ({ inner = [], message = { word: 'Error' } } = {}) => {
     const errorsByPath = groupBy(inner, 'path') ?? {}
-    const totalErrors = Object.keys(errorsByPath).length
+    const jsonErrorsByPath = deepStringify(errorsByPath, 6) || ''
+    const totalErrors = (jsonErrorsByPath.match(/\bmessage\b/g) || []).length
 
     const translationError =
       totalErrors > 0 ? [T.ErrorsOcurred, totalErrors] : Object.values(message)
 
-    setError(stepId, { type: 'manual', message: translationError })
+    const individualErrorMessages = inner.map((error) => error?.message ?? '')
 
-    inner?.forEach(({ path, type, errors: innerMessage }) => {
+    setError(stepId, {
+      type: 'manual',
+      message: translationError,
+      individualErrorMessages,
+    })
+
+    inner?.forEach(({ path, type, errors: innerMessage }, index) => {
       setError(`${stepId}.${path}`, { type, message: innerMessage })
     })
   }
@@ -300,12 +309,12 @@ const FormStepper = ({
         Number.isInteger(stepToBack) ? stepToBack : prevStep - 1
       )
     },
-    [activeStep]
+    [activeStep, steps]
   )
 
   const { id: stepId, content: Content } = useMemo(
     () => steps[activeStep] || { id: null, content: null },
-    [formData, activeStep]
+    [steps, activeStep]
   )
 
   return (
@@ -358,5 +367,4 @@ FormStepper.propTypes = {
 }
 
 export { DefaultFormStepper, SkeletonStepsForm }
-
 export default FormStepper

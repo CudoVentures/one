@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -18,7 +18,8 @@ import PropTypes from 'prop-types'
 
 import { Typography } from '@mui/material'
 import { HomeShield } from 'iconoir-react'
-
+import { Tr } from 'client/components/HOC'
+import { T } from 'client/constants'
 import { StatusCircle } from 'client/components/Status'
 import { rowStyles } from 'client/components/Tables/styles'
 
@@ -41,7 +42,7 @@ const Row = ({ original, value, ...props }) => {
         </div>
         <div className={classes.caption}>
           <span>{`#${ID}`}</span>
-          <span title={`Endpoint: ${ENDPOINT}`}>
+          <span title={`${Tr(T.Endpoint)}: ${ENDPOINT}`}>
             <HomeShield />
             <span>{` ${ENDPOINT}`}</span>
           </span>

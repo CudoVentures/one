@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -96,7 +96,7 @@ const VmSnapshotTab = ({ tabProps: { actions } = {}, id }) => {
                   opacity: 0.8,
                 }}
               >
-                Taking snapshots is not available.
+                {Tr(T.VmSnapshotNotAvailable)}
               </Typography>
               <List>
                 <ListItem>
@@ -120,8 +120,7 @@ const VmSnapshotTab = ({ tabProps: { actions } = {}, id }) => {
                   marginTop: '1em',
                 }}
               >
-                If none of the above worked, please refer to the VM monitoring
-                logs.
+                {Tr(T.VmSnapshotReferLogs)}
               </Typography>
             </Box>
           </Stack>

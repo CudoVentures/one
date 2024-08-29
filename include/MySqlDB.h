@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -155,14 +155,15 @@ public:
         throw std::runtime_error("Aborting oned, MySQL support not compiled!");
     };
 
-    ~MySqlDB(){};
+    ~MySqlDB() {};
 
     char * escape_str(const std::string& str) const override {return nullptr;};
 
     void free_str(char * str) const override {};
 
 protected:
-    int exec_ext(std::ostringstream& c, Callbackable *o, bool q) override {
+    int exec_ext(std::ostringstream& c, Callbackable *o, bool q) override
+    {
         return -1;
     };
 };

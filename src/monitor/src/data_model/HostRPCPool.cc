@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -34,7 +34,7 @@ int HostRPCPool::update_monitoring(const HostMonitoringTemplate& monitoring)
     if (sql_xml == 0)
     {
         NebulaLog::log("HPL", Log::WARNING,
-                "Could not transform Host monitoring to XML");
+                       "Could not transform Host monitoring to XML");
 
         return -1;
     }
@@ -42,7 +42,7 @@ int HostRPCPool::update_monitoring(const HostMonitoringTemplate& monitoring)
     if (ObjectXML::validate_xml(sql_xml) != 0)
     {
         NebulaLog::log("HPL", Log::WARNING,
-                "Could not transform Host monitoring to XML" + string(sql_xml));
+                       "Could not transform Host monitoring to XML" + string(sql_xml));
 
         db->free_str(sql_xml);
         return -1;
@@ -85,7 +85,8 @@ int HostRPCPool::clean_expired_monitoring()
 
 void HostRPCPool::discover(set<int> * discovered_hosts, time_t target_time)
 {
-    each<HostBase>([&](const BaseObjectLock<HostBase>& o) {
+    each<HostBase>([&](const BaseObjectLock<HostBase>& o)
+    {
         if (o->last_monitored() < target_time)
         {
             discovered_hosts->insert(o->oid());

@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------ */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems              */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems              */
 /*                                                                          */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may  */
 /* not use this file except in compliance with the License. You may obtain  */
@@ -109,14 +109,14 @@ public:
      *
      * @return a group of vector attributes
      */
-     void get_rules(std::vector<VectorAttribute*>& result) const;
+    void get_rules(std::vector<VectorAttribute*>& result) const;
 
-     /**
-      * Commit SG changes to associated VMs
-      *   @param recover, if true It will propagate the changes to VMs in error
-      *   and those being updated. Otherwise all VMs associated with the SG will
-      *   be updated
-      */
+    /**
+     * Commit SG changes to associated VMs
+     *   @param recover, if true It will propagate the changes to VMs in error
+     *   and those being updated. Otherwise all VMs associated with the SG will
+     *   be updated
+     */
     void commit(bool recover)
     {
         if (!recover)

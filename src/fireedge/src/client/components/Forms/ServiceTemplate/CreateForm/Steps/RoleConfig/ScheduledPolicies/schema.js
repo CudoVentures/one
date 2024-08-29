@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -15,7 +15,7 @@
  * ------------------------------------------------------------------------- */
 import { object, string, number } from 'yup'
 import { getValidationFromFields, arrayToOptions } from 'client/utils'
-import { INPUT_TYPES } from 'client/constants'
+import { INPUT_TYPES, T } from 'client/constants'
 
 const TIME_TYPES = {
   none: '',
@@ -49,8 +49,9 @@ export const createScheduledPolicyFields = (pathPrefix) => {
   return [
     {
       name: getPath('SCHEDTYPE'),
-      label: 'Type',
-      type: INPUT_TYPES.SELECT,
+      label: T.Type,
+      type: INPUT_TYPES.AUTOCOMPLETE,
+      optionsOnly: true,
       cy: 'roleconfig-scheduledpolicies',
       values: arrayToOptions(Object.keys(SCHED_TYPES), {
         addEmpty: false,
@@ -59,24 +60,23 @@ export const createScheduledPolicyFields = (pathPrefix) => {
       }),
       validation: string()
         .trim()
-        .required()
+        .oneOf(Object.keys(SCHED_TYPES))
         .default(() => Object.keys(SCHED_TYPES)[0]),
       grid: { xs: 12, sm: 6, md: 3.3 },
     },
     {
       name: getPath('ADJUST'),
-      label: 'Adjust',
+      label: T.Adjust,
       type: INPUT_TYPES.TEXT,
       cy: 'roleconfig-scheduledpolicies',
       validation: string()
         .trim()
-        .required()
         .default(() => ''),
       grid: { xs: 12, sm: 6, md: 3.1 },
     },
     {
       name: getPath('MIN'),
-      label: 'Min',
+      label: T.Min,
       type: INPUT_TYPES.TEXT,
       cy: 'roleconfig-scheduledpolicies',
       fieldProps: {
@@ -87,8 +87,9 @@ export const createScheduledPolicyFields = (pathPrefix) => {
     },
     {
       name: getPath('TIMEFORMAT'),
-      label: 'Time Format',
-      type: INPUT_TYPES.SELECT,
+      label: T.TimeFormat,
+      type: INPUT_TYPES.AUTOCOMPLETE,
+      optionsOnly: true,
       cy: 'roleconfig-scheduledpolicies',
       values: arrayToOptions(Object.values(TIME_TYPES), { addEmpty: false }),
       validation: string()
@@ -100,7 +101,7 @@ export const createScheduledPolicyFields = (pathPrefix) => {
     },
     {
       name: getPath('TIMEEXPRESSION'),
-      label: 'Time Expression',
+      label: T.TimeExpression,
       type: INPUT_TYPES.TEXT,
       cy: 'roleconfig-scheduledpolicies',
       validation: string()

@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -44,8 +44,8 @@ private:
      *    @return 0 on success
      */
     int deployment_description(
-        const VirtualMachine *  vm,
-        const std::string&      file_name) const override;
+            const VirtualMachine *  vm,
+            const std::string&      file_name) const override;
 };
 
 #endif /*XML_DRIVER_H_*/

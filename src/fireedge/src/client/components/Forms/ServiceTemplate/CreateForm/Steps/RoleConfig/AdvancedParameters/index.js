@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -28,6 +28,7 @@ import {
   useTheme,
 } from '@mui/material'
 import { T } from 'client/constants'
+import { Tr } from 'client/components/HOC'
 
 export const SECTION_ID = 'ADVANCEDPARAMS'
 
@@ -76,7 +77,7 @@ const AdvancedParametersSection = ({ stepId, roleConfigs, onChange }) => {
             filter: 'brightness(90%)',
           }}
         >
-          <Typography variant="body1">{T.AdvancedParams}</Typography>
+          <Typography variant="body1">{Tr(T.AdvancedParams)}</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Box

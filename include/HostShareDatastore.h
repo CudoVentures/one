@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------ */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems              */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems              */
 /*                                                                          */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may  */
 /* not use this file except in compliance with the License. You may obtain  */
@@ -28,9 +28,9 @@ class HostShareDatastore : public Template
 {
 public:
     HostShareDatastore() : Template(false, '=', "DATASTORES"), disk_usage(0),
-    max_disk(0), free_disk(0), used_disk(0){};
+        max_disk(0), free_disk(0), used_disk(0) {};
 
-    virtual ~HostShareDatastore(){};
+    virtual ~HostShareDatastore() {};
 
     /**
      *  Updates the Datastore information from the monitorization template.

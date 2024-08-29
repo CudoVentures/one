@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -25,7 +25,12 @@ import { storage } from 'client/utils'
 import { JWT_NAME, FILTER_POOL, ONEADMIN_ID } from 'client/constants'
 
 const { GROUP_POOL, ...restOfPool } = ONE_RESOURCES_POOL
-const { ALL_RESOURCES, PRIMARY_GROUP_RESOURCES } = FILTER_POOL
+const {
+  ALL_RESOURCES,
+  PRIMARY_GROUP_RESOURCES,
+  USER_RESOURCES,
+  USER_GROUPS_RESOURCES,
+} = FILTER_POOL
 
 const authApi = oneApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -96,8 +101,12 @@ const authApi = oneApi.injectEndpoints({
        */
       queryFn: async ({ group } = {}, { getState, dispatch }) => {
         try {
-          if (group === ALL_RESOURCES) {
-            dispatch(authActions.changeFilterPool(ALL_RESOURCES))
+          if (
+            group === ALL_RESOURCES ||
+            group === USER_GROUPS_RESOURCES ||
+            group === USER_RESOURCES
+          ) {
+            dispatch(authActions.changeFilterPool(group))
 
             return { data: '' }
           }

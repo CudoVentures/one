@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -84,7 +84,7 @@ void MarketPlaceManager::_import(unique_ptr<market_msg_t> msg)
     if (msg->status() == "FAILURE")
     {
         app_failure_action(apppool, id, "Error importing app into marketplace: "
-            + msg->payload());
+                           + msg->payload());
         return;
     }
 
@@ -97,7 +97,7 @@ void MarketPlaceManager::_import(unique_ptr<market_msg_t> msg)
     if (rci != 0)
     {
         app_failure_action(apppool, id,
-            "Error importing app into marketplace. Parse error: " + error);
+                           "Error importing app into marketplace. Parse error: " + error);
         return;
     }
 
@@ -109,7 +109,7 @@ void MarketPlaceManager::_import(unique_ptr<market_msg_t> msg)
     if ( source.empty() || checksum.empty() || format.empty() || rc == false )
     {
         app_failure_action(apppool, id,
-            "Error importing app into marketplace. Missing app attributes.");
+                           "Error importing app into marketplace. Missing app attributes.");
         return;
     }
 
@@ -118,7 +118,7 @@ void MarketPlaceManager::_import(unique_ptr<market_msg_t> msg)
     if (app == nullptr)
     {
         NebulaLog::error("MKP", "Marketplace app successfully imported "
-            "but it no longer exists. You may need to manually remove: " + source);
+                         "but it no longer exists. You may need to manually remove: " + source);
         return;
     }
 

@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -29,7 +29,6 @@ import {
   Field,
   arrayToOptions,
   filterFieldsByHypervisor,
-  getFactorsOfNumber,
   getObjectSchemaFromFields,
   prettyBytes,
   sentenceCase,
@@ -38,7 +37,7 @@ import {
 
 import { VIRTUAL_CPU as GENERAL_VIRTUAL_CPU } from 'client/components/Forms/VmTemplate/CreateForm/Steps/General/capacitySchema'
 
-const { kvm, vcenter, firecracker, dummy } = HYPERVISORS
+const { kvm, dummy } = HYPERVISORS
 const numaPinPolicies = Object.keys(NUMA_PIN_POLICIES)
 
 const VIRTUAL_CPU = {
@@ -63,25 +62,22 @@ const PIN_POLICY = {
   name: 'TOPOLOGY.PIN_POLICY',
   label: T.PinPolicy,
   tooltip: [T.PinPolicyConcept, numaPinPolicies.join(', ')],
-  type: INPUT_TYPES.SELECT,
+  type: INPUT_TYPES.AUTOCOMPLETE,
+  optionsOnly: true,
   values: arrayToOptions(numaPinPolicies, {
     addEmpty: false,
     getText: sentenceCase,
   }),
   dependOf: ENABLE_NUMA.name,
   htmlType: (enableNuma) => !enableNuma && INPUT_TYPES.HIDDEN,
-  notOnHypervisors: [vcenter, firecracker],
   validation: lazy((_, { context }) =>
     string()
       .trim()
       .notRequired()
       .default(() => {
-        const { general, extra } = context || {}
+        const { extra } = context || {}
 
-        return general?.HYPERVISOR === firecracker
-          ? NUMA_PIN_POLICIES.SHARED
-          : ![vcenter].includes(general?.HYPERVISOR) &&
-            extra?.TOPOLOGY?.NODE_AFFINITY
+        return extra?.TOPOLOGY?.NODE_AFFINITY
           ? NUMA_PIN_POLICIES.NODE_AFFINITY
           : NUMA_PIN_POLICIES.NONE
       })
@@ -97,13 +93,11 @@ const NODE_AFFINITY = {
   htmlType: ([pinPolicy, enableNuma] = []) =>
     (!enableNuma || pinPolicy !== NUMA_PIN_POLICIES.NODE_AFFINITY) &&
     INPUT_TYPES.HIDDEN,
-  notOnHypervisors: [vcenter, firecracker],
   type: INPUT_TYPES.TEXT,
   validation: lazy((_, { context }) => {
-    const { general, extra } = context || {}
+    const { extra } = context || {}
 
-    return ![vcenter, firecracker].includes(general?.HYPERVISOR) &&
-      extra?.TOPOLOGY?.PIN_POLICY === NUMA_PIN_POLICIES.NODE_AFFINITY
+    return extra?.TOPOLOGY?.PIN_POLICY === NUMA_PIN_POLICIES.NODE_AFFINITY
       ? string().trim().required()
       : string().trim().notRequired()
   }),
@@ -115,14 +109,9 @@ const CORES = {
   label: T.Cores,
   tooltip: T.NumaCoresConcept,
   dependOf: ['$general.VCPU', '$general.HYPERVISOR', ENABLE_NUMA.name],
-  type: ([, hypervisor] = []) =>
-    hypervisor === vcenter ? INPUT_TYPES.SELECT : INPUT_TYPES.TEXT,
+  type: INPUT_TYPES.TEXT,
   htmlType: ([, , enableNuma] = []) =>
     !enableNuma ? INPUT_TYPES.HIDDEN : 'number',
-  values: ([vcpu, hypervisor] = []) => {
-    if (hypervisor === vcenter)
-      return arrayToOptions(getFactorsOfNumber(vcpu ?? 0))
-  },
   validation: number()
     .notRequired()
     .integer()
@@ -143,14 +132,11 @@ const SOCKETS = {
   ],
   htmlType: ([, , , enableNuma] = []) =>
     !enableNuma ? INPUT_TYPES.HIDDEN : 'number',
-  notOnHypervisors: [vcenter, firecracker],
   validation: number()
     .notRequired()
     .integer()
     .default(() => 1),
   watcher: ([hypervisor, vcpu, cores] = []) => {
-    if (hypervisor === vcenter) return
-
     if (!isNaN(+vcpu) && !isNaN(+cores) && +cores !== 0) {
       return vcpu / cores
     }
@@ -173,22 +159,9 @@ const THREADS = {
   htmlType: ([, enableNuma] = []) =>
     !enableNuma ? INPUT_TYPES.HIDDEN : 'number',
   dependOf: ['$general.HYPERVISOR', ENABLE_NUMA.name],
-  type: ([hypervisor] = []) =>
-    [firecracker, vcenter].includes(hypervisor)
-      ? INPUT_TYPES.SELECT
-      : INPUT_TYPES.TEXT,
-  values: (hypervisor) =>
-    ({
-      [firecracker]: arrayToOptions([1, 2]),
-      [vcenter]: arrayToOptions([1]),
-    }[hypervisor]),
-  validation: lazy(
-    (_, { context }) =>
-      ({
-        [firecracker]: threadsValidation.min(1).max(2),
-        [vcenter]: threadsValidation.min(1).max(1),
-      }[context?.general?.HYPERVISOR] || threadsValidation)
-  ),
+  optionsOnly: true,
+  type: INPUT_TYPES.TEXT,
+  validation: lazy((_, { context }) => threadsValidation),
 }
 
 /** @type {Field} Hugepage size field */
@@ -196,10 +169,10 @@ const HUGEPAGES = {
   name: 'TOPOLOGY.HUGEPAGE_SIZE',
   label: T.HugepagesSize,
   tooltip: T.HugepagesSizeConcept,
-  notOnHypervisors: [vcenter, firecracker],
   dependOf: ENABLE_NUMA.name,
   htmlType: (enableNuma) => !enableNuma && INPUT_TYPES.HIDDEN,
-  type: INPUT_TYPES.SELECT,
+  type: INPUT_TYPES.AUTOCOMPLETE,
+  optionsOnly: true,
   values: () => {
     const { data: hosts = [] } = useGetHostsQuery()
     const sizes = hosts
@@ -222,8 +195,8 @@ const MEMORY_ACCESS = {
   name: 'TOPOLOGY.MEMORY_ACCESS',
   label: T.MemoryAccess,
   tooltip: [T.MemoryAccessConcept, NUMA_MEMORY_ACCESS.join(', ')],
-  notOnHypervisors: [vcenter, firecracker],
-  type: INPUT_TYPES.SELECT,
+  type: INPUT_TYPES.AUTOCOMPLETE,
+  optionsOnly: true,
   dependOf: ENABLE_NUMA.name,
   htmlType: (enableNuma) => !enableNuma && INPUT_TYPES.HIDDEN,
   values: arrayToOptions(NUMA_MEMORY_ACCESS, { getText: sentenceCase }),
@@ -269,7 +242,7 @@ const NUMA_SCHEMA = (hypervisor) =>
       const { ENABLE_NUMA: isEnabled, ...restOfTopology } = TOPOLOGY
       const hyperv = context?.general?.HYPERVISOR
 
-      if ([vcenter, kvm, dummy].includes(hyperv) && isEnabled) {
+      if (['vcenter', kvm, dummy].includes(hyperv) && isEnabled) {
         if (
           restOfTopology?.NODE_AFFINITY &&
           restOfTopology.PIN_POLICY === NUMA_PIN_POLICIES.NODE_AFFINITY

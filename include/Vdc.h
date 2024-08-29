@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------ */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems              */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems              */
 /*                                                                          */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may  */
 /* not use this file except in compliance with the License. You may obtain  */
@@ -131,12 +131,12 @@ private:
     /**
      *  The resource type of this set.
      */
-     PoolObjectSQL::ObjectType type;
+    PoolObjectSQL::ObjectType type;
 
     /**
      *  XML Name of the resource
      */
-     std::string xml_name;
+    std::string xml_name;
 
     /**
      *  Insert acl rules into rules attribute.
@@ -144,9 +144,9 @@ private:
      *  @param name_attr the name of the configuration attribute.
      *  @param type Object type for the acls.
      */
-     void insert_default_rules(const std::string& name_attr,
-                               PoolObjectSQL::ObjectType type);
- };
+    void insert_default_rules(const std::string& name_attr,
+                              PoolObjectSQL::ObjectType type);
+};
 
 /**
  *  The Vdc class.

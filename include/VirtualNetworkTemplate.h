@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -25,16 +25,16 @@
 class VirtualNetworkTemplate : public Template
 {
 public:
-    VirtualNetworkTemplate():Template(false,'=',"TEMPLATE"){};
+    VirtualNetworkTemplate():Template(false, '=', "TEMPLATE") {};
 
     VirtualNetworkTemplate(bool replace_mode,
                            const char   separator,
                            const char * xml_root)
         : Template(replace_mode, separator, xml_root) {}
 
-    ~VirtualNetworkTemplate(){};
+    ~VirtualNetworkTemplate() {};
 
-    VirtualNetworkTemplate(const Template& vnt):Template(vnt){};
+    VirtualNetworkTemplate(const Template& vnt):Template(vnt) {};
 
     // -------------------------------------------------------------------------
     // Restricted attributes interface implementation

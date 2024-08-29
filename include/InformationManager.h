@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -30,12 +30,12 @@ class InformationManager : public DriverManager<Driver<im_msg_t>>
 {
 public:
     InformationManager(
-        HostPool * _hpool,
-        VirtualMachinePool * _vmpool,
-        const std::string& mad_location)
-            : DriverManager(mad_location)
-            , hpool(_hpool)
-            , vmpool(_vmpool)
+            HostPool * _hpool,
+            VirtualMachinePool * _vmpool,
+            const std::string& mad_location)
+        : DriverManager(mad_location)
+        , hpool(_hpool)
+        , vmpool(_vmpool)
     {
     }
 

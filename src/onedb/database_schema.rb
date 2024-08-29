@@ -1,5 +1,5 @@
 # -------------------------------------------------------------------------- #
-# Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                #
+# Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                #
 #                                                                            #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may    #
 # not use this file except in compliance with the License. You may obtain    #
@@ -106,7 +106,6 @@ class OneDBBacKEnd
                 "body MEDIUMTEXT, uid INTEGER, gid INTEGER," <<
                 "owner_u INTEGER, group_u INTEGER, other_u INTEGER",
             index_sql: [{ :name =>'state_oid_idx', :table => 'vm_pool', :columns => '(state, oid)' },
-                        { :name =>'ftidx', :table => 'vm_pool', :columns => '(search_token)', :type => 'FULLTEXT' },
                         { :name =>'applied_idx', :table => 'logdb', :columns => '(applied)' },
                         { :name =>'fed_index_idx', :table => 'logdb', :columns => '(fed_index)' }],
 

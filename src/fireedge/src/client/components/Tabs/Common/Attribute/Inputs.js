@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -23,6 +23,7 @@ import {
   forwardRef,
   useState,
 } from 'react'
+import { Tr } from 'client/components/HOC'
 
 import { Actions } from 'client/components/Tabs/Common/Attribute'
 
@@ -110,7 +111,7 @@ const Text = forwardRef(
         inputRef={ref}
         onChange={handleChange}
         value={newValue}
-        name={name}
+        name={Tr(name)}
         {...props}
       />
     )

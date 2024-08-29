@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -177,30 +177,30 @@ void Quotas::quota_del(QuotaType type, Template *tmpl)
     {
         case DATASTORE:
             datastore_quota.del(tmpl);
-        break;
+            break;
 
         case NETWORK:
             network_quota.del(tmpl);
-        break;
+            break;
 
         case IMAGE:
             image_quota.del(tmpl);
-        break;
+            break;
 
         case VM:
             vm_quota.del(tmpl);
-        break;
+            break;
 
         case VIRTUALMACHINE:
             network_quota.del(tmpl);
             vm_quota.del(tmpl);
             image_quota.del(tmpl);
-        break;
+            break;
 
         case VIRTUALROUTER:
             QuotaNetworkVirtualRouter vr_net_quota(&network_quota);
             vr_net_quota.del(tmpl);
-        break;
+            break;
     }
 }
 
@@ -208,9 +208,9 @@ void Quotas::quota_del(QuotaType type, Template *tmpl)
 /* -------------------------------------------------------------------------- */
 
 bool Quotas::quota_check(QuotaType  type,
-                        Template    *tmpl,
-                        Quotas      &default_quotas,
-                        string      &error_str)
+                         Template    *tmpl,
+                         Quotas      &default_quotas,
+                         string      &error_str)
 {
     switch (type)
     {
@@ -311,7 +311,7 @@ void Quotas::quota_del(QuotaType type, int uid, int gid, Template * tmpl)
 }
 
 void Quotas::quota_check(QuotaType type, int uid, int gid, Template * tmpl,
-        string& error)
+                         string& error)
 {
     Nebula&     nd    = Nebula::instance();
     UserPool *  upool = nd.get_upool();

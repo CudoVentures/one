@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -32,6 +32,8 @@ import {
   Radio,
 } from '@mui/material'
 import PropTypes from 'prop-types'
+import { Tr } from 'client/components/HOC'
+import { T } from 'client/constants'
 
 /**
  * @param {object} root0 - Props
@@ -70,7 +72,7 @@ const UserInputDialog = ({ open, onClose, userInput }) => {
               {...field}
               labelId="value-select-label"
               id="value-select"
-              label="Value"
+              label={Tr(T.Value)}
               multiple={userInput?.type === 'listmultiple'}
             >
               {userInput?.options?.map((option, index) => (
@@ -90,8 +92,12 @@ const UserInputDialog = ({ open, onClose, userInput }) => {
             value={field.value}
             onChange={(e) => field.onChange(e.target.value)}
           >
-            <FormControlLabel value="YES" control={<Radio />} label="Yes" />
-            <FormControlLabel value="NO" control={<Radio />} label="No" />
+            <FormControlLabel
+              value="YES"
+              control={<Radio />}
+              label={Tr(T.Yes)}
+            />
+            <FormControlLabel value="NO" control={<Radio />} label={Tr(T.No)} />
           </RadioGroup>
         )
       default:
@@ -100,7 +106,7 @@ const UserInputDialog = ({ open, onClose, userInput }) => {
             {...field}
             margin="dense"
             id="value"
-            label="Value"
+            label={Tr(T.Value)}
             type={userInput?.type === 'number' ? 'number' : 'text'}
             fullWidth
             variant="outlined"

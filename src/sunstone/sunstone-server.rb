@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # -------------------------------------------------------------------------- #
-# Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                #
+# Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                #
 #                                                                            #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may    #
 # not use this file except in compliance with the License. You may obtain    #
@@ -38,6 +38,7 @@ else
 end
 
 VMS_LOCATION = VAR_LOCATION + "/vms"
+VMM_EXEC_CONF = ETC_LOCATION + "/vmm_exec/vmm_exec_kvm.conf"
 
 SUNSTONE_AUTH             = VAR_LOCATION + '/.one/sunstone_auth'
 SUNSTONE_LOG              = LOG_LOCATION + '/sunstone.log'
@@ -323,7 +324,7 @@ SUPPORT = {
     :author_name => "OpenNebula Support Team",
     :support_subscription => "https://opennebula.io/support/",
     :account => "https://opennebula.io/buy-support",
-    :docs => "https://docs.opennebula.io/6.9/",
+    :docs => "https://docs.opennebula.io/6.10/",
     :community => "https://opennebula.io/usec",
     :project => "OpenNebula"
 }
@@ -354,6 +355,23 @@ helpers do
         end
 
         session[:csrftoken] && session[:csrftoken] == csrftoken
+    end
+
+    def get_ovmf_uefis
+        ovmf_uefis = []
+
+        if File.exist?(VMM_EXEC_CONF)
+            File.foreach(VMM_EXEC_CONF) do |line|
+                if line =~ /^OVMF_UEFIS\s*=\s*"(.+)"$/
+                    ovmf_uefis = $1.split(" ")
+                    break
+                end
+            end
+        else
+            logger.error("Configuration file not found: #{VMM_EXEC_CONF}")
+        end
+
+        ovmf_uefis
     end
 
     def authorized?
@@ -862,6 +880,14 @@ get '/version' do
     [200, version.to_json]
 end
 
+get '/ovmf_uefis' do
+    content_type 'application/json', :charset => 'utf-8'
+    ovmf_uefis = {}
+    ovmf_uefis["ovmf_uefis"] = get_ovmf_uefis
+    [200, ovmf_uefis.to_json]
+end
+
+
 ##############################################################################
 # Login
 ##############################################################################
@@ -1190,13 +1216,6 @@ get '/marketplaceapp/:id/download' do
             end
         end
     end
-end
-
-##############################################################################
-# Retrive DockerHub tags
-##############################################################################
-get '/marketplaceapp/:id/tags' do
-    @SunstoneServer.get_docker_tags(params[:id])
 end
 
 ##############################################################################

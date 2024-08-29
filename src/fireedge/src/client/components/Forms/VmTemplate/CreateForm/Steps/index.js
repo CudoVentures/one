@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -28,8 +28,6 @@ import General, {
 import { userInputsToArray } from 'client/models/Helper'
 import { createSteps, getUnknownAttributes, decodeBase64 } from 'client/utils'
 
-import { KVM_FIRMWARE_TYPES, VCENTER_FIRMWARE_TYPES } from 'client/constants'
-
 const Steps = createSteps([General, ExtraConfiguration, CustomVariables], {
   saveState: true,
   transformInitialValue: (vmTemplate, schema) => {
@@ -56,13 +54,8 @@ const Steps = createSteps([General, ExtraConfiguration, CustomVariables], {
     // cast FIRMWARE
     const firmware = vmTemplate?.TEMPLATE?.OS?.FIRMWARE
     if (firmware) {
-      const firmwareOption =
-        KVM_FIRMWARE_TYPES.includes(firmware) ||
-        VCENTER_FIRMWARE_TYPES.includes(firmware)
-
       objectSchema[EXTRA_ID].OS = {
         ...vmTemplate?.TEMPLATE?.OS,
-        FEATURE_CUSTOM_ENABLED: !firmwareOption ? 'YES' : 'NO',
       }
     }
 
@@ -90,6 +83,15 @@ const Steps = createSteps([General, ExtraConfiguration, CustomVariables], {
       objectSchema[EXTRA_ID].CONTEXT = {
         ...objectSchema[EXTRA_ID].CONTEXT,
         INIT_SCRIPTS: vmTemplate?.TEMPLATE?.CONTEXT?.INIT_SCRIPTS.split(' '),
+      }
+    }
+
+    // Init GRPAHICS.TYPE
+    const type = vmTemplate?.TEMPLATE?.GRAPHICS?.TYPE === 'VNC'
+    if (type) {
+      objectSchema[EXTRA_ID].GRAPHICS = {
+        ...vmTemplate?.GRAPHICS,
+        TYPE: type,
       }
     }
 

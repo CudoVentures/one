@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -76,12 +76,12 @@ export const ARGS_TYPES = {
 
 /** @enum {string} Period type */
 export const PERIOD_TYPES = {
-  YEARS: 'years',
-  MONTHS: 'months',
-  WEEKS: 'weeks',
-  DAYS: 'days',
-  HOURS: 'hours',
-  MINUTES: 'minutes',
+  YEARS: T.Years,
+  MONTHS: T.Months,
+  WEEKS: T.Weeks,
+  DAYS: T.Days,
+  HOURS: T.Hours,
+  MINUTES: T.Minutes,
 }
 
 export const SCHEDULE_TYPE = {

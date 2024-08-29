@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -39,7 +39,7 @@ const TIMEOUT = 8000 // 8 seconds
  * @param {number|string} id - The ID for which accounting data is to be fetched.
  * @returns {object} - Returns an object containing the processed data, loading state, and any error.
  */
-export const useAccountingData = ({ user, group, id, start, end }) => {
+export const useAccountingData = ({ id, start, end }) => {
   // Create the hook to fetch data
   const [refetch, { data: fetchedData }] =
     useLazyGetAccountingPoolFilteredQuery()

@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -20,6 +20,9 @@ import { TextField, Box } from '@mui/material'
 import { useSearch } from 'client/hooks'
 import { ListInfiniteScroll } from 'client/components/List'
 
+import { Tr } from 'client/components/HOC'
+import { T } from 'client/constants'
+
 const Search = ({
   list,
   listOptions,
@@ -38,7 +41,7 @@ const Search = ({
           value={query}
           onChange={handleChange}
           fullWidth
-          placeholder="Search..."
+          placeholder={`${Tr(T.Search)}...`}
         />
       </Box>
       {result?.length === 0 ? (

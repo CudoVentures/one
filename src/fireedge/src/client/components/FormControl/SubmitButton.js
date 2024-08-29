@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -39,6 +39,13 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.action.disabled,
     },
   },
+  tooltipLink: {
+    color: theme.palette.secondary.main,
+    textDecoration: 'none',
+    '&:hover': {
+      color: theme.palette.secondary.dark,
+    },
+  },
 }))
 
 const ButtonComponent = forwardRef(
@@ -63,23 +70,43 @@ const ButtonComponent = forwardRef(
     )
 )
 
-const TooltipComponent = ({ tooltip, tooltipprops, children }) => (
-  <ConditionalWrap
-    condition={tooltip && tooltip !== ''}
-    wrap={(wrapperChildren) => (
-      <Tooltip
-        arrow
-        placement="bottom"
-        title={<Typography variant="subtitle2">{tooltip}</Typography>}
-        {...tooltipprops}
-      >
-        <span>{wrapperChildren}</span>
-      </Tooltip>
-    )}
-  >
-    {children}
-  </ConditionalWrap>
-)
+const TooltipComponent = ({ tooltip, tooltipLink, tooltipprops, children }) => {
+  const classes = useStyles()
+
+  return (
+    <ConditionalWrap
+      condition={tooltip && tooltip !== ''}
+      wrap={(wrapperChildren) => (
+        <Tooltip
+          arrow
+          placement="bottom"
+          title={
+            tooltipLink ? (
+              <Typography variant="subtitle2">
+                {Tr(tooltip)}{' '}
+                <a
+                  className={classes.tooltipLink}
+                  target="_blank"
+                  href={tooltipLink.link}
+                  rel="noreferrer"
+                >
+                  {Tr(tooltipLink.text)}
+                </a>
+              </Typography>
+            ) : (
+              <Typography variant="subtitle2">{Tr(tooltip)}</Typography>
+            )
+          }
+          {...tooltipprops}
+        >
+          <span>{wrapperChildren}</span>
+        </Tooltip>
+      )}
+    >
+      {children}
+    </ConditionalWrap>
+  )
+}
 
 const SubmitButton = memo(
   ({ isSubmitting, disabled, label, icon, className, ...props }) => {
@@ -100,7 +127,7 @@ const SubmitButton = memo(
           {isSubmitting && (
             <CircularProgress color="secondary" size={progressSize} />
           )}
-          {!isSubmitting && (icon ?? label ?? Tr(T.Submit))}
+          {!isSubmitting && (icon ?? Tr(label) ?? Tr(T.Submit))}
         </ButtonComponent>
       </TooltipComponent>
     )
@@ -118,6 +145,7 @@ export const SubmitButtonPropTypes = {
   endicon: PropTypes.node,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   tooltip: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  tooltipLink: PropTypes.object,
   tooltipprops: PropTypes.object,
   isSubmitting: PropTypes.bool,
   disabled: PropTypes.bool,

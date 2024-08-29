@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -31,31 +31,31 @@ int IPAMManager::start()
     using namespace std::placeholders; // for _1
 
     register_action(IPAMManagerMessages::UNDEFINED,
-            &IPAMManager::_undefined);
+                    &IPAMManager::_undefined);
 
     register_action(IPAMManagerMessages::REGISTER_ADDRESS_RANGE,
-            bind(&IPAMManager::_notify_request, this, _1));
+                    bind(&IPAMManager::_notify_request, this, _1));
 
     register_action(IPAMManagerMessages::UNREGISTER_ADDRESS_RANGE,
-            bind(&IPAMManager::_notify_request, this, _1));
+                    bind(&IPAMManager::_notify_request, this, _1));
 
     register_action(IPAMManagerMessages::GET_ADDRESS,
-            bind(&IPAMManager::_notify_request, this, _1));
+                    bind(&IPAMManager::_notify_request, this, _1));
 
     register_action(IPAMManagerMessages::ALLOCATE_ADDRESS,
-            bind(&IPAMManager::_notify_request, this, _1));
+                    bind(&IPAMManager::_notify_request, this, _1));
 
     register_action(IPAMManagerMessages::FREE_ADDRESS,
-            bind(&IPAMManager::_notify_request, this, _1));
+                    bind(&IPAMManager::_notify_request, this, _1));
 
     register_action(IPAMManagerMessages::VNET_CREATE,
-            bind(&IPAMManager::_vnet_create, this, _1));
+                    bind(&IPAMManager::_vnet_create, this, _1));
 
     register_action(IPAMManagerMessages::VNET_DELETE,
-            bind(&IPAMManager::_vnet_delete, this, _1));
+                    bind(&IPAMManager::_vnet_delete, this, _1));
 
     register_action(IPAMManagerMessages::LOG,
-            &IPAMManager::_log);
+                    &IPAMManager::_log);
 
     string error;
     if ( DriverManager::start(error) != 0 )
@@ -64,7 +64,7 @@ int IPAMManager::start()
         return -1;
     }
 
-    NebulaLog::log("IPM",Log::INFO,"Starting IPAM Manager...");
+    NebulaLog::log("IPM", Log::INFO, "Starting IPAM Manager...");
 
     Listener::start();
 
@@ -118,7 +118,8 @@ void IPAMManager::send_message(IPAMManagerMessages type,
 
 void IPAMManager::trigger_register_address_range(IPAMRequest& ir)
 {
-    trigger([&] {
+    trigger([&]
+    {
         send_request(IPAMManagerMessages::REGISTER_ADDRESS_RANGE, ir);
     });
 }
@@ -127,7 +128,8 @@ void IPAMManager::trigger_register_address_range(IPAMRequest& ir)
 
 void IPAMManager::trigger_unregister_address_range(IPAMRequest& ir)
 {
-    trigger([&] {
+    trigger([&]
+    {
         send_request(IPAMManagerMessages::UNREGISTER_ADDRESS_RANGE, ir);
     });
 }
@@ -136,7 +138,8 @@ void IPAMManager::trigger_unregister_address_range(IPAMRequest& ir)
 
 void IPAMManager::trigger_get_address(IPAMRequest& ir)
 {
-    trigger([&] {
+    trigger([&]
+    {
         send_request(IPAMManagerMessages::GET_ADDRESS, ir);
     });
 }
@@ -145,7 +148,8 @@ void IPAMManager::trigger_get_address(IPAMRequest& ir)
 
 void IPAMManager::trigger_allocate_address(IPAMRequest& ir)
 {
-    trigger([&] {
+    trigger([&]
+    {
         send_request(IPAMManagerMessages::ALLOCATE_ADDRESS, ir);
     });
 }
@@ -154,7 +158,8 @@ void IPAMManager::trigger_allocate_address(IPAMRequest& ir)
 
 void IPAMManager::trigger_free_address(IPAMRequest& ir)
 {
-    trigger([&] {
+    trigger([&]
+    {
         send_request(IPAMManagerMessages::FREE_ADDRESS, ir);
     });
 }
@@ -201,7 +206,7 @@ int IPAMManager::load_drivers(const std::vector<const VectorAttribute*>& _mads)
     // Set default for threads
     int threads = 0;
     ipam_conf.vector_value("THREADS", threads);
-        
+
     if ( threads < 16 )
     {
         ipam_conf.replace("THREADS", 16);

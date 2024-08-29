@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -31,9 +31,9 @@ class UserPriorityPolicy : public SchedulerPolicy
 public:
 
     UserPriorityPolicy(VirtualMachinePoolXML * _pool, float  w = 1.0):
-            SchedulerPolicy(w), vm_pool(_pool) {};
+        SchedulerPolicy(w), vm_pool(_pool) {};
 
-    virtual ~UserPriorityPolicy(){};
+    virtual ~UserPriorityPolicy() {};
 
 protected:
     /**

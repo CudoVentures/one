@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -20,7 +20,8 @@
 
 using namespace std;
 
-std::set<std::string> ScheduledAction::VM_ACTIONS = {
+std::set<std::string> ScheduledAction::VM_ACTIONS =
+{
     "terminate",
     "terminate-hard",
     "undeploy",
@@ -43,7 +44,8 @@ std::set<std::string> ScheduledAction::VM_ACTIONS = {
     "backup"
 };
 
-std::set<PoolObjectSQL::ObjectType> ScheduledAction::SCHED_OBJECTS = {
+std::set<PoolObjectSQL::ObjectType> ScheduledAction::SCHED_OBJECTS =
+{
     PoolObjectSQL::VM,
     PoolObjectSQL::BACKUPJOB
 };
@@ -63,7 +65,7 @@ ScheduledAction::ScheduledAction(PoolObjectSQL::ObjectType type,
     , _end_type(END_NONE)
     , _end_value(-1)
     , _done(-1)
-    , _message("")
+    , _warning(0)
 {
 }
 
@@ -87,6 +89,7 @@ string& ScheduledAction::to_xml(string& xml) const
         << "<END_VALUE>" << _end_value  << "</END_VALUE>"
         << "<DONE>"    << _done    << "</DONE>"
         << "<MESSAGE>" << _message << "</MESSAGE>"
+        << "<WARNING>" << _warning << "</WARNING>"
         << "</SCHED_ACTION>";
 
     xml = oss.str();
@@ -142,6 +145,17 @@ int ScheduledAction::parse(const VectorAttribute * va, time_t origin, string& er
     if (_time == -1)
     {
         error_str = "Unable to parse the time value or value is empty: " + tmp_str;
+        return -1;
+    }
+
+    if (va->vector_value("WARNING", tmp_str) == 0 && !tmp_str.empty())
+    {
+        _warning = parse_time(tmp_str, origin);
+    }
+
+    if (_warning == -1)
+    {
+        error_str = "Unable to parse the warning value: " + tmp_str;
         return -1;
     }
 
@@ -219,15 +233,16 @@ int ScheduledAction::parse(const VectorAttribute * va, time_t origin, string& er
 
 bool ScheduledAction::days_in_range(std::string& error)
 {
-    static const char * e[] = {
+    static const char * e[] =
+    {
         "Days in a week have to be in [0,6] range",   //WEEKLY - 0
         "Days in a month have to be in [1,31] range", // MONTHLY - 1
         "Days in a year have to be in [0,365] range", // YEARLY - 2
         "Hours have to be in [0,168] range"           // HOURLY - 3
     };
 
-    static int fday[] = {0,1,0,1};
-    static int lday[] = {7,32,366,168};
+    static int fday[] = {0, 1, 0, 1};
+    static int lday[] = {7, 32, 366, 168};
 
     bool extra_check;
 
@@ -383,7 +398,8 @@ time_t ScheduledAction::next_action()
     /* ---------------------------------------------------------------------  */
     if ( _repeat == HOURLY )
     {
-        do {
+        do
+        {
             _time += *(days_set.begin()) * 3600;
         } while (_time < current);
 
@@ -439,6 +455,8 @@ time_t ScheduledAction::next_action()
 
     _time += delta * 24 * 3600;
 
+    _warning = 0; // Reset warning for repeated action
+
     return _time;
 }
 
@@ -455,11 +473,12 @@ int ScheduledAction::rebuild_attributes()
     rc += xpath(_parent_id, "/SCHED_ACTION/PARENT_ID", -1);
     rc += xpath(_action, "/SCHED_ACTION/ACTION", "");
     rc += xpath(_args, "/SCHED_ACTION/ARGS", "");
-    rc += xpath(_time, "/SCHED_ACTION/TIME",(time_t) -1);
-    rc += xpath(_done, "/SCHED_ACTION/DONE",(time_t) -1);
+    rc += xpath(_time, "/SCHED_ACTION/TIME", (time_t) -1);
+    rc += xpath(_done, "/SCHED_ACTION/DONE", (time_t) -1);
     rc += xpath(_days, "/SCHED_ACTION/DAYS", "");
     rc += xpath(_message, "/SCHED_ACTION/MESSAGE", "");
     rc += xpath(_end_value, "/SCHED_ACTION/END_VALUE", (time_t)-1);
+    rc += xpath(_warning, "/SCHED_ACTION/WARNING", (time_t)0);
 
     rc += xpath(tmp_str, "/SCHED_ACTION/TYPE", "");
     _type = str_to_type(tmp_str);
@@ -523,7 +542,8 @@ int ScheduledAction::days_in_period(int month, int year)
 {
     static map<int, int> MONTHS_DAYS = {{0, 31}, {1, 28}, {2, 31}, {3, 30},
         {4, 31}, {5, 30}, {6, 31}, {7, 31}, {8, 30}, {9, 31}, {10, 30},
-        {11, 31}};
+        {11, 31}
+    };
 
     int leap_year  = 0;
     int leap_month = 0;

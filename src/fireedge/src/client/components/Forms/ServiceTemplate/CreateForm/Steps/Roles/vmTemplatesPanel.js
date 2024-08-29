@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -28,9 +28,11 @@ import {
   Paper,
   useTheme,
 } from '@mui/material'
-import { useLazyGetTemplatesQuery } from 'client/features/OneApi/vmTemplate'
+import { useGetTemplatesQuery } from 'client/features/OneApi/vmTemplate'
 import { useGeneralApi } from 'client/features/General'
 import { DateTime } from 'luxon'
+import { Tr } from 'client/components/HOC'
+import { T } from 'client/constants'
 
 const convertTimestampToDate = (timestamp) =>
   DateTime.fromSeconds(parseInt(timestamp)).toFormat('dd/MM/yyyy HH:mm:ss')
@@ -42,30 +44,27 @@ const convertTimestampToDate = (timestamp) =>
  * @param {Array} props.roles - The roles available for selection.
  * @param {number} props.selectedRoleIndex - The index of the currently selected role.
  * @param {Function} props.onChange - Callback to be called when affinity settings are changed.
+ * @param {Array} props.vmTemplates - VM Templates array
+ * @param {object} props.error - Error object
  * @returns {Component} The VmTemplatesPanel component.
  */
-const VmTemplatesPanel = ({ roles, selectedRoleIndex, onChange }) => {
+const VmTemplatesPanel = ({
+  roles,
+  selectedRoleIndex,
+  onChange,
+  vmTemplates,
+  error,
+}) => {
   const theme = useTheme()
   const { enqueueError } = useGeneralApi()
-  const [vmTemplates, setVmTemplates] = useState([])
-  const [fetch, { data, error }] = useLazyGetTemplatesQuery()
   const templateID = roles?.[selectedRoleIndex]?.SELECTED_VM_TEMPLATE_ID ?? []
-
-  useEffect(() => {
-    fetch()
-  }, [fetch])
+  const templates = vmTemplates || (useGetTemplatesQuery()?.data ?? [])
 
   useEffect(() => {
     if (error) {
-      enqueueError(
-        `Error fetching VM templates data: ${error?.message ?? error}`
-      )
+      enqueueError(T.ErrorVmTemplateFetching, error?.message ?? error)
     }
   }, [error, enqueueError])
-
-  useEffect(() => {
-    setVmTemplates(data)
-  }, [data])
 
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
@@ -79,6 +78,8 @@ const VmTemplatesPanel = ({ roles, selectedRoleIndex, onChange }) => {
     setPage(0)
   }
 
+  const isDisabled = !roles?.[selectedRoleIndex] || roles?.length <= 0
+
   return (
     <Box
       sx={{
@@ -86,25 +87,27 @@ const VmTemplatesPanel = ({ roles, selectedRoleIndex, onChange }) => {
         p: 2,
         borderRadius: 2,
         maxHeight: '40%',
+        pointerEvents: isDisabled ? 'none' : 'auto',
+        opacity: isDisabled ? '50%' : '100%',
       }}
     >
       <Typography variant="h6" gutterBottom>
-        VM Templates
+        {Tr(T.VMTemplates)}
       </Typography>
       <Paper sx={{ overflow: 'auto', marginBottom: 2 }}>
         <Table>
           <TableHead>
             <TableRow>
               <TableCell padding="checkbox"></TableCell>
-              <TableCell>ID</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Owner</TableCell>
-              <TableCell>Group</TableCell>
-              <TableCell>Registration time</TableCell>
+              <TableCell>{Tr(T.ID)}</TableCell>
+              <TableCell>{Tr(T.Name)}</TableCell>
+              <TableCell>{Tr(T.Owner)}</TableCell>
+              <TableCell>{Tr(T.Group)}</TableCell>
+              <TableCell>{Tr(T.RegistrationTime)}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {vmTemplates
+            {templates
               ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               ?.map((vmTemplate) => (
                 <TableRow
@@ -151,26 +154,23 @@ const VmTemplatesPanel = ({ roles, selectedRoleIndex, onChange }) => {
       <TablePagination
         rowsPerPageOptions={[10, 25, 50]}
         component="div"
-        count={vmTemplates?.length}
+        count={templates?.length ?? 0}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        labelRowsPerPage={Tr(T.RowsPerPage)}
       />
     </Box>
   )
 }
 
 VmTemplatesPanel.propTypes = {
-  roles: PropTypes.arrayOf(
-    PropTypes.shape({
-      NAME: PropTypes.string,
-      POLICY: PropTypes.string,
-      SELECTED_VM_TEMPLATE_ID: PropTypes.array,
-    })
-  ),
+  roles: PropTypes.array,
   selectedRoleIndex: PropTypes.number,
   onChange: PropTypes.func.isRequired,
+  vmTemplates: PropTypes.array,
+  error: PropTypes.object,
   templateID: PropTypes.array,
 }
 

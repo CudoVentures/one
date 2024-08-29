@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -18,6 +18,7 @@ import PropTypes from 'prop-types'
 
 import { Tooltip, Typography, Box } from '@mui/material'
 import { Component } from 'react'
+import { Tr } from 'client/components/HOC'
 
 /**
  * `LinearProgressWithTooltip` component displays a linear progress bar with a label and an optional tooltip.
@@ -51,7 +52,7 @@ const LinearProgressWithTooltip = ({
     <Tooltip
       arrow
       placement="right"
-      title={<Typography variant="subtitle2">{tooltipTitle}</Typography>}
+      title={<Typography variant="subtitle2">{Tr(tooltipTitle)}</Typography>}
     >
       <Box component="span" ml={2} mt={1} mr={2} lineHeight={1}>
         {icon}

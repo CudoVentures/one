@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -425,11 +425,20 @@ FieldComponent.propTypes = {
     PropTypes.string,
     PropTypes.arrayOf(PropTypes.string),
   ]),
-  stepControl: PropTypes.shape({
-    condition: PropTypes.func,
-    steps: PropTypes.arrayOf(PropTypes.string),
-    statePaths: PropTypes.arrayOf(PropTypes.string),
-  }),
+  stepControl: PropTypes.oneOfType([
+    PropTypes.arrayOf(
+      PropTypes.shape({
+        condition: PropTypes.func,
+        steps: PropTypes.arrayOf(PropTypes.string),
+        statePaths: PropTypes.arrayOf(PropTypes.string),
+      })
+    ),
+    PropTypes.shape({
+      condition: PropTypes.func,
+      steps: PropTypes.arrayOf(PropTypes.string),
+      statePaths: PropTypes.arrayOf(PropTypes.string),
+    }),
+  ]),
 }
 
 FieldComponent.displayName = 'FieldComponent'

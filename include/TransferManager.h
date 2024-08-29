@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -32,18 +32,18 @@ class LifeCycleManager;
 
 class TransferManager :
     public DriverManager<Driver<transfer_msg_t>>,
-    public Listener
+                                              public Listener
 {
 public:
 
     TransferManager(
-        VirtualMachinePool * _vmpool,
-        HostPool *           _hpool,
-        const std::string&   _mad_location):
-            DriverManager(_mad_location),
-            Listener("Transfer Manager"),
-            vmpool(_vmpool),
-            hpool(_hpool)
+            VirtualMachinePool * _vmpool,
+            HostPool *           _hpool,
+            const std::string&   _mad_location):
+        DriverManager(_mad_location),
+        Listener("Transfer Manager"),
+        vmpool(_vmpool),
+        hpool(_hpool)
     {
     };
 
@@ -123,8 +123,8 @@ public:
      * @param xfr Stream where the transfer command will be written
      */
     void migrate_transfer_command(
-        VirtualMachine *        vm,
-        std::ostream&           xfr);
+            VirtualMachine *        vm,
+            std::ostream&           xfr);
 
     /**
      *  This function generates the epilog_delete sequence for current,
@@ -201,7 +201,7 @@ private:
     /**
      *  Generic name for the TransferManager driver
      */
-     static const char *  transfer_driver_name;
+    static const char *  transfer_driver_name;
 
     /**
      *  Returns a pointer to a Transfer Manager driver. The driver is

@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -25,14 +25,14 @@ void DatastorePoolXML::add_object(xmlNodePtr node)
 {
     if ( node == 0 || node->children == 0 )
     {
-        NebulaLog::log("DATASTORE",Log::ERROR,
+        NebulaLog::log("DATASTORE", Log::ERROR,
                        "XML Node does not represent a valid Host");
         return;
     }
 
     DatastoreXML* ds = new DatastoreXML(node);
 
-    objects.insert(pair<int,ObjectXML*>(ds->get_oid(), ds));
+    objects.insert(pair<int, ObjectXML*>(ds->get_oid(), ds));
 }
 
 /* -------------------------------------------------------------------------- */

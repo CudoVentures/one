@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -26,17 +26,17 @@ class RequestManagerUpdateDB: public Request
 {
 protected:
     RequestManagerUpdateDB(const std::string& name): Request(name, "A:sis",
-            "Updates the DB object from a XML document")
+                                                                 "Updates the DB object from a XML document")
     {
         auth_op = AuthRequest::MANAGE;
     };
 
-    ~RequestManagerUpdateDB(){};
+    ~RequestManagerUpdateDB() {};
 
     /* ---------------------------------------------------------------------- */
 
     virtual void request_execute(xmlrpc_c::paramList const& pl,
-            RequestAttributes& att) override
+                                 RequestAttributes& att) override
     {
         int oid = xmlrpc_c::value_int(pl.getInt(1));
         std::string xml = xmlrpc_c::value_string(pl.getString(2));
@@ -63,7 +63,7 @@ protected:
     /* ---------------------------------------------------------------------- */
 
     ErrorCode request_execute(int oid, const std::string& xml,
-            RequestAttributes& att)
+                              RequestAttributes& att)
     {
         auto object = pool->get<PoolObjectSQL>(oid);
 
@@ -111,7 +111,7 @@ public:
         pool        =  Nebula::instance().get_apppool();
     }
 
-    ~MarketPlaceAppUpdateDB(){};
+    ~MarketPlaceAppUpdateDB() {};
 };
 
 /* -------------------------------------------------------------------------- */
@@ -125,7 +125,7 @@ public:
         pool        =  Nebula::instance().get_marketpool();
     }
 
-    ~MarketPlaceUpdateDB(){};
+    ~MarketPlaceUpdateDB() {};
 };
 
 /* -------------------------------------------------------------------------- */
@@ -139,10 +139,10 @@ public:
         pool        =  Nebula::instance().get_zonepool();
     }
 
-    ~ZoneUpdateDB(){};
+    ~ZoneUpdateDB() {};
 
     void request_execute(xmlrpc_c::paramList const& pl,
-            RequestAttributes& att) override
+                         RequestAttributes& att) override
     {
         int oid = xmlrpc_c::value_int(pl.getInt(1));
         std::string xml = xmlrpc_c::value_string(pl.getString(2));

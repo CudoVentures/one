@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project Leads (OpenNebula.org)             */
+/* Copyright 2002-2024, OpenNebula Project Leads (OpenNebula.org)             */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -50,7 +50,7 @@ private:
     void init_attributes()
     {
         xpath(oid,  "/USER/ID", -1);
-        xpaths(gids,"/USER/GROUPS/ID");
+        xpaths(gids, "/USER/GROUPS/ID");
     };
 };
 

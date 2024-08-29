@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -27,7 +27,7 @@ import {
 } from 'client/components/FormStepper'
 import { CreateForm } from 'client/components/Forms/MarketplaceApp'
 import { jsonToXml } from 'client/models/Helper'
-import { RESOURCE_NAMES } from 'client/constants'
+import { RESOURCE_NAMES, T } from 'client/constants'
 
 /**
  * Displays the creation or modification form to a Marketplace App.
@@ -58,7 +58,7 @@ function CreateMarketplaceApp() {
       }[String(type).toLowerCase()]
 
       const response = await createApp?.()?.unwrap?.()
-      response && enqueueSuccess(`Marketplace App created: ${response}`)
+      response && enqueueSuccess(T.SuccessMarketplaceAppCreated, response)
       history.goBack()
     } catch {}
   }

@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -34,7 +34,7 @@ int VMRPCPool::update_monitoring(const VirtualMachineMonitorInfo& monitoring)
     if (sql_xml == 0)
     {
         NebulaLog::log("VMP", Log::WARNING,
-                "Could not transform VM monitoring to XML");
+                       "Could not transform VM monitoring to XML");
 
         return -1;
     }
@@ -42,7 +42,7 @@ int VMRPCPool::update_monitoring(const VirtualMachineMonitorInfo& monitoring)
     if (ObjectXML::validate_xml(sql_xml) != 0)
     {
         NebulaLog::log("VMP", Log::WARNING,
-                "Could not transform VM monitoring to XML" + string(sql_xml));
+                       "Could not transform VM monitoring to XML" + string(sql_xml));
 
         db->free_str(sql_xml);
         return -1;

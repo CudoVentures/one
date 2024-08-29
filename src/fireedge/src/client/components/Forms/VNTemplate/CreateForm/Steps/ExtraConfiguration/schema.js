@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -17,6 +17,7 @@ import { array, object, ObjectSchema } from 'yup'
 
 import { SCHEMA as CONTEXT_SCHEMA } from 'client/components/Forms/VNTemplate/CreateForm/Steps/ExtraConfiguration/context/schema'
 import { SCHEMA as QOS_SCHEMA } from 'client/components/Forms/VNTemplate/CreateForm/Steps/ExtraConfiguration/qos/schema'
+import { SCHEMA as CONFIGURATION_SCHEMA } from 'client/components/Forms/VNTemplate/CreateForm/Steps/ExtraConfiguration/configuration/schema'
 
 /**
  * Map name attribute if not exists.
@@ -46,6 +47,7 @@ const AR_SCHEMA = object({
  */
 export const SCHEMA = (isUpdate, oneConfig, adminGroup) => {
   const schema = object({ SECURITY_GROUPS: array().ensure() })
+    .concat(CONFIGURATION_SCHEMA(oneConfig, adminGroup))
     .concat(CONTEXT_SCHEMA(oneConfig, adminGroup))
     .concat(QOS_SCHEMA(oneConfig, adminGroup))
 

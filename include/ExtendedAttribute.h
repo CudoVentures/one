@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -93,13 +93,8 @@ public:
         return va->to_json(s);
     };
 
-    void to_token(std::ostringstream& s) const override
-    {
-        return va->to_token(s);
-    };
-
     void to_xml(std::ostringstream& s,
-        const std::map<std::string, std::set<std::string>> &hidden) const override
+                const std::map<std::string, std::set<std::string>> &hidden) const override
     {
         return va->to_xml(s, hidden);
     }
@@ -111,12 +106,12 @@ protected:
      *    @param va pointer to the VectorAttribute.
      */
     ExtendedAttribute(VectorAttribute *_va):
-        Attribute(_va->name()) ,va(_va), id(-1) {};
+        Attribute(_va->name()), va(_va), id(-1) {};
 
     ExtendedAttribute(VectorAttribute *_va, int _id):
-        Attribute(_va->name()) ,va(_va), id(_id) {};
+        Attribute(_va->name()), va(_va), id(_id) {};
 
-    virtual ~ExtendedAttribute(){};
+    virtual ~ExtendedAttribute() {};
 
     /* ---------------------------------------------------------------------- */
     /* Attribute Interface                                                    */
@@ -174,7 +169,7 @@ protected:
      *  Creates the ExtenededAttribute set
      *    @param dispose elements upon set destruction
      */
-    ExtendedAttributeSet(bool _dispose):dispose(_dispose){};
+    ExtendedAttributeSet(bool _dispose):dispose(_dispose) {};
 
     virtual ~ExtendedAttributeSet();
 
@@ -218,12 +213,12 @@ protected:
             return map_it != rhs.map_it;
         }
 
-        AttributeIterator(){};
-        AttributeIterator(const AttributeIterator& ait):map_it(ait.map_it){};
+        AttributeIterator() {};
+        AttributeIterator(const AttributeIterator& ait):map_it(ait.map_it) {};
         AttributeIterator(const std::map<int,
-                ExtendedAttribute *>::iterator& _map_it):map_it(_map_it){};
+                          ExtendedAttribute *>::iterator& _map_it):map_it(_map_it) {};
 
-        virtual ~AttributeIterator(){};
+        virtual ~AttributeIterator() {};
 
     protected:
         std::map<int, ExtendedAttribute *>::iterator map_it;
@@ -270,12 +265,12 @@ protected:
      *    @param vas vector of attribute to use
      */
     void init_attribute_map(const std::string& id_name,
-            std::vector<VectorAttribute *>& vas);
+                            std::vector<VectorAttribute *>& vas);
     /**
      *  Abstract method to create the VirtualMachineAttributes for this set
      */
     virtual ExtendedAttribute * attribute_factory(VectorAttribute * va,
-            int id) const = 0;
+                                                  int id) const = 0;
 
     /**
      *  @return the number of elements in the set

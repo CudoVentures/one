@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -108,20 +108,27 @@ const HostPciTab = ({ id }) => {
           </Select>
         </FormControl>
       </Box>
-      <MultiChart
-        datasets={[
-          {
-            ...transformedDataset.dataset,
-            error: transformedDataset.error,
-            isEmpty: transformedDataset.isEmpty,
-          },
-        ]}
-        metricNames={metricNames}
-        chartType={chartType}
-        ItemsPerPage={10}
-        tableColumns={DataGridColumns}
-        groupBy={'deviceName'}
-      />
+      <Box
+        sx={{
+          width: '100%',
+          height: '100%',
+        }}
+      >
+        <MultiChart
+          datasets={[
+            {
+              ...transformedDataset.dataset,
+              error: transformedDataset.error,
+              isEmpty: transformedDataset.isEmpty,
+            },
+          ]}
+          metricNames={metricNames}
+          chartType={chartType}
+          ItemsPerPage={10}
+          tableColumns={DataGridColumns}
+          groupBy={'deviceName'}
+        />
+      </Box>
     </>
   )
 }

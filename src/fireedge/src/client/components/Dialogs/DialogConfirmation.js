@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -78,6 +78,8 @@ const DialogConfirmation = memo(
           sx: {
             minWidth: fixedWidth ? '80vw' : 'auto',
             minHeight: fixedHeight ? '80vh' : 'auto',
+            maxWidth: fixedWidth ? '80vw' : 'auto',
+            maxHeight: fixedHeight ? '80vh' : 'auto',
           },
         }}
         open={open}

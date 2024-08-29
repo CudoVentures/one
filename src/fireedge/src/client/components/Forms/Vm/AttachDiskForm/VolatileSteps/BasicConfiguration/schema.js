@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -30,8 +30,6 @@ import {
   UNITS,
 } from 'client/constants'
 
-const { vcenter } = HYPERVISORS
-
 /** @type {Field} Size field */
 const SIZE = {
   name: 'SIZE',
@@ -51,7 +49,8 @@ const SIZE = {
 export const SIZEUNIT = {
   name: 'SIZEUNIT',
   label: T.SizeUnit,
-  type: INPUT_TYPES.SELECT,
+  type: INPUT_TYPES.AUTOCOMPLETE,
+  optionsOnly: true,
   tooltip: T.SizeUnitTooltip,
   values: arrayToOptions([UNITS.MB, UNITS.GB, UNITS.TB], {
     addEmpty: false,
@@ -71,18 +70,13 @@ export const SIZEUNIT = {
 const TYPE = (hypervisor) => ({
   name: 'TYPE',
   label: T.DiskType,
-  type: INPUT_TYPES.SELECT,
-  values:
-    hypervisor === vcenter
-      ? [
-          { text: '-', value: undefined },
-          { text: 'FS', value: 'fs' },
-        ]
-      : [
-          { text: '-', value: undefined },
-          { text: 'FS', value: 'fs' },
-          { text: 'Swap', value: 'swap' },
-        ],
+  type: INPUT_TYPES.AUTOCOMPLETE,
+  optionsOnly: true,
+  values: [
+    { text: '-', value: undefined },
+    { text: 'FS', value: 'fs' },
+    { text: 'Swap', value: 'swap' },
+  ],
   validation: string().trim().required().default(undefined),
 })
 
@@ -93,20 +87,15 @@ const TYPE = (hypervisor) => ({
 const FORMAT = (hypervisor) => ({
   name: 'FORMAT',
   label: T.Format,
-  type: INPUT_TYPES.SELECT,
+  type: INPUT_TYPES.AUTOCOMPLETE,
+  optionsOnly: true,
   dependOf: 'TYPE',
   htmlType: (type) => type === 'swap' && INPUT_TYPES.HIDDEN,
-  values:
-    hypervisor === vcenter
-      ? [
-          { text: '-', value: undefined },
-          { text: 'Raw', value: 'raw' },
-        ]
-      : [
-          { text: '-', value: undefined },
-          { text: 'Raw', value: 'raw' },
-          { text: 'qcow2', value: 'qcow2' },
-        ],
+  values: [
+    { text: '-', value: undefined },
+    { text: 'Raw', value: 'raw' },
+    { text: 'qcow2', value: 'qcow2' },
+  ],
   validation: string()
     .trim()
     .when('TYPE', (type, schema) =>
@@ -120,8 +109,8 @@ const FORMAT = (hypervisor) => ({
 const FILESYSTEM = {
   name: 'FS',
   label: T.FileSystemType,
-  notOnHypervisors: [vcenter],
-  type: INPUT_TYPES.SELECT,
+  type: INPUT_TYPES.AUTOCOMPLETE,
+  optionsOnly: true,
   dependOf: 'TYPE',
   htmlType: (type) => type === 'swap' && INPUT_TYPES.HIDDEN,
   values: () => arrayToOptions(SERVER_CONFIG?.supported_fs),

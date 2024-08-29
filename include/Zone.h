@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------ */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems              */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems              */
 /*                                                                          */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may  */
 /* not use this file except in compliance with the License. You may obtain  */
@@ -43,9 +43,12 @@ public:
 
         state = ENABLED;
 
-        if ( st == "ENABLED" ) {
+        if ( st == "ENABLED" )
+        {
             state = ENABLED;
-        } else if ( st == "DISABLED" ) {
+        }
+        else if ( st == "DISABLED" )
+        {
             state = DISABLED;
         }
         else
@@ -120,10 +123,10 @@ public:
     }
 
     /**
-	 *  @param server_id
+     *  @param server_id
      *  @return the server
      */
-	ZoneServer * get_server(int server_id) const;
+    ZoneServer * get_server(int server_id) const;
 
     /**
      *  @return the number of servers in this zone

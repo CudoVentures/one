@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -17,6 +17,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { DataGrid } from '@mui/x-data-grid'
 import { Box } from '@mui/material'
+import { Tr } from 'client/components/HOC'
+import { T } from 'client/constants'
 
 /**
  * Renders a data grid table using the provided data and columns.
@@ -43,6 +45,20 @@ const DataGridTable = ({ data, columns }) => {
         rows={flattenedData.map((row, index) => ({ ...row, id: index }))}
         columns={columns}
         rowsPerPageOptions={[25, 50, 100]}
+        localeText={{
+          columnMenuLabel: Tr(T.ColumnMenuLabel),
+          columnMenuShowColumns: Tr(T.ColumnMenuShowColumns),
+          columnMenuManageColumns: Tr(T.ColumnMenuManageColumns),
+          columnMenuFilter: Tr(T.ColumnMenuFilter),
+          columnMenuHideColumn: Tr(T.ColumnMenuHideColumn),
+          columnMenuUnsort: Tr(T.ColumnMenuUnsort),
+          columnMenuSortAsc: Tr(T.ColumnMenuSortAsc),
+          columnMenuSortDesc: Tr(T.ColumnMenuSortDesc),
+          columnHeaderSortIconLabel: Tr(T.ColumnHeaderSortIconLabel),
+          MuiTablePagination: {
+            labelRowsPerPage: Tr(T.RowsPerPage),
+          },
+        }}
       />
     </Box>
   )

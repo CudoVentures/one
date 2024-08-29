@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -40,6 +40,8 @@ import {
   calculateDisplayMetrics,
 } from 'client/components/Tabs/Accounting/helpers'
 import { filterDataset } from 'client/components/Charts/MultiChart/helpers/scripts'
+import { Tr } from 'client/components/HOC'
+import { T } from 'client/constants'
 
 const ACTION_ADD = 'add'
 const ACTION_REMOVE = 'remove'
@@ -275,15 +277,15 @@ const generateAccountingInfoTab = ({ groups }) => {
                 size="small"
                 style={{ marginRight: 2, minWidth: 120 }}
               >
-                <InputLabel>Group By</InputLabel>
+                <InputLabel>{Tr(T.GroupBy)}</InputLabel>
                 <Select
                   value={groupBy}
                   onChange={handleGroupByChange}
-                  label="Group By"
+                  label={Tr(T.GroupBy)}
                 >
-                  <MenuItem value="NAME">VM</MenuItem>
-                  <MenuItem value="UNAME">User</MenuItem>
-                  <MenuItem value="GNAME">Group</MenuItem>
+                  <MenuItem value="NAME">{Tr(T.VM)}</MenuItem>
+                  <MenuItem value="UNAME">{Tr(T.User)}</MenuItem>
+                  <MenuItem value="GNAME">{Tr(T.Group)}</MenuItem>
                 </Select>
               </FormControl>
               <FormControl
@@ -291,16 +293,16 @@ const generateAccountingInfoTab = ({ groups }) => {
                 size="small"
                 style={{ marginRight: 2, minWidth: 120 }}
               >
-                <InputLabel>Chart Type</InputLabel>
+                <InputLabel>{Tr(T.ChartType)}</InputLabel>
                 <Select
                   value={chartType}
                   onChange={handleChartTypeChange}
-                  label="Chart Type"
+                  label={Tr(T.ChartType)}
                 >
-                  <MenuItem value="line">Line Chart</MenuItem>
-                  <MenuItem value="bar">Bar Chart</MenuItem>
-                  <MenuItem value="area">Area Chart</MenuItem>
-                  <MenuItem value="table">Table Chart</MenuItem>
+                  <MenuItem value="line">{Tr(T.LineChart)}</MenuItem>
+                  <MenuItem value="bar">{Tr(T.BarChart)}</MenuItem>
+                  <MenuItem value="area">{Tr(T.AreaChart)}</MenuItem>
+                  <MenuItem value="table">{Tr(T.TableChart)}</MenuItem>
                 </Select>
               </FormControl>
             </Box>

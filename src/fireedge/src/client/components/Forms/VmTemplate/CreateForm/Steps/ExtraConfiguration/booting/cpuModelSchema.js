@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -14,7 +14,7 @@
  * limitations under the License.                                            *
  * ------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -40,14 +40,15 @@ import { useGetHostsQuery } from 'client/features/OneApi/host'
 import { getKvmCpuFeatures, getKvmCpuModels } from 'client/models/Host'
 import { Field, arrayToOptions } from 'client/utils'
 
-const { vcenter, firecracker, lxc } = HYPERVISORS
+const { lxc } = HYPERVISORS
 
 /** @type {Field} CPU model field */
 export const MODEL = {
   name: 'CPU_MODEL.MODEL',
   label: T.CpuModel,
-  notOnHypervisors: [vcenter, firecracker, lxc],
-  type: INPUT_TYPES.SELECT,
+  notOnHypervisors: [lxc],
+  type: INPUT_TYPES.AUTOCOMPLETE,
+  optionsOnly: true,
   values: () => {
     const { data: hosts = [] } = useGetHostsQuery()
     const kvmCpuModels = getKvmCpuModels(hosts)
@@ -65,8 +66,9 @@ export const MODEL = {
 export const FEATURES = {
   name: 'CPU_MODEL.FEATURES',
   label: T.CpuFeature,
-  notOnHypervisors: [vcenter, firecracker, lxc],
-  type: INPUT_TYPES.SELECT,
+  notOnHypervisors: [lxc],
+  type: INPUT_TYPES.AUTOCOMPLETE,
+  optionsOnly: true,
   multiple: true,
   values: () => {
     const { data: hosts = [] } = useGetHostsQuery()

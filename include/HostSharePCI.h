@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------ */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems              */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems              */
 /*                                                                          */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may  */
 /* not use this file except in compliance with the License. You may obtain  */
@@ -47,7 +47,7 @@ class HostSharePCI : public Template
 {
 public:
 
-    HostSharePCI() : Template(false, '=', "PCI_DEVICES"){};
+    HostSharePCI() : Template(false, '=', "PCI_DEVICES") {};
 
     HostSharePCI(const HostSharePCI& src);
 
@@ -148,7 +148,7 @@ public:
      *  @return -1 if wrong bus 0 on success
      */
     static int set_pci_address(VectorAttribute * pci_device, const std::string& dbus,
-            bool bus_index, bool clean);
+                               bool bus_index, bool clean);
 
 private:
     /**
@@ -161,7 +161,7 @@ private:
 
         PCIDevice(const PCIDevice& src);
 
-        ~PCIDevice(){};
+        ~PCIDevice() {};
 
         unsigned int vendor_id;
         unsigned int device_id;

@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -21,6 +21,9 @@ import { Typography } from '@mui/material'
 
 import { rowStyles } from 'client/components/Tables/styles'
 
+import { Tr } from 'client/components/HOC'
+import { T } from 'client/constants'
+
 const Row = ({ original, value, ...props }) => {
   const classes = rowStyles()
   const { ID, NAME, HOSTS, DATASTORES, VNETS, PROVIDER_NAME } = value
@@ -35,26 +38,29 @@ const Row = ({ original, value, ...props }) => {
         </div>
         <div className={classes.caption}>
           <span data-cy="cluster-card-id">{`#${ID}`}</span>
-          <span data-cy="cluster-card-hosts" title={`Total Hosts: ${HOSTS}`}>
+          <span
+            data-cy="cluster-card-hosts"
+            title={`${Tr(T.Total)} ${Tr(T.Hosts)}: ${HOSTS}`}
+          >
             <HardDrive />
             <span>{`${HOSTS}`}</span>
           </span>
           <span
             data-cy="cluster-card-vnets"
-            title={`Total Virtual Networks: ${VNETS}`}
+            title={`${Tr(T.Total)} ${Tr(T.VirtualNetworks)}: ${VNETS}`}
           >
             <NetworkAlt />
             <span>{`${VNETS}`}</span>
           </span>
           <span
             data-cy="cluster-card-datastores"
-            title={`Total Datastores: ${DATASTORES}`}
+            title={`${Tr(T.Total)} ${Tr(T.Datastores)}: ${DATASTORES}`}
           >
             <Folder />
             <span>{`${DATASTORES}`}</span>
           </span>
           {PROVIDER_NAME && (
-            <span title={`Provider: ${PROVIDER_NAME}`}>
+            <span title={`${Tr(T.Provider)}: ${PROVIDER_NAME}`}>
               <Cloud />
               <span>{` ${PROVIDER_NAME}`}</span>
             </span>

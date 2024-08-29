@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -20,7 +20,7 @@ import { DatastoresTable } from 'client/components/Tables'
 import { SCHEMA } from 'client/components/Forms/Backup/RestoreForm/Steps/DatastoresTable/schema'
 
 import { Step } from 'client/utils'
-import { T } from 'client/constants'
+import { T, DATASTORE_TYPES } from 'client/constants'
 
 export const STEP_ID = 'datastore'
 
@@ -41,6 +41,13 @@ const Content = ({ data, app }) => {
       displaySelectedRows
       pageSize={5}
       getRowId={(row) => String(row.NAME)}
+      filter={
+        (datastores) =>
+          datastores?.filter(
+            ({ TYPE }) => +TYPE === DATASTORE_TYPES.IMAGE.id
+          ) ?? []
+        // 0 = image
+      }
       initialState={{
         selectedRowIds: { [NAME]: true },
         filters: [{ id: 'TYPE', value: 'IMAGE' }],
@@ -56,12 +63,20 @@ const Content = ({ data, app }) => {
  * @param {object} app - Marketplace App resource
  * @returns {Step} Datastore step
  */
-const DatastoreStep = (app) => ({
-  id: STEP_ID,
-  label: T.SelectDatastoreImage,
-  resolver: SCHEMA,
-  content: (props) => Content({ ...props, app }),
-})
+const DatastoreStep = (app) => {
+  const { disableImageSelection } = app
+
+  return {
+    id: STEP_ID,
+    label: T.SelectDatastoreImage,
+    resolver: SCHEMA,
+    content: (props) => Content({ ...props, app }),
+    defaultDisabled: {
+      // Disabled when image selection is enabled, aka when in restore operation
+      condition: () => !disableImageSelection,
+    },
+  }
+}
 
 Content.propTypes = {
   data: PropTypes.any,

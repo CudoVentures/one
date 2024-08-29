@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -22,6 +22,7 @@ import SecondaryGroups, {
 import PrimaryGroup, {
   STEP_ID as PRIMARY_GROUP_ID,
 } from 'client/components/Forms/User/CreateForm/Steps/PrimaryGroup'
+import { AUTH_DRIVER } from 'client/constants'
 
 import { createSteps } from 'client/utils'
 const Steps = createSteps([General, PrimaryGroup, SecondaryGroups], {
@@ -32,9 +33,11 @@ const Steps = createSteps([General, PrimaryGroup, SecondaryGroups], {
       [SECONDARY_GROUPS_ID]: secondaryGroupsData,
     } = formData
 
+    // LDAP driver needs to set passwort to '-'
     return {
       username: generalData.username,
-      password: generalData.password,
+      password:
+        generalData.authType === AUTH_DRIVER.LDAP ? '-' : generalData.password,
       driver: generalData.authType,
       group: [primaryGroupsData, ...secondaryGroupsData],
     }

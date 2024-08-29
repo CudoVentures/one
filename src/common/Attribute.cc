@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -81,7 +81,7 @@ void VectorAttribute::to_xml(ostringstream &oss) const
 }
 
 void VectorAttribute::to_xml(ostringstream &oss,
-        const std::map<std::string, std::set<std::string>> &hidden) const
+                             const std::map<std::string, std::set<std::string>> &hidden) const
 {
     oss << "<" << name() << ">";
 
@@ -97,7 +97,7 @@ void VectorAttribute::to_xml(ostringstream &oss,
         oss << "<" << it->first << ">";
 
         if (hidden_it != hidden.end() &&
-                hidden_it->second.find(it->first) != hidden_it->second.end())
+            hidden_it->second.find(it->first) != hidden_it->second.end())
         {
             oss << "***";
         }
@@ -147,28 +147,12 @@ void VectorAttribute::to_json(std::ostringstream& s) const
     s << "}";
 }
 
-void VectorAttribute::to_token(std::ostringstream& s) const
-{
-    for (auto it=attribute_value.begin(); it!=attribute_value.end(); it++)
-    {
-        if (it->first.empty() || it->second.empty())
-        {
-            continue;
-        }
-
-        one_util::escape_token(it->first, s);
-        s << "=";
-        one_util::escape_token(it->second, s);
-        s << std::endl;
-    }
-}
-
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 
 void VectorAttribute::unmarshall(const string& sattr, const char * _sep)
 {
-    size_t  bpos=0,epos,mpos;
+    size_t  bpos=0, epos, mpos;
     string  tmp;
     bool    cont = true;
 
@@ -188,7 +172,7 @@ void VectorAttribute::unmarshall(const string& sattr, const char * _sep)
 
     while(cont)
     {
-        epos=sattr.find(my_sep,bpos);
+        epos=sattr.find(my_sep, bpos);
 
         if (epos == string::npos)
         {
@@ -197,7 +181,7 @@ void VectorAttribute::unmarshall(const string& sattr, const char * _sep)
         }
         else
         {
-            tmp  = sattr.substr(bpos,epos-bpos);
+            tmp  = sattr.substr(bpos, epos-bpos);
             bpos = epos + my_sep_size;
         }
 
@@ -210,11 +194,11 @@ void VectorAttribute::unmarshall(const string& sattr, const char * _sep)
 
         if ( mpos + 1 == tmp.size() )
         {
-            attribute_value.insert(make_pair(tmp.substr(0,mpos),""));
+            attribute_value.insert(make_pair(tmp.substr(0, mpos), ""));
         }
         else
         {
-            attribute_value.insert(make_pair(tmp.substr(0,mpos),
+            attribute_value.insert(make_pair(tmp.substr(0, mpos),
                                              tmp.substr(mpos+1)));
         }
     }
@@ -222,7 +206,7 @@ void VectorAttribute::unmarshall(const string& sattr, const char * _sep)
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 
-void VectorAttribute::replace(const map<string,string>& attr)
+void VectorAttribute::replace(const map<string, string>& attr)
 {
     attribute_value = attr;
 }
@@ -231,7 +215,7 @@ void VectorAttribute::replace(const map<string,string>& attr)
 
 void VectorAttribute::merge(const VectorAttribute* vattr, bool replace)
 {
-    const map<string,string>& source_values = vattr->value();
+    const map<string, string>& source_values = vattr->value();
 
     for (auto it=source_values.begin(); it!=source_values.end(); it++)
     {
@@ -249,7 +233,7 @@ void VectorAttribute::merge(const VectorAttribute* vattr, bool replace)
             }
         }
 
-        attribute_value.insert(make_pair(it->first,it->second));
+        attribute_value.insert(make_pair(it->first, it->second));
     }
 }
 
@@ -265,7 +249,7 @@ void VectorAttribute::replace(const string& name, const string& value)
         attribute_value.erase(it);
     }
 
-    attribute_value.insert(make_pair(name,value));
+    attribute_value.insert(make_pair(name, value));
 }
 
 /* -------------------------------------------------------------------------- */

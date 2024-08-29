@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -47,14 +47,14 @@ public:
      *                  -2 in case of template parse failure
      */
     int allocate (
-        int                      uid,
-        int                      gid,
-        const std::string&       uname,
-        const std::string&       gname,
-        int                      umask,
-        std::unique_ptr<Template> templ,
-        int *                    oid,
-        std::string&             error_str);
+            int                      uid,
+            int                      gid,
+            const std::string&       uname,
+            const std::string&       gname,
+            int                      umask,
+            std::unique_ptr<Template> templ,
+            int *                    oid,
+            std::string&             error_str);
 
     /**
      *  Updates an Image in the data base. It also updates the previous state
@@ -128,7 +128,7 @@ public:
      *  @return 0 on success
      */
     int dump(std::string& oss, const std::string& where, int sid, int eid,
-        bool desc) override
+             bool desc) override
     {
         return PoolSQL::dump(oss, "BACKUPJOB_POOL", "body", one_db::backup_job_table,
                              where, sid, eid, desc);

@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -27,7 +27,8 @@ class VMActions
 public:
 
     enum Action
-    {                                       //Associated XML-RPC API call
+    {
+        //Associated XML-RPC API call
         NONE_ACTION            = 0,         // "one.vm.migrate"
         MIGRATE_ACTION         = 1,         // "one.vm.migrate"
         LIVE_MIGRATE_ACTION    = 2,
@@ -149,7 +150,7 @@ private:
      *  Returns action set from a string of actions seperated by commas
      */
     int set_auth_ops(const std::string& ops_str,
-       ActionSet<Action>& ops_set, std::string& error);
+                     ActionSet<Action>& ops_set, std::string& error);
 };
 
 #endif /*VMACTIONS_H*/

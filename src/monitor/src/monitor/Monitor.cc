@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -22,7 +22,6 @@
 #include "StreamManager.h"
 #include "SqliteDB.h"
 #include "MySqlDB.h"
-#include "PostgreSqlDB.h"
 
 #include <fcntl.h>
 #include <unistd.h>
@@ -41,16 +40,16 @@ void Monitor::start()
     if (oned_config.load_configuration() != 0)
     {
         throw runtime_error("Error reading oned configuration file " +
-            oned_filename);
+                            oned_filename);
     }
 
     config = make_unique<MonitorConfigTemplate>(get_defaults_location(),
-                conf_filename);
+                                                conf_filename);
 
     if (config->load_configuration() != 0)
     {
         throw runtime_error("Error reading monitor configuration file" +
-            conf_filename);
+                            conf_filename);
     }
 
     string datastore_location;
@@ -106,7 +105,7 @@ void Monitor::start()
 
         sqlDB = make_unique<SqliteDB>(get_var_location() + "one.db", timeout);
     }
-    else
+    else if ( db_backend == "mysql" )
     {
         string server;
         int    port;
@@ -127,20 +126,12 @@ void Monitor::start()
 
         _db_m->vector_value("CONNECTIONS", connections, 15);
 
-        if ( db_backend == "postgresql" )
-        {
-            sqlDB = make_unique<PostgreSqlDB>(server, port, user, passwd, db_name,
-                    connections);
-        }
-        else if ( db_backend == "mysql" )
-        {
-            sqlDB = make_unique<MySqlDB>(server, port, user, passwd, db_name,
-                        encoding, connections, compare_binary);
-        }
-        else
-        {
-            throw runtime_error("Unknown DB backend " + db_backend);
-        }
+        sqlDB = make_unique<MySqlDB>(server, port, user, passwd, db_name,
+                                     encoding, connections, compare_binary);
+    }
+    else
+    {
+        throw runtime_error("DB BACKEND must be sqlite or mysql.");
     }
 
     // -------------------------------------------------------------------------
@@ -202,10 +193,10 @@ void Monitor::start()
     }
 
     hm = make_unique<HostMonitorManager>(hpool.get(), vmpool.get(),
-                addr, port, threads,
-                get_mad_location(),
-                timer_period,
-                monitor_interval_host);
+                                         addr, port, threads,
+                                         get_mad_location(),
+                                         timer_period,
+                                         monitor_interval_host);
 
     if (hm->load_monitor_drivers(drivers_conf) != 0)
     {

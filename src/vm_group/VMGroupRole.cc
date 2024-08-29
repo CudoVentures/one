@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------ */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems              */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems              */
 /*                                                                          */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may  */
 /* not use this file except in compliance with the License. You may obtain  */
@@ -128,7 +128,7 @@ void VMGroupRole::set_vms()
 /* -------------------------------------------------------------------------- */
 
 static void affinity_requirements(int vm_id, std::string& requirements,
-        VMGroupPolicy policy, const std::set<int>& vms)
+                                  VMGroupPolicy policy, const std::set<int>& vms)
 {
     string op, op2;
 
@@ -184,7 +184,7 @@ void VMGroupRole::role_requirements(VMGroupPolicy pol, std::string& reqs)
 /* -------------------------------------------------------------------------- */
 
 void VMGroupRole::host_requirements(std::set<int>& hosts, const std::string& op1,
-        const std::string& op2, std::ostringstream& oss)
+                                    const std::string& op2, std::ostringstream& oss)
 {
     bool empty = true;
 

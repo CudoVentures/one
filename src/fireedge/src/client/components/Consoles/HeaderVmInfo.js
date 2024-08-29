@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -64,7 +64,7 @@ const HeaderVmInfo = ({ id, type }) => {
 
   useEffect(() => {
     if (isVMRC && isSuccess && vm && !isVCenter(vm)) {
-      enqueueError(`${vm.ID} - ${vm.NAME} is not located on vCenter Host`)
+      enqueueError(T.ErrorVmNoLocatedVenter, [vm.ID, vm.NAME])
       redirectTo(PATH.DASHBOARD)
     }
   }, [isVMRC, isSuccess])

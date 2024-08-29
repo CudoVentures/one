@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -39,7 +39,7 @@ protected:
      *    @return 0 on success
      */
     virtual int select(
-        SqlDB * db) = 0;
+            SqlDB * db) = 0;
 
     /**
      *  Writes the ObjectSQL in the database.
@@ -47,8 +47,8 @@ protected:
      *    @return 0 on success
      */
     virtual int insert(
-        SqlDB * db,
-        std::string& error_str) = 0;
+            SqlDB * db,
+            std::string& error_str) = 0;
 
     /**
      *  Updates the ObjectSQL in the database.
@@ -56,7 +56,7 @@ protected:
      *    @return 0 on success
      */
     virtual int update(
-        SqlDB * db) = 0;
+            SqlDB * db) = 0;
 
     /**
      *  Removes the ObjectSQL from the database.
@@ -64,7 +64,7 @@ protected:
      *    @return 0 on success
      */
     virtual int drop(
-        SqlDB * db) = 0;
+            SqlDB * db) = 0;
 };
 
 #endif /*OBJECT_SQL_H_*/

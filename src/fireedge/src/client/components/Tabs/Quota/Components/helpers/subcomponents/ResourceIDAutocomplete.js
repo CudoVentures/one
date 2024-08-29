@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -17,7 +17,8 @@ import PropTypes from 'prop-types'
 import { Component, useState } from 'react'
 import { Autocomplete, Box, Chip, IconButton, TextField } from '@mui/material'
 import { Trash } from 'iconoir-react'
-
+import { Tr } from 'client/components/HOC'
+import { T } from 'client/constants'
 /**
  * @param {object} root0 - Component
  * @param {string} root0.selectedType - Selected Quota type.
@@ -119,18 +120,15 @@ export const ResourceIDAutocomplete = ({
             setInputValue('')
           }}
           variant="outlined"
-          label="Resource IDs"
+          label={Tr(T.ResourceIds)}
           placeholder={
             inputValue || state?.globalIds?.length > 1
               ? ''
-              : 'Select or type a Resource ID'
+              : Tr(T.ResourceIdsConcept)
           }
           fullWidth
           error={!state.isValid}
-          helperText={
-            !state.isValid &&
-            'Invalid format or duplicate ID. Please enter a positive number.'
-          }
+          helperText={!state.isValid && Tr(T.ResourceIdsInvalid)}
           sx={{
             '.MuiOutlinedInput-root': {
               minHeight: '56px',

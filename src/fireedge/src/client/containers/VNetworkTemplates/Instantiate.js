@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -30,6 +30,7 @@ import {
 import { InstantiateForm } from 'client/components/Forms/VNTemplate'
 
 import { useSystemData } from 'client/features/Auth'
+import { T } from 'client/constants'
 
 const _ = require('lodash')
 
@@ -60,7 +61,7 @@ const InstantiateVnTemplate = () => {
       history.push(PATH.NETWORK.VN_TEMPLATES.LIST)
 
       const templateInfo = `#${templateId} ${templateName}`
-      enqueueInfo(`VN Template instantiated - ${templateInfo}`)
+      enqueueInfo(T.InfoVNTemplateInstantiated, [templateInfo])
     } catch {}
   }
 

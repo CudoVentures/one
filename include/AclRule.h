@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -64,11 +64,11 @@ public:
     /**
      *  Set the fields of the ACL, and updates its representation
      */
-     void set(int       _oid,
-              long long _user,
-              long long _resource,
-              long long _rights,
-              long long _zone)
+    void set(int       _oid,
+             long long _user,
+             long long _resource,
+             long long _rights,
+             long long _zone)
     {
         oid      = _oid;
         user     = _user;

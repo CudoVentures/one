@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -63,7 +63,7 @@ ExtendedAttribute * ExtendedAttributeSet::last_attribute() const
 /* -------------------------------------------------------------------------- */
 
 void ExtendedAttributeSet::init_attribute_map(const std::string& id_name,
-        std::vector<VectorAttribute *>& vas)
+                                              std::vector<VectorAttribute *>& vas)
 {
     int id;
     int auto_id = 0;

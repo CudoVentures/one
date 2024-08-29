@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -26,25 +26,25 @@ using namespace std;
 
 
 const string VirtualMachineManagerDriver::imported_actions_default =
-    "shutdown, shutdown-hard, hold, release, suspend, resume, delete, reboot, "
-    "reboot-hard, resched, unresched, disk-attach, disk-detach, nic-attach, "
-    "nic-detach, snap-create, snap-delete";
+        "shutdown, shutdown-hard, hold, release, suspend, resume, delete, reboot, "
+        "reboot-hard, resched, unresched, disk-attach, disk-detach, nic-attach, "
+        "nic-detach, snap-create, snap-delete";
 
 const string VirtualMachineManagerDriver::imported_actions_default_public =
-    "shutdown, shutdown-hard, hold, release, suspend, resume, delete, reboot, "
-    "reboot-hard, resched, unresched, disk-attach, disk-detach, nic-attach, "
-    "nic-detach, snap-create, snap-delete, poweroff, poweroff-hard";
+        "shutdown, shutdown-hard, hold, release, suspend, resume, delete, reboot, "
+        "reboot-hard, resched, unresched, disk-attach, disk-detach, nic-attach, "
+        "nic-detach, snap-create, snap-delete, poweroff, poweroff-hard";
 
 VirtualMachineManagerDriver::VirtualMachineManagerDriver(
-    const string             &mad_location,
-    const map<string,string> &attrs):
-        Driver(),
-        driver_conf(true),
-        keep_snapshots(false),
-        ds_live_migration(false),
-        cold_nic_attach(false),
-        live_resize(false),
-        support_shareable_(false)
+        const string             &mad_location,
+        const map<string, string> &attrs):
+    Driver(),
+    driver_conf(true),
+    keep_snapshots(false),
+    ds_live_migration(false),
+    cold_nic_attach(false),
+    live_resize(false),
+    support_shareable_(false)
 {
     char *          error_msg = nullptr;
     const char *    cfile;

@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -29,7 +29,7 @@ import { useFieldArray, useForm, FormProvider } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import { FormWithSchema, Legend } from 'client/components/Forms'
-import { Translate } from 'client/components/HOC'
+import { Translate, Tr } from 'client/components/HOC'
 
 import {
   FIELDS,
@@ -127,22 +127,22 @@ const RulesSection = memo(
             <TableHead>
               <TableRow>
                 <TableCell>
-                  <b>{T.Protocol}</b>
+                  <b>{Tr(T.Protocol)}</b>
                 </TableCell>
                 <TableCell>
-                  <b>{T.Type}</b>
+                  <b>{Tr(T.Type)}</b>
                 </TableCell>
                 <TableCell>
-                  <b>{T.Range}</b>
+                  <b>{Tr(T.Range)}</b>
                 </TableCell>
                 <TableCell>
-                  <b>{T.Network}</b>
+                  <b>{Tr(T.Network)}</b>
                 </TableCell>
                 <TableCell>
-                  <b>{T.IcmpType}</b>
+                  <b>{Tr(T.IcmpType)}</b>
                 </TableCell>
                 <TableCell>
-                  <b>{T.IcmpTypeV6}</b>
+                  <b>{Tr(T.IcmpTypeV6)}</b>
                 </TableCell>
                 <TableCell />
               </TableRow>
@@ -181,12 +181,14 @@ const RulesSection = memo(
 
                   return (
                     <TableRow key={index}>
-                      <TableCell>{PROTOCOL}</TableCell>
-                      <TableCell>{RULE_TYPE}</TableCell>
-                      <TableCell>{RANGE}</TableCell>
-                      <TableCell>{network}</TableCell>
-                      <TableCell>{ICMP_STRING[ICMP_TYPE] || ''}</TableCell>
-                      <TableCell>{ICMP_V6_STRING[ICMPv6_TYPE] || ''}</TableCell>
+                      <TableCell>{Tr(PROTOCOL)}</TableCell>
+                      <TableCell>{Tr(RULE_TYPE)}</TableCell>
+                      <TableCell>{Tr(RANGE)}</TableCell>
+                      <TableCell>{Tr(network)}</TableCell>
+                      <TableCell>{Tr(ICMP_STRING[ICMP_TYPE]) || ''}</TableCell>
+                      <TableCell>
+                        {Tr(ICMP_V6_STRING[ICMPv6_TYPE]) || ''}
+                      </TableCell>
                       <TableCell align="right">
                         <IconButton onClick={() => remove(index)}>
                           <DeleteCircledOutline />

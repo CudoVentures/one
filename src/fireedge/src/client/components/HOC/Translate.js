@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -27,9 +27,10 @@ import {
 import { sprintf } from 'sprintf-js'
 import root from 'window-or-global'
 
-import { LANGUAGES, LANGUAGES_URL } from 'client/constants'
+import { LANGUAGES, LANGUAGES_URL, T } from 'client/constants'
 import { useAuth } from 'client/features/Auth'
 import { isDevelopment } from 'client/utils'
+import { findKey } from 'lodash'
 
 const TranslateContext = createContext()
 
@@ -65,13 +66,20 @@ const labelCanBeTranslated = (val) =>
  * @returns {boolean} - True if the value can be translated
  */
 const translateString = (word = '', values) => {
+  // Get the translation context so hash will be the map with the language that is using the user
   const { hash = {} } = useContext(TranslateContext)
-  const { [word]: wordVal } = hash
 
+  // Look for the key thas has the value equal to word in the T object
+  const key = findKey(T, (value) => value === word)
+
+  // Using the key from the previous step, get the translated word in the language map
+  const { [key]: wordVal } = hash
+
+  // If there is no word, use the original
   const ensuredWord = wordVal || word
-
   if (!ensuredWord || !values) return ensuredWord
 
+  // Return translation
   try {
     return sprintf(ensuredWord, ...values)
   } catch {
@@ -148,7 +156,10 @@ const Tr = (word = '', values = []) => {
 const Translate = memo(({ word = '', values = [] }) => {
   const [w, v = values] = Array.isArray(word) ? word : [word, values]
   const ensuredValues = !Array.isArray(v) ? [v] : v
-  const translation = translateString(w, ensuredValues.filter(Boolean))
+  const translation = translateString(
+    w,
+    ensuredValues.filter((value) => value || value === 0)
+  )
 
   return <>{translation}</>
 })

@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -66,10 +66,10 @@ public:
      *  Check if the user is enabled
      *    @return true if the user is enabled
      */
-     bool isEnabled() const
-     {
+    bool isEnabled() const
+    {
         return enabled;
-     }
+    }
 
     /**
      *  Returns user password
@@ -384,7 +384,7 @@ protected:
          const std::string& _password,
          const std::string& _auth_driver,
          bool               _enabled):
-        PoolObjectSQL(id,USER,_uname,-1,_gid,"",_gname,one_db::user_table),
+        PoolObjectSQL(id, USER, _uname, -1, _gid, "", _gname, one_db::user_table),
         quota(),
         password(_password),
         auth_driver(_auth_driver),

@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -86,14 +86,19 @@ const accounting = (
       const responseData = value
 
       // Filter if there is not userId and there is a groupId
-      if (!userId && groupId && responseData && responseData.HISTORY_RECORDS) {
+      if (responseData && responseData.HISTORY_RECORDS) {
         // Filter data by group id
         const history = Array.isArray(responseData.HISTORY_RECORDS.HISTORY)
           ? responseData.HISTORY_RECORDS.HISTORY
           : [responseData.HISTORY_RECORDS.HISTORY]
-        responseData.HISTORY_RECORDS.HISTORY = history.filter(
-          (item) => item.VM.GID === groupId
-        )
+
+        if (!userId && groupId) {
+          responseData.HISTORY_RECORDS.HISTORY = history.filter(
+            (item) => item.VM.GID === groupId
+          )
+        } else {
+          responseData.HISTORY_RECORDS.HISTORY = history
+        }
       }
 
       // Return response
@@ -176,16 +181,21 @@ const showback = (
       const responseData = value
 
       // Filter if there is not userId and there is a groupId
-      if (!userId && groupId && responseData && responseData.SHOWBACK_RECORDS) {
+      if (responseData && responseData.SHOWBACK_RECORDS) {
         // Filter data by group id
         const showbackHistory = Array.isArray(
           responseData.SHOWBACK_RECORDS.SHOWBACK
         )
           ? responseData.SHOWBACK_RECORDS.SHOWBACK
           : [responseData.SHOWBACK_RECORDS.SHOWBACK]
-        responseData.SHOWBACK_RECORDS.SHOWBACK = showbackHistory.filter(
-          (item) => item.GID === groupId
-        )
+
+        if (!userId && groupId) {
+          responseData.SHOWBACK_RECORDS.SHOWBACK = showbackHistory.filter(
+            (item) => item.GID === groupId
+          )
+        } else {
+          responseData.SHOWBACK_RECORDS.SHOWBACK = showbackHistory
+        }
       }
 
       // Return response

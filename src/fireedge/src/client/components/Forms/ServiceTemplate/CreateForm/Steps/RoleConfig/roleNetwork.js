@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -15,12 +15,13 @@
  * ------------------------------------------------------------------------- */
 
 import PropTypes from 'prop-types'
-import { useFieldArray, useFormContext } from 'react-hook-form'
+import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 import { useEffect, useState, useRef, useMemo, Component } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import makeStyles from '@mui/styles/makeStyles'
 import { Box, Checkbox, TextField, Autocomplete } from '@mui/material'
 import { T } from 'client/constants'
+import { Tr } from 'client/components/HOC'
 import { Legend } from 'client/components/Forms'
 import { STEP_ID as EXTRA_ID } from 'client/components/Forms/ServiceTemplate/CreateForm/Steps/Extra'
 import _ from 'lodash'
@@ -64,10 +65,16 @@ const RoleNetwork = ({ stepId, selectedRoleIndex }) => {
   }, [selectedRoleIndex, SECTION_ID, stepId])
 
   const classes = useStyles()
-  const { getValues, setValue } = useFormContext()
+  const { control, getValues, setValue } = useFormContext()
 
   const { fields, update } = useFieldArray({
     name: fieldArrayLocation,
+  })
+
+  const watchedRdpConfig = useWatch({
+    control,
+    name: `${stepId}.RDP`,
+    defaultValue: {},
   })
 
   useEffect(() => {
@@ -144,6 +151,16 @@ const RoleNetwork = ({ stepId, selectedRoleIndex }) => {
     }
   }, [fieldArrayLocation])
 
+  const handleSetRdp = (row) => {
+    const existing = getValues(`${stepId}.RDP`) || {}
+    const updatedRdp = {
+      ...existing,
+      [selectedRoleIndex]:
+        typeof row === 'object' && row !== null ? row?.name : '',
+    }
+    setValue(`${stepId}.RDP`, updatedRdp)
+  }
+
   const handleSelectRow = (row, forceSelect = false) => {
     const fieldArray = getValues(fieldArrayLocation)
     const fieldArrayIndex = fieldArray?.findIndex((f) => f?.idx === row?.idx)
@@ -151,12 +168,17 @@ const RoleNetwork = ({ stepId, selectedRoleIndex }) => {
       ? true
       : !fieldArray?.[fieldArrayIndex]?.rowSelected
 
+    if (
+      // if rowSelected === true, its being deselected
+      row?.rowSelected &&
+      getValues(`${stepId}.RDP`)?.[selectedRoleIndex] === row?.name
+    ) {
+      handleSetRdp(null) // Deselect
+    }
+
     const updatedFieldArray = fieldArray?.map((f, index) => {
       if (index === fieldArrayIndex) {
         return { ...f, rowSelected: rowToggle, aliasSelected: false }
-      }
-      if (f.aliasIdx === fieldArrayIndex) {
-        return { ...f, aliasIdx: -1 }
       }
 
       return f
@@ -187,13 +209,21 @@ const RoleNetwork = ({ stepId, selectedRoleIndex }) => {
     })
   }
 
+  // Transalte before useMemo because Tr could not be inside useMemo
+  const columnTranslations = {
+    select: Tr(T.Select),
+    network: Tr(T.Network),
+    nicAlias: Tr(T.NICAlias),
+    alias: Tr(T.Alias),
+  }
+
   const columns = useMemo(
     () => [
       {
         field: 'select',
         disableColumnMenu: true,
         sortable: false,
-        headerName: 'Select',
+        headerName: columnTranslations.select,
         width: 100,
         renderCell: (params) => (
           <Checkbox
@@ -209,14 +239,14 @@ const RoleNetwork = ({ stepId, selectedRoleIndex }) => {
         field: 'network',
         disableColumnMenu: true,
         flex: 1,
-        headerName: 'Network',
+        headerName: columnTranslations.network,
         width: 150,
       },
       {
         field: 'aliasToggle',
         disableColumnMenu: true,
         sortable: false,
-        headerName: 'NIC Alias',
+        headerName: columnTranslations.nicAlias,
         width: 110,
         renderCell: (params) =>
           params?.row?.rowSelected && (
@@ -233,7 +263,7 @@ const RoleNetwork = ({ stepId, selectedRoleIndex }) => {
         field: 'alias',
         disableColumnMenu: true,
         flex: 1,
-        headerName: 'Alias',
+        headerName: columnTranslations.alias,
         width: 200,
         renderCell: (params) =>
           params?.row?.aliasSelected && (
@@ -281,11 +311,32 @@ const RoleNetwork = ({ stepId, selectedRoleIndex }) => {
         className={classes.root}
         rows={fields}
         columns={columns}
-        localeText={{ noRowsLabel: 'No networks have been defined' }}
+        localeText={{
+          noRowsLabel: 'No networks have been defined',
+          MuiTablePagination: {
+            labelRowsPerPage: Tr(T.RowsPerPage),
+          },
+        }}
         autoHeight
         rowsPerPageOptions={[5, 10, 25, 50, 100]}
         disableSelectionOnClick
       />
+
+      {networks?.length > 0 && (
+        <Box sx={{ mb: 2, mt: 4 }}>
+          <Autocomplete
+            options={(getValues(fieldArrayLocation) || [])?.filter(
+              (row) => row?.rowSelected
+            )}
+            value={watchedRdpConfig?.[selectedRoleIndex] ?? ''}
+            getOptionLabel={(option) => option?.name || option || ''}
+            onChange={(_event, value) => handleSetRdp(value)}
+            renderInput={(params) => (
+              <TextField {...params} name="RDP" placeholder={Tr(T.Rdp)} />
+            )}
+          />
+        </Box>
+      )}
     </Box>
   )
 }

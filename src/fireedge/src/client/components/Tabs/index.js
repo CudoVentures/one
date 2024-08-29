@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -14,7 +14,7 @@
  * limitations under the License.                                            *
  * ------------------------------------------------------------------------- */
 import PropTypes from 'prop-types'
-import { ReactElement, useMemo, useState } from 'react'
+import { ReactElement, useState } from 'react'
 
 import {
   Fade,
@@ -25,6 +25,7 @@ import {
   styled,
 } from '@mui/material'
 import { WarningCircledOutline } from 'iconoir-react'
+import { Tr } from 'client/components/HOC'
 
 const WarningIcon = styled(WarningCircledOutline)(({ theme }) => ({
   color: theme.palette.error.main,
@@ -86,49 +87,34 @@ const Tabs = ({
 }) => {
   const [tabSelected, setTab] = useState(() => 0)
 
-  const renderTabs = useMemo(
-    () => (
-      <MTabs
-        value={tabSelected}
-        variant="scrollable"
-        allowScrollButtonsMobile
-        scrollButtons="auto"
-        onChange={(_, tab) => setTab(tab)}
-        sx={{
-          position: 'sticky',
-          top: 0,
-          zIndex: ({ zIndex }) => zIndex.appBar,
-          ...sx,
-        }}
-        {...tabsProps}
-      >
-        {tabs.map(
-          ({ value, name, id = name, label, error, icon: Icon }, idx) => (
-            <MTab
-              key={`tab-${id}`}
-              id={`tab-${id}`}
-              iconPosition="start"
-              icon={error ? <WarningIcon /> : Icon && <Icon />}
-              value={value ?? idx}
-              label={label ?? id}
-              data-cy={`tab-${id}`}
-            />
-          )
-        )}
-      </MTabs>
-    ),
-    [tabs, tabSelected]
-  )
-
-  const renderAllHiddenTabContents = useMemo(
-    () =>
-      tabs.map((tabProps, idx) => {
-        const { name, value = idx } = tabProps
-        const hidden = tabSelected !== value
-
-        return <Content key={`tab-${name}`} {...tabProps} hidden={hidden} />
-      }),
-    [tabSelected]
+  // Removed memoization, might need to optimize later
+  const renderTabs = (
+    <MTabs
+      value={tabSelected}
+      variant="scrollable"
+      allowScrollButtonsMobile
+      scrollButtons="auto"
+      onChange={(_, tab) => setTab(tab)}
+      sx={{
+        position: 'sticky',
+        top: 0,
+        zIndex: ({ zIndex }) => zIndex.appBar,
+        ...sx,
+      }}
+      {...tabsProps}
+    >
+      {tabs.map(({ value, name, id = name, label, error, icon: Icon }, idx) => (
+        <MTab
+          key={`tab-${id}`}
+          id={`tab-${id}`}
+          iconPosition="start"
+          icon={error ? <WarningIcon /> : Icon && <Icon />}
+          value={value ?? idx}
+          label={Tr(label) ?? id}
+          data-cy={`tab-${id}`}
+        />
+      ))}
+    </MTabs>
   )
 
   const logTabId = tabs
@@ -143,7 +129,12 @@ const Tabs = ({
         {renderTabs}
       </Fade>
       {renderHiddenTabs ? (
-        renderAllHiddenTabContents
+        tabs.map((tabProps, idx) => {
+          const { name, value = idx } = tabProps
+          const hidden = tabSelected !== value
+
+          return <Content key={`tab-${name}`} {...tabProps} hidden={hidden} />
+        })
       ) : (
         <Content
           addBorder={addBorder}

@@ -1,5 +1,5 @@
 # -------------------------------------------------------------------------- #
-# Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                #
+# Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                #
 #                                                                            #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may    #
 # not use this file except in compliance with the License. You may obtain    #
@@ -44,8 +44,8 @@ CONFIG_DEFAULTS = {
 ANSIBLE_ARGS = "--ssh-common-args='-o UserKnownHostsFile=/dev/null'"
 ANSIBLE_INVENTORY_DEFAULT = 'default'
 CEPH_ANSIBLE_URL    = 'https://github.com/ceph/ceph-ansible.git'
-CEPH_ANSIBLE_BRANCH = 'stable-7.0'
-CEPH_ANSIBLE_DIR    = '/var/lib/one/.ansible/ceph-7.0'
+CEPH_ANSIBLE_BRANCH = 'stable-8.0'
+CEPH_ANSIBLE_DIR    = '/var/lib/one/.ansible/ceph-8.0'
 
 module OneProvision
 

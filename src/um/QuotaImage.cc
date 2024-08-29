@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -36,7 +36,7 @@ bool QuotaImage::check(Template * tmpl, Quotas& default_quotas, string& error)
 
     map<string, float> image_request;
 
-    image_request.insert(make_pair("RVMS",1));
+    image_request.insert(make_pair("RVMS", 1));
 
     num = tmpl->get("DISK", disk);
 
@@ -69,7 +69,7 @@ void QuotaImage::del(Template * tmpl)
 
     map<string, float> image_request;
 
-    image_request.insert(make_pair("RVMS",1));
+    image_request.insert(make_pair("RVMS", 1));
 
     num = tmpl->get("DISK", disk);
 
@@ -85,9 +85,9 @@ void QuotaImage::del(Template * tmpl)
 /* -------------------------------------------------------------------------- */
 
 int QuotaImage::get_default_quota(
-    const string& id,
-    Quotas& default_quotas,
-    VectorAttribute **va)
+        const string& id,
+        Quotas& default_quotas,
+        VectorAttribute **va)
 {
     return default_quotas.image_get(id, va);
 }

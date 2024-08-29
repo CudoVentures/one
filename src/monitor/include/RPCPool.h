@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -92,7 +92,7 @@ public:
 protected:
     // ------------------------------------------------------------------------
     explicit RPCPool(SqlDB* _db)
-    : db(_db)
+        : db(_db)
     {
     }
 
@@ -121,7 +121,7 @@ protected:
         if (node == 0 || node->children == 0)
         {
             NebulaLog::log("POOL", Log::ERROR,
-                        "XML Node does not represent a valid object");
+                           "XML Node does not represent a valid object");
             return;
         }
 

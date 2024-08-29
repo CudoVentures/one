@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -26,14 +26,14 @@ using namespace std;
 void AclAddRule::request_execute(xmlrpc_c::paramList const& paramList,
                                  RequestAttributes& att)
 {
-/*
-    xmlrpc-c version 1.07 can manage 64 bit numbers, but not all distros. ship
-    the latest version.
+    /*
+        xmlrpc-c version 1.07 can manage 64 bit numbers, but not all distros. ship
+        the latest version.
 
-    user      = xmlrpc_c::value_i8(paramList.getI8(1));
-    resource  = xmlrpc_c::value_i8(paramList.getI8(2));
-    rights    = xmlrpc_c::value_i8(paramList.getI8(3));
-*/
+        user      = xmlrpc_c::value_i8(paramList.getI8(1));
+        resource  = xmlrpc_c::value_i8(paramList.getI8(2));
+        rights    = xmlrpc_c::value_i8(paramList.getI8(3));
+    */
     long long user;
     long long resource;
     long long rights;

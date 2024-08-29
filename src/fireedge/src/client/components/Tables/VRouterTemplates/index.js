@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -13,32 +13,32 @@
  * See the License for the specific language governing permissions and       *
  * limitations under the License.                                            *
  * ------------------------------------------------------------------------- */
-import { Component, useMemo, useState, useEffect } from 'react'
+import { Box, Button, Grid } from '@mui/material'
+import { Component, useEffect, useMemo, useState } from 'react'
 import { DatastoreDialog } from './DatastoreSelectionDialog'
-import { Grid, Box, Button } from '@mui/material'
 
-import { T, RESOURCE_NAMES } from 'client/constants'
-import { BoxIso as DownloadIcon } from 'iconoir-react'
+import { RESOURCE_NAMES, T } from 'client/constants'
 import { useViews } from 'client/features/Auth'
 import { useGeneralApi } from 'client/features/General'
-import { useGetVRouterTemplatesQuery } from 'client/features/OneApi/vrouterTemplate'
 import {
-  useLazyGetMarketplacesQuery,
   useEnableMarketplaceMutation,
+  useLazyGetMarketplacesQuery,
 } from 'client/features/OneApi/marketplace'
+import { useGetVRouterTemplatesQuery } from 'client/features/OneApi/vrouterTemplate'
+import { BoxIso as DownloadIcon } from 'iconoir-react'
 
-import {
-  useLazyGetMarketplaceAppsQuery,
-  useExportAppMutation,
-} from 'client/features/OneApi/marketplaceApp'
-import { useLazyGetDatastoresQuery } from 'client/features/OneApi/datastore'
-import { debounce } from 'lodash'
+import { Tr, Translate } from 'client/components/HOC'
 import EnhancedTable, { createColumns } from 'client/components/Tables/Enhanced'
 import VRouterTemplateColumns from 'client/components/Tables/VRouterTemplates/columns'
 import VRouterTemplateRow from 'client/components/Tables/VRouterTemplates/row'
-import InfoEmpty from 'iconoir-react/dist/InfoEmpty'
-import { Translate } from 'client/components/HOC'
 import { useStyles } from 'client/components/Tabs/EmptyTab/styles'
+import { useLazyGetDatastoresQuery } from 'client/features/OneApi/datastore'
+import {
+  useExportAppMutation,
+  useLazyGetMarketplaceAppsQuery,
+} from 'client/features/OneApi/marketplaceApp'
+import InfoEmpty from 'iconoir-react/dist/InfoEmpty'
+import { debounce } from 'lodash'
 
 const DEFAULT_DATA_CY = 'vrouter-templates'
 
@@ -144,7 +144,7 @@ const VRouterTemplatesTable = (props) => {
     const enableMarket = async (marketID) => {
       const response = await enableMarketplace({ id: marketID })
       if (response?.data === parseInt(marketID, 10)) {
-        enqueueInfo('Enabled OpenNebula Public marketplace')
+        enqueueInfo(T.InfoEnableOpenNebulaMarketplace)
         setOneMarket({ ...oneMarket, STATE: 'ENABLED' })
         fetchApps()
       }
@@ -204,7 +204,7 @@ const VRouterTemplatesTable = (props) => {
     })
       .then((res) => {
         if (res?.data) {
-          enqueueSuccess('Downloaded default image') && refetch()
+          enqueueSuccess(T.SuccessDownloadDefaultImage) && refetch()
         } else if (res?.error) {
           enqueueError(res.error)
         } else {
@@ -246,7 +246,7 @@ const VRouterTemplatesTable = (props) => {
               startIcon={<DownloadIcon />}
               onClick={() => handleDownloadDefaultImage()}
             >
-              {T.DownloadDefaultImage}
+              {Tr(T.DownloadDefaultImage)}
             </Button>
           </Box>
         </Grid>

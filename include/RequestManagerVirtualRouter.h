@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -40,8 +40,8 @@ class VirtualRouterInstantiate : public RequestManagerVirtualRouter
 {
 public:
     VirtualRouterInstantiate() : RequestManagerVirtualRouter(
-        "one.vrouter.instantiate", "Instantiates a new virtual machine "
-        "associated to a virtual router", "A:siiisbs") { }
+                "one.vrouter.instantiate", "Instantiates a new virtual machine "
+                "associated to a virtual router", "A:siiisbs") { }
 
     ~VirtualRouterInstantiate() = default;
 
@@ -57,8 +57,8 @@ class VirtualRouterAttachNic : public RequestManagerVirtualRouter
 {
 public:
     VirtualRouterAttachNic():RequestManagerVirtualRouter("one.vrouter.attachnic",
-         "Attaches a new NIC to the virtual router, and its virtual machines",
-         "A:sis") { }
+                                                             "Attaches a new NIC to the virtual router, and its virtual machines",
+                                                             "A:sis") { }
 
     ~VirtualRouterAttachNic() = default;
 
@@ -74,7 +74,7 @@ class VirtualRouterDetachNic : public RequestManagerVirtualRouter
 {
 public:
     VirtualRouterDetachNic():RequestManagerVirtualRouter("one.vrouter.detachnic",
-        "Detaches a NIC from a virtual router, and its virtual machines","A:sii") { }
+                                                             "Detaches a NIC from a virtual router, and its virtual machines", "A:sii") { }
 
     ~VirtualRouterDetachNic() = default;
 

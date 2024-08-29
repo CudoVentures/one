@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -13,13 +13,19 @@
  * See the License for the specific language governing permissions and       *
  * limitations under the License.                                            *
  * ------------------------------------------------------------------------- */
-import { Stack, Tooltip, Typography } from '@mui/material'
+import { Stack, Tooltip, Typography, styled } from '@mui/material'
 import PropTypes from 'prop-types'
 import { ReactElement, isValidElement, useMemo } from 'react'
 
 import { Translate } from 'client/components/HOC'
 import { StatusChip } from 'client/components/Status'
 import { T } from 'client/constants'
+
+const StyledText = styled(Typography)(({ theme }) => ({
+  '&': {
+    fontSize: theme.typography.button.fontSize,
+  },
+}))
 
 /**
  * @typedef TagType
@@ -75,10 +81,10 @@ const MultipleTags = ({ tags, limitTags = 1, clipboard = false }) => {
       {tagsToDisplay}
       {more > 0 && (
         <Tooltip arrow title={<Stack>{tagsToHide}</Stack>}>
-          <Typography component="span" variant="string" sx={{ ml: 1 }}>
+          <StyledText component="span" variant="string" sx={{ ml: 1 }}>
             {`+${more} `}
             <Translate word={T.More} />
-          </Typography>
+          </StyledText>
         </Tooltip>
       )}
     </>

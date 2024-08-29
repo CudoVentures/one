@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -25,6 +25,8 @@ import {
   Box,
   Typography,
 } from '@mui/material'
+import { Tr } from 'client/components/HOC'
+import { T } from 'client/constants'
 
 /**
  * Dialog for scaling the number of VMs.
@@ -67,7 +69,7 @@ export const ScaleDialog = ({ open, onClose, onScale, roleName }) => {
           <TextField
             margin="normal"
             fullWidth
-            label="Number of VMs"
+            label={Tr(T.NumberOfVms)}
             type="number"
             {...register('numberOfVms', {
               required: 'Number of VMs is required',
@@ -77,7 +79,7 @@ export const ScaleDialog = ({ open, onClose, onScale, roleName }) => {
           />
           <FormControlLabel
             control={<Switch {...register('force')} />}
-            label="Force"
+            label={Tr(T.Force)}
           />
           <Button
             type="submit"
@@ -86,7 +88,7 @@ export const ScaleDialog = ({ open, onClose, onScale, roleName }) => {
             color="primary"
             sx={{ mt: 2, fontSize: '1rem' }}
           >
-            Scale
+            {Tr(T.Scale)}
           </Button>
         </form>
       </Box>

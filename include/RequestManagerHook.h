@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -31,7 +31,7 @@ protected:
     RequestManagerHook(const std::string& method_name,
                        const std::string& help,
                        const std::string& params)
-        :Request(method_name,params,help)
+        :Request(method_name, params, help)
     {
         Nebula& nd  = Nebula::instance();
         pool        = nd.get_hkpool();
@@ -49,7 +49,7 @@ class HookRetry : public RequestManagerHook
 {
 public:
     HookRetry() : RequestManagerHook(
-        "one.hook.retry", "Retry a hook execution ", "A:sii")
+                "one.hook.retry", "Retry a hook execution ", "A:sii")
     {
         auth_op = AuthRequest::MANAGE;
     };

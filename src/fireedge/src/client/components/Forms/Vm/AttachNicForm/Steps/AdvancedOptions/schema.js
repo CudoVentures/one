@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -43,7 +43,7 @@ import {
   transformPciToString,
 } from 'client/components/Forms/Vm/AttachPciForm/schema.js'
 
-const { vcenter, firecracker, lxc } = HYPERVISORS
+const { lxc } = HYPERVISORS
 const PCI_TYPE_NAME = 'PCI_TYPE'
 const DEVICE_LIST = 'DEVICE_LIST'
 const VENDOR = 'VENDOR'
@@ -138,7 +138,8 @@ const GUACAMOLE_CONNECTIONS = [
   {
     name: 'RDP_RESIZE_METHOD',
     label: T.RdpRizeMethod,
-    type: INPUT_TYPES.SELECT,
+    type: INPUT_TYPES.AUTOCOMPLETE,
+    optionsOnly: true,
     dependOf: 'RDP',
     values: [
       { text: '-', value: undefined },
@@ -322,7 +323,8 @@ const OVERRIDE_IPV4_FIELDS = [
     name: 'METHOD',
     label: T.NetworkMethod,
     tooltip: T.NetworkMethod4Concept,
-    type: INPUT_TYPES.SELECT,
+    type: INPUT_TYPES.AUTOCOMPLETE,
+    optionsOnly: true,
     values: arrayToOptions(Object.keys(IPV4_METHODS), {
       getText: (key) => key,
       getValue: (key) => IPV4_METHODS[key],
@@ -358,7 +360,8 @@ const OVERRIDE_IPV6_FIELDS = [
     name: 'IP6_METHOD',
     label: T.NetworkMethod,
     tooltip: T.NetworkMethod6Concept,
-    type: INPUT_TYPES.SELECT,
+    type: INPUT_TYPES.AUTOCOMPLETE,
+    optionsOnly: true,
     values: arrayToOptions(Object.keys(IPV6_METHODS), {
       getText: (key) => key,
       getValue: (key) => IPV6_METHODS[key],
@@ -377,7 +380,8 @@ const HARDWARE_FIELDS = (
   {
     name: PCI_TYPE_NAME,
     label: T.VirtualNicHardwareMode,
-    type: INPUT_TYPES.SELECT,
+    type: INPUT_TYPES.AUTOCOMPLETE,
+    optionsOnly: true,
     values: arrayToOptions(Object.values(NIC_HARDWARE), {
       addEmpty: false,
       getText: (key) => NIC_HARDWARE_STR[key],
@@ -407,7 +411,6 @@ const HARDWARE_FIELDS = (
     dependOf: PCI_TYPE_NAME,
     htmlType: (value) => value !== NIC_HARDWARE.EMULATED && INPUT_TYPES.HIDDEN,
     type: INPUT_TYPES.TEXT,
-    notOnHypervisors: [firecracker],
     fieldProps: {
       disabled: hasAlias || isAlias,
     },
@@ -421,7 +424,6 @@ const HARDWARE_FIELDS = (
     label: T.TransmissionQueue,
     tooltip: T.OnlySupportedForVirtioDriver,
     type: INPUT_TYPES.TEXT,
-    notOnHypervisors: [firecracker],
     fieldProps: {
       disabled: hasAlias || isAlias,
     },
@@ -436,7 +438,8 @@ const HARDWARE_FIELDS = (
   {
     name: DEVICE_LIST,
     label: T.DeviceName,
-    type: INPUT_TYPES.SELECT,
+    type: INPUT_TYPES.AUTOCOMPLETE,
+    optionsOnly: true,
     values: () => {
       const { data: hosts = [] } = useGetHostsAdminQuery()
       const pciDevices = hosts
@@ -483,7 +486,7 @@ const HARDWARE_FIELDS = (
     name: VENDOR,
     label: T.Vendor,
     type: INPUT_TYPES.TEXT,
-    notOnHypervisors: [vcenter, lxc, firecracker],
+    notOnHypervisors: [lxc],
     dependOf: [PCI_TYPE_NAME, DEVICE_LIST],
     watcher: fillPCIAtributes(VENDOR),
     htmlType: (_, context) => {
@@ -513,7 +516,7 @@ const HARDWARE_FIELDS = (
     name: DEVICE,
     label: T.Device,
     type: INPUT_TYPES.TEXT,
-    notOnHypervisors: [vcenter, lxc, firecracker],
+    notOnHypervisors: [lxc],
     dependOf: [PCI_TYPE_NAME, DEVICE_LIST],
     watcher: fillPCIAtributes(DEVICE),
     htmlType: (_, context) => {
@@ -543,7 +546,7 @@ const HARDWARE_FIELDS = (
     name: CLASS,
     label: T.Class,
     type: INPUT_TYPES.TEXT,
-    notOnHypervisors: [vcenter, lxc, firecracker],
+    notOnHypervisors: [lxc],
     dependOf: [PCI_TYPE_NAME, DEVICE_LIST],
     watcher: fillPCIAtributes(CLASS),
     htmlType: (_, context) => {
@@ -575,7 +578,7 @@ const HARDWARE_FIELDS = (
     label: T.ShortAddress,
     tooltip: T.ShortAddressConcept,
     type: INPUT_TYPES.AUTOCOMPLETE,
-    notOnHypervisors: [vcenter, lxc, firecracker],
+    notOnHypervisors: [lxc],
     dependOf: PCI_TYPE_NAME,
     htmlType: (value) =>
       value !== NIC_HARDWARE.PCI_PASSTHROUGH_MANUAL && INPUT_TYPES.HIDDEN,
@@ -619,7 +622,6 @@ const GUEST_FIELDS = [
     label: T.GuestMTU,
     tooltip: T.GuestMTUConcept,
     type: INPUT_TYPES.TEXT,
-    notOnHypervisors: [firecracker],
     validation: string()
       .trim()
       .notRequired()

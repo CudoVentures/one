@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -175,7 +175,7 @@ public:
         {
             bs->reset(bit);
         }
-        catch(const std::out_of_range& oor){};
+        catch(const std::out_of_range& oor) {};
     }
 
     /**
@@ -196,7 +196,7 @@ public:
                 rc = 0;
             }
         }
-        catch(const std::out_of_range& oor){};
+        catch(const std::out_of_range& oor) {};
 
         return rc;
     }
@@ -304,7 +304,7 @@ private:
         else
         {
             oss << "INSERT INTO " << db_table << " (id, map) VALUES ("
-            << id << ",'" << ezipped64 << "')";
+                << id << ",'" << ezipped64 << "')";
         }
 
         int rc = db->exec_wr(oss);

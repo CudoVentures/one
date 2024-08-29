@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -34,7 +34,7 @@ import { transformXmlString } from 'client/models/Helper'
 const addHypervisorRequirement = (schedRequirements, hypervisor) => {
   // Regular expression pattern to match (HYPERVISOR=VALUE)
 
-  const regexPattern = /\(HYPERVISOR=(kvm|dummy|lxc|vcenter|firecracker|qemu)\)/
+  const regexPattern = /\(HYPERVISOR=(kvm|dummy|lxc|qemu)\)/
 
   // If exists a condition with hypervisor, replace the type. If not, add the hypervisor type.
   if (regexPattern.test(schedRequirements)) {
@@ -156,7 +156,7 @@ const HOST_POLICY_TYPE_FIELD = {
   name: 'HOST_POLICY_TYPE',
   type: INPUT_TYPES.TOGGLE,
   values: () =>
-    arrayToOptions(['Packing', 'Stripping', 'Load-aware'], {
+    arrayToOptions([T.Packing, T.Stripping, T.LoadAware], {
       addEmpty: false,
       getText: (opt) => opt,
       getValue: (_opt, idx) =>
@@ -221,12 +221,9 @@ const TABLE_TYPE = {
   name: 'CLUSTER_HOST_TYPE',
   type: INPUT_TYPES.TOGGLE,
   values: () =>
-    arrayToOptions(
-      [T.Cluster, T.Host]?.map((t) => T.Select + ' ' + t),
-      {
-        addEmpty: false,
-      }
-    ),
+    arrayToOptions([T.SelectCluster, T.SelectHost], {
+      addEmpty: false,
+    }),
   validation: string()
     .trim()
     .required()

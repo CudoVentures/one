@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -43,7 +43,7 @@ protected:
 
 
     void request_execute(xmlrpc_c::paramList const& paramList,
-        RequestAttributes& att) override;
+                         RequestAttributes& att) override;
 
     ErrorCode delete_object(int oid, bool recursive, RequestAttributes& att);
 
@@ -154,7 +154,7 @@ public:
     };
 
     void request_execute(xmlrpc_c::paramList const& paramList,
-        RequestAttributes& att) override;
+                         RequestAttributes& att) override;
 
 protected:
 

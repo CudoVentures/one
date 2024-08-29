@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -14,14 +14,19 @@
  * limitations under the License.                                            *
  * ------------------------------------------------------------------------- */
 
-const { httpMethod } = require('server/utils/constants/defaults')
+const {
+  from: { query },
+  httpMethod,
+} = require('../../../utils/constants/defaults')
 
 const basepath = '/system'
 const { GET } = httpMethod
 
 const SYSTEM_CONFIG = 'system.config'
+const VMM_CONFIG = 'vmm.config'
 const Actions = {
   SYSTEM_CONFIG,
+  VMM_CONFIG,
 }
 
 module.exports = {
@@ -30,6 +35,17 @@ module.exports = {
     [SYSTEM_CONFIG]: {
       path: `${basepath}/config`,
       httpMethod: GET,
+      auth: true,
+    },
+    [VMM_CONFIG]: {
+      path: `${basepath}/vmmconfig`,
+      httpMethod: GET,
+      params: {
+        hypervisor: {
+          from: query,
+          default: 'kvm',
+        },
+      },
       auth: true,
     },
   },

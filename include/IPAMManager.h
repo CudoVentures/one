@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -32,14 +32,14 @@ class VectorAttribute;
 
 class IPAMManager :
     public DriverManager<Driver<ipam_msg_t>>,
-    public Listener
+                                          public Listener
 {
 public:
 
     IPAMManager(time_t timer, const std::string& mad_location)
         : DriverManager(mad_location)
         , Listener("IPAM Manager")
-        , timer_thread(timer, [this](){timer_action();})
+        , timer_thread(timer, [this]() {timer_action();})
     {
     }
 

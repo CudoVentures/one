@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -25,7 +25,7 @@ import { useGetVMGroupQuery } from 'client/features/OneApi/vmGroup'
 import { Box } from '@mui/material'
 import { Component } from 'react'
 import { useGeneralApi } from 'client/features/General'
-import { VM_STATES } from 'client/constants'
+import { VM_STATES, T } from 'client/constants'
 const keyMap = {
   ID: 'ID',
   NAME: 'NAME',
@@ -73,8 +73,7 @@ const VmsInfoTab = ({ id }) => {
     ),
   ]
 
-  includedVms?.isError &&
-    enqueueError('Failed to fetch vm groups, displaying all VMs')
+  includedVms?.isError && enqueueError(T.ErrorVmGroupsFetch)
   const startMonth = -2
   const startYear = -2
   const endMonth = -2

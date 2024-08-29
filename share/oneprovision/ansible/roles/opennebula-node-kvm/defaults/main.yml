@@ -1,0 +1,9 @@
+---
+###############################################################################
+# Valid defaults
+###############################################################################
+# Enable nested KVM virtualization
+opennebula_node_kvm_param_nested: False
+
+# Enable KVM configuration
+opennebula_node_kvm_manage_kvm: True

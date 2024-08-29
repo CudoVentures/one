@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------- *
- * Copyright 2002-2023, OpenNebula Project, OpenNebula Systems               *
+ * Copyright 2002-2024, OpenNebula Project, OpenNebula Systems               *
  *                                                                           *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may   *
  * not use this file except in compliance with the License. You may obtain   *
@@ -27,10 +27,10 @@ import {
 
 import PropTypes from 'prop-types'
 import { T } from 'client/constants'
+import { Tr } from 'client/components/HOC'
 import { Legend } from 'client/components/Forms'
 
 import { mapNameByIndex } from 'client/components/Forms/VmTemplate/CreateForm/Steps/ExtraConfiguration/schema'
-import { STEP_ID as EXTRA_ID } from 'client/components/Forms/ServiceTemplate/CreateForm/Steps/Extra'
 
 import { Component, useMemo } from 'react'
 
@@ -51,7 +51,7 @@ const ScheduleActionsSection = ({ oneConfig, adminGroup }) => {
     update,
     append,
   } = useFieldArray({
-    name: `${EXTRA_ID}.${TAB_ID}`,
+    name: `charter.${TAB_ID}`,
     keyName: 'ID',
   })
 
@@ -77,7 +77,7 @@ const ScheduleActionsSection = ({ oneConfig, adminGroup }) => {
 
   return (
     <Box mt={2}>
-      <Legend title={'Add Charters Values Configuration'} />
+      <Legend title={Tr(T.AddChartes)} />
       <Box sx={{ width: '100%', gridColumn: '1 / -1' }}>
         <Stack flexDirection="row" gap="1em">
           <CreateSchedButton

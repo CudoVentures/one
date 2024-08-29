@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Copyright 2002-2023, OpenNebula Project, OpenNebula Systems                */
+/* Copyright 2002-2024, OpenNebula Project, OpenNebula Systems                */
 /*                                                                            */
 /* Licensed under the Apache License, Version 2.0 (the "License"); you may    */
 /* not use this file except in compliance with the License. You may obtain    */
@@ -272,7 +272,7 @@ int Hook::insert_replace(SqlDB *db, bool replace, std::string& error_str)
     set_user(0, "");
     set_group(GroupPool::ONEADMIN_ID, GroupPool::ONEADMIN_NAME);
 
-   // Update the Hook
+    // Update the Hook
     sql_name = db->escape_str(name);
 
     if ( sql_name == 0 )
