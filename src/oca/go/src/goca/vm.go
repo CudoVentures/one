@@ -438,14 +438,14 @@ func (vc *VMController) UpdateContext(ctx context.Context, tpl string, uType par
 
 // UpdateConf updates (appends) a set of supported configuration attributes in
 // the VM template
-func (vc *VMController) UpdateConf(tpl string) error {
-	return vc.UpdateConfContext(context.Background(), tpl)
+func (vc *VMController) UpdateConf(tpl string, uType parameters.UpdateType) error {
+	return vc.UpdateConfContext(context.Background(), tpl, uType)
 }
 
 // UpdateConf updates (appends) a set of supported configuration attributes in
 // the VM template
-func (vc *VMController) UpdateConfContext(ctx context.Context, tpl string) error {
-	_, err := vc.c.Client.CallContext(ctx, "one.vm.updateconf", vc.ID, tpl)
+func (vc *VMController) UpdateConfContext(ctx context.Context, tpl string, uType parameters.UpdateType) error {
+	_, err := vc.c.Client.CallContext(ctx, "one.vm.updateconf", vc.ID, tpl, uType)
 	return err
 }
 
